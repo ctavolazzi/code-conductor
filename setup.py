@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="ai_setup",
-    version="0.2.0",
+    version="0.2.1",
     description="AI-Setup toolkit for managing AI development environments and work efforts",
     author="AI-Setup Team",
     py_modules=["cli"],

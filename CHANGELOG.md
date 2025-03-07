@@ -2,6 +2,13 @@
 
 All notable changes to the AI-Setup project will be documented in this file.
 
+## [0.2.1] - 2024-03-07
+
+### Changed
+- Updated version number for consistency
+- Reinstalled and verified work efforts structure functionality
+- Confirmed AI usage is properly disabled by default
+
 ## [0.2.0] - 2024-03-07
 
 ### Added

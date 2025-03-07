@@ -4,7 +4,7 @@ AI-Setup is a toolkit for setting up AI-assisted development environments and ma
 
 ## Version
 
-Current version: 0.2.0
+Current version: 0.2.1
 
 ## Features
 
