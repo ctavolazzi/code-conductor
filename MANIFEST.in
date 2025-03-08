@@ -1,0 +1,2 @@
+include .AI-Setup/*.md
+recursive-include .AI-Setup *
