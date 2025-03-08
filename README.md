@@ -25,12 +25,6 @@ cd ai_setup
 pip install -e .
 ```
 
-### From PyPI (if published)
-
-```bash
-pip install ai-setup
-```
-
 ## Usage
 
 ### Basic Commands
