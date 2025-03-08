@@ -49,12 +49,6 @@ source ~/.zshrc  # or source ~/.bash_profile
 
 > **Tip**: If you're having trouble with global installation, ask your preferred AI model (like Claude, ChatGPT, etc.) for help specific to your system. They can provide customized installation instructions based on your operating system and environment.
 
-### From PyPI (if published)
-
-```bash
-pip install ai-setup
-```
-
 ## Usage
 
 ### Basic Commands
