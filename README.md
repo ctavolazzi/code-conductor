@@ -4,7 +4,7 @@ AI-Setup is a toolkit for setting up AI-assisted development environments and ma
 
 ## Version
 
-Current version: 0.2.1
+Current version: 0.2.3
 
 ## Features
 
@@ -25,6 +25,30 @@ cd ai_setup
 pip install -e .
 ```
 
+### Global Installation on macOS
+
+To install the package globally on macOS so you can use it from any directory:
+
+```bash
+# Install the package system-wide (requires administrator privileges)
+sudo pip3 install -e /path/to/ai_setup
+
+# Or install for the current user only
+pip3 install -e /path/to/ai_setup --user
+```
+
+If you install with `--user`, you may need to add the Python user bin directory to your PATH:
+
+```bash
+# Add this line to your ~/.zshrc or ~/.bash_profile
+export PATH=$PATH:$HOME/Library/Python/<version>/bin
+
+# Then reload your shell configuration
+source ~/.zshrc  # or source ~/.bash_profile
+```
+
+> **Tip**: If you're having trouble with global installation, ask your preferred AI model (like Claude, ChatGPT, etc.) for help specific to your system. They can provide customized installation instructions based on your operating system and environment.
+
 ### From PyPI (if published)
 
 ```bash
@@ -37,10 +61,10 @@ pip install ai-setup
 
 ```bash
 # Set up AI assistance in current directory
-ai-setup init
+ai-setup setup
 
 # Create a new work effort
-ai-setup work
+ai-setup work_effort
 
 # List all work efforts
 ai-setup list
@@ -53,10 +77,16 @@ ai-setup select
 
 ```bash
 # Interactive mode
-ai-setup work -i
+ai-setup work_effort -i
 
 # With specific details
-ai-setup work "New Feature" --description "Implement the new feature X" --priority high
+ai-setup work_effort --title "New Feature" --priority high
+
+# Using the enhanced AI work effort creator
+ai-work-effort -i
+
+# With AI content generation (requires Ollama)
+ai-work-effort --use-ai --description "Implement authentication system" --model phi3
 ```
 
 Note: AI content generation is OFF by default. Use the `--use-ai` flag to enable it.
