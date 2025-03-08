@@ -5,6 +5,9 @@ import argparse
 import asyncio
 from datetime import datetime
 
+# Add version info
+__version__ = "0.4.0"
+
 # Re-import the necessary AI setup modules
 try:
     from utils.directory_scanner import select_directories, is_ai_setup_installed, create_ai_setup, install_ai_setup
@@ -61,6 +64,7 @@ except ImportError:
         if not os.path.exists(setup_folder):
             os.makedirs(setup_folder)
 
+        # Create all other files first
         # 1. Create INSTRUCTIONS.md
         instructions_file = os.path.join(setup_folder, "INSTRUCTIONS.md")
         with open(instructions_file, "w") as f:
@@ -77,16 +81,16 @@ and provide more contextual help and recommendations.
 
 The AI-Setup package provides two main commands:
 
-1. `ai-setup` - Main command for setting up AI assistance and basic work efforts
-   - `ai-setup help` - Show help information
-   - `ai-setup setup` - Set up AI assistance in the current directory
-   - `ai-setup work_effort` - Create a new work effort
-   - `ai-setup list` - List all work efforts
+1. `ai_setup` - Main command for setting up AI assistance and basic work efforts
+   - `ai_setup help` - Show help information
+   - `ai_setup setup` - Set up AI assistance in the current directory
+   - `ai_setup work_effort` - Create a new work effort
+   - `ai_setup list` - List all work efforts
 
-2. `ai-work-effort` - Enhanced work effort creator with AI content generation capabilities
-   - `ai-work-effort -i` - Create a work effort interactively
-   - `ai-work-effort --use-ai --description "Your description"` - Use AI to generate content
-   - `ai-work-effort --help` - Show help information
+2. `ai_work_effort` - Enhanced work effort creator with AI content generation capabilities
+   - `ai_work_effort -i` - Create a work effort interactively
+   - `ai_work_effort --use-ai --description "Your description"` - Use AI to generate content
+   - `ai_work_effort --help` - Show help information
 
 No action is required from you - the AI tools will automatically utilize these files.
 """)
@@ -112,12 +116,14 @@ It helps AI assistants understand how to verify that everything is working corre
    - AI-setup-validation-instructions.md
    - AI-work-effort-system.md
    - AI-setup-instructions.md
+   - work_efforts/ directory with:
+     - templates/
+     - active/
+     - completed/
+     - archived/
+     - scripts/
 
-2. `work_efforts` directory with:
-   - templates/
-   - active/
-   - completed/
-   - archived/
+2. Root level `work_efforts` directory (maintained for backward compatibility)
 
 ## Testing Commands
 
@@ -148,37 +154,34 @@ title: "Title of the Work Effort"
 status: "active" # options: active, paused, completed
 priority: "medium" # options: low, medium, high, critical
 assignee: "username"
-created: "YYYY-MM-DD HH:MM" # Date and time
-last_updated: "YYYY-MM-DD HH:MM" # Date and time
-due_date: "YYYY-MM-DD" # Date only
-tags: [tag1, tag2, tag3]
+created: "YYYY-MM-DD HH:mm" # Creation date and time
+last_updated: "YYYY-MM-DD HH:mm" # Last update date and time
+due_date: "YYYY-MM-DD" # Expected completion date
+tags: [feature, bugfix, refactor, documentation, testing, devops]
 ---
 
 # Title of the Work Effort
 
 ## 🚩 Objectives
-- Clear goal 1
-- Clear goal 2
+- Clearly define goals for this work effort
 
 ## 🛠 Tasks
 - [ ] Task 1
 - [ ] Task 2
-- [ ] Task 3
 
 ## 📝 Notes
-- Context information
-- Relevant details
+- Context, links to relevant code, designs, references
 
 ## 🐞 Issues Encountered
-- Obstacles or challenges
+- Document issues and obstacles clearly
 
 ## ✅ Outcomes & Results
-- Results achieved
-- Lessons learned
+- Explicitly log outcomes, lessons learned, and code changes
 
 ## 📌 Linked Items
-- [[Related File]]
-- [[GitHub Issue #123]]
+- [[Related Work Effort]]
+- [[GitHub Issue #]]
+- [[Pull Request #]]
 
 ## 📅 Timeline & Progress
 - **Started**: YYYY-MM-DD
@@ -186,119 +189,178 @@ tags: [tag1, tag2, tag3]
 - **Target Completion**: YYYY-MM-DD
 ```
 
-## Work Effort Commands
-
-Creating work efforts:
-```
-ai-setup work_effort --title "Feature Name" --priority high
-ai-work-effort -i  # Interactive mode with more features
-```
-
-Listing work efforts:
-```
-ai-setup list
-```
-
-## Work Effort Locations
-
-Work efforts are organized into directories:
-- `work_efforts/active/` - Current, in-progress work
-- `work_efforts/completed/` - Successfully finished work
-- `work_efforts/archived/` - Deprecated or abandoned work
-""")
-
-        # 4. Create AI-setup-instructions.md
-        setup_instructions_file = os.path.join(setup_folder, "AI-setup-instructions.md")
-        with open(setup_instructions_file, "w") as f:
-            f.write("""# AI Setup Instructions
-
-This file contains detailed instructions for setting up AI assistance in this project.
-It helps AI assistants understand how to configure and use the AI tools.
-
-## Installation
-
-The AI-Setup package can be installed globally using:
-
-```bash
-sudo pip3 install ai-setup
-```
-
-After installation, the following commands will be available:
-- `ai-setup` - Main command for AI setup and work effort management
-- `ai-work-effort` - Enhanced work effort creator with AI features
-
-## Setting Up a Project
-
-To set up a new or existing project with AI assistance:
-
-1. Navigate to the project directory:
-   ```bash
-   cd /path/to/your/project
-   ```
-
-2. Run the setup command:
-   ```bash
-   ai-setup setup
-   ```
-
-This will:
-- Create a `.AI-Setup` folder with all necessary files
-- Set up a `work_efforts` directory structure
-- Create an initial default work effort
-
-## Creating Work Efforts
-
-Basic work effort creation:
-```bash
-ai-setup work_effort --title "Feature Name" --priority high
-```
-
-Enhanced work effort creation with more features:
-```bash
-ai-work-effort -i
-```
-
-With AI-powered content generation (requires Ollama):
-```bash
-ai-work-effort --use-ai --description "Create a user authentication system" --model phi3
-```
-
-## Managing Work Efforts
-
-List all work efforts:
-```bash
-ai-setup list
-```
-
 ## Directory Structure
 
-A properly configured project will have:
+Work efforts are organized in the following directories:
 
+- **templates/** - Contains templates for creating new work efforts
+- **active/** - Current, ongoing work efforts
+- **completed/** - Successfully completed work efforts
+- **archived/** - Deprecated or abandoned work efforts
+- **scripts/** - Helper scripts for managing work efforts
+
+## Using the Work Effort System
+
+1. Create a new work effort using the CLI:
 ```
-your-project/
-├── .AI-Setup/
-│   ├── INSTRUCTIONS.md
-│   ├── AI-setup-validation-instructions.md
-│   ├── AI-work-effort-system.md
-│   └── AI-setup-instructions.md
-└── work_efforts/
-    ├── templates/
-    │   └── work-effort-template.md
-    ├── active/
-    ├── completed/
-    ├── archived/
-    └── README.md
+ai-setup work_effort --title "Feature Name" --priority high
 ```
+
+2. Or use the interactive mode:
+```
+ai-setup work_effort -i
+```
+
+3. Update work effort status as it progresses:
+```
+ai-setup update-status "Feature Name" --status completed
+```
+
+4. List all work efforts:
+```
+ai-setup list
+```
+
+## Best Practices
+
+1. Use descriptive titles that clearly indicate the task
+2. Break down complex work efforts into manageable tasks
+3. Update the status regularly
+4. Document issues and blockers immediately
+5. Keep the timeline updated
+6. Move completed work efforts to the 'completed' directory
+7. Archive work efforts that are no longer relevant
+
+## AI Integration
+
+The Work Effort system is designed to work seamlessly with AI assistants:
+
+1. AI assistants can read and understand the structure of work efforts
+2. They can suggest updates and improvements
+3. They can help prioritize and organize tasks
+4. They can provide insights based on the documented issues and outcomes
 
 ## Advanced Features
 
-The `ai-work-effort` command supports integration with Ollama for AI-powered content generation. When using the `--use-ai` flag, it can:
-
-1. Connect to a local Ollama instance
-2. Generate structured content based on your description
-3. Provide an interactive console experience with animated typing
-4. Allow for timeout configuration and graceful interruption
+1. Work efforts can be linked to form a network of related tasks
+2. Dependencies between work efforts can be specified
+3. Complex projects can be broken down into multiple linked work efforts
+4. AI models can analyze patterns across work efforts to provide insights
 """)
+
+        # 4. Create AI-setup-instructions.md
+        ai_setup_instructions_file = os.path.join(setup_folder, "AI-setup-instructions.md")
+        with open(ai_setup_instructions_file, "w") as f:
+            f.write("""# AI Setup Instructions
+
+This file contains detailed instructions for setting up AI assistance in this project.
+It helps AI assistants understand the structure and purpose of the project.
+
+## Project Structure
+
+This project follows a standard structure:
+
+1. `src/` - Source code directory
+2. `tests/` - Test files
+3. `docs/` - Documentation
+4. `.AI-Setup/` - AI assistant setup files
+
+## Setting Up AI Assistance
+
+To set up AI assistance in a project:
+
+1. Install the AI-Setup package:
+```
+pip install ai_setup
+```
+
+2. Run the setup command in your project directory:
+```
+ai-setup setup
+```
+
+3. This will create the necessary files and directories:
+   - `.AI-Setup/` directory with configuration files
+   - `work_efforts/` directory for tracking tasks
+
+## Using AI Assistance
+
+Once set up, AI assistants can:
+
+1. Better understand your project structure
+2. Provide more contextual recommendations
+3. Help manage and track work efforts
+4. Offer insights based on project patterns
+
+## Work Efforts
+
+Work efforts are structured documents for tracking tasks. To create a new work effort:
+
+```
+ai-setup work_effort -i
+```
+
+This will create a new file in the `work_efforts/active/` directory.
+
+## Commands
+
+The AI-Setup package provides the following commands:
+
+1. `ai-setup setup` - Set up AI assistance in the current directory
+2. `ai-setup work-effort` - Create a new work effort
+3. `ai-setup list` - List all work efforts
+4. `ai-setup update-status` - Update the status of a work effort
+5. `ai-setup help` - Show help information
+
+## Configuration
+
+AI assistance can be configured by modifying the files in the `.AI-Setup/` directory.
+
+## Best Practices
+
+1. Keep work efforts updated
+2. Use descriptive titles for work efforts
+3. Document issues and blockers
+4. Update the status of work efforts regularly
+5. Move completed work efforts to the 'completed' directory
+6. Archive work efforts that are no longer relevant
+7. Use AI assistants to help manage and track work efforts
+8. Provide feedback to improve AI assistance
+
+## Troubleshooting
+
+If you encounter issues with AI assistance:
+
+1. Ensure the AI-Setup package is installed correctly
+2. Verify the `.AI-Setup/` directory exists
+3. Check that work efforts are created in the correct directory
+4. Ensure the files in the `.AI-Setup/` directory are properly formatted
+5. Try running `ai-setup setup` again to recreate the files and directories
+6. Check for error messages in the console
+7. Report issues to the AI-Setup team
+
+## Advanced Features
+
+1. AI models can be customized for specific projects
+2. Work efforts can be linked to form a network of related tasks
+3. Complex projects can be broken down into multiple linked work efforts
+4. AI models can analyze patterns across work efforts to provide insights
+
+## Roadmap
+
+Planned future features include:
+
+1. Integration with issue tracking systems
+2. Enhanced AI analysis of work efforts
+3. Visualization of work effort networks
+4. Automatic prioritization of tasks based on AI analysis
+""")
+
+        # Create work_efforts directory inside .AI-Setup using our structured function
+        ai_work_dir, ai_template_path, _, _, _ = setup_work_efforts_structure(root_dir, create_dirs=True, in_ai_setup=True)
+
+        # Ensure template file exists in .AI-Setup/work_efforts/templates
+        create_template_if_missing(ai_template_path)
 
         print(f"✅ Created AI-Setup in: {root_dir}")
         return setup_folder
@@ -348,11 +410,12 @@ The `ai-work-effort` command supports integration with Ollama for AI-powered con
         return ["phi3", "llama3", "mistral"]  # Default fallbacks
 
 
-def setup_work_efforts_structure(base_dir=None, create_dirs=True):
+def setup_work_efforts_structure(base_dir=None, create_dirs=True, in_ai_setup=False):
     """
     Set up the work_efforts directory structure in the specified directory
     If no directory is specified, use the current directory
     If create_dirs is False, just return the paths without creating directories
+    If in_ai_setup is True, create within the .AI-Setup folder
 
     Returns a tuple of (work_efforts_dir, template_path, active_path, completed_path, archived_path)
     """
@@ -360,7 +423,21 @@ def setup_work_efforts_structure(base_dir=None, create_dirs=True):
         base_dir = os.getcwd()
 
     # Define the work_efforts directory and its subdirectories
-    work_efforts_dir = os.path.join(base_dir, "work_efforts")
+    if in_ai_setup:
+        # Create inside .AI-Setup folder
+        ai_setup_dir = os.path.join(base_dir, ".AI-Setup")
+        if not os.path.exists(ai_setup_dir):
+            if create_dirs:
+                os.makedirs(ai_setup_dir)
+                print(f"Created .AI-Setup directory: {ai_setup_dir}")
+            else:
+                print(f"Warning: .AI-Setup directory does not exist at {ai_setup_dir}")
+
+        work_efforts_dir = os.path.join(ai_setup_dir, "work_efforts")
+    else:
+        # Create at the root level (original behavior)
+        work_efforts_dir = os.path.join(base_dir, "work_efforts")
+
     templates_dir = os.path.join(work_efforts_dir, "templates")
     active_dir = os.path.join(work_efforts_dir, "active")
     completed_dir = os.path.join(work_efforts_dir, "completed")
@@ -420,6 +497,13 @@ ai-setup list
             with open(init_py_path, "w") as f:
                 f.write("# work_efforts scripts package")
             print(f"Created __init__.py at: {init_py_path}")
+
+        # Create an __init__.py file in the work_efforts directory
+        work_efforts_init_py_path = os.path.join(work_efforts_dir, "__init__.py")
+        if not os.path.exists(work_efforts_init_py_path):
+            with open(work_efforts_init_py_path, "w") as f:
+                f.write("# work_efforts package")
+            print(f"Created __init__.py at: {work_efforts_init_py_path}")
 
         # Copy script files from the package
         try:
@@ -625,38 +709,44 @@ async def setup_ai_in_current_dir():
     ai_setup_dir = os.path.join(current_dir, ".AI-Setup")
     ai_setup_exists = os.path.exists(ai_setup_dir) and os.path.isdir(ai_setup_dir)
 
-    # Check if work_efforts already exists
+    # Check if work_efforts already exists in the root
     work_efforts_dir = os.path.join(current_dir, "work_efforts")
     work_efforts_exists = os.path.exists(work_efforts_dir) and os.path.isdir(work_efforts_dir)
 
-    # If both exist, inform the user and exit
-    if ai_setup_exists and work_efforts_exists:
-        print("\n✅ AI-Setup is already installed in this directory")
+    # Check if work_efforts already exists inside .AI-Setup
+    ai_setup_work_efforts_dir = os.path.join(ai_setup_dir, "work_efforts") if ai_setup_exists else None
+    ai_setup_work_efforts_exists = ai_setup_work_efforts_dir and os.path.exists(ai_setup_work_efforts_dir) and os.path.isdir(ai_setup_work_efforts_dir)
+
+    # If all exist, inform the user and exit
+    if ai_setup_exists and work_efforts_exists and ai_setup_work_efforts_exists:
+        print("\n✅ AI-Setup is already completely installed in this directory")
         print(f"- .AI-Setup folder exists at: {ai_setup_dir}")
-        print(f"- work_efforts folder exists at: {work_efforts_dir}")
+        print(f"- Root work_efforts folder exists at: {work_efforts_dir}")
+        print(f"- .AI-Setup/work_efforts folder exists at: {ai_setup_work_efforts_dir}")
         print("\nYou can use the following commands:")
         print("  ai-setup work_effort -i        - Create a new work effort interactively")
         print("  ai-setup list                  - List existing work efforts")
         return 0
 
     # Report what will be installed
-    if not ai_setup_exists and not work_efforts_exists:
-        print("\n🔍 No AI-Setup components found. Will install:")
+    if not ai_setup_exists:
+        print("\n🔍 No .AI-Setup folder found. Will install:")
         print("- .AI-Setup folder for AI contextual information")
-        print("- work_efforts directory structure for tracking tasks")
-    elif not ai_setup_exists:
-        print("\n🔍 Found existing work_efforts directory but no .AI-Setup folder.")
-        print("- Will install .AI-Setup folder for AI contextual information")
-    elif not work_efforts_exists:
-        print("\n🔍 Found existing .AI-Setup folder but no work_efforts directory.")
-        print("- Will install work_efforts directory structure for tracking tasks")
+        print("- .AI-Setup/work_efforts directory for tracking tasks")
+
+    if not work_efforts_exists:
+        print("- Root work_efforts directory for backward compatibility")
+
+    if ai_setup_exists and not ai_setup_work_efforts_exists:
+        print("\n🔍 Found existing .AI-Setup folder but no work_efforts directory inside it.")
+        print("- Will install .AI-Setup/work_efforts directory for tracking tasks")
 
     print("\n📦 Installing missing components...")
 
-    # Create the work_efforts folder structure if needed
+    # Create the root work_efforts folder structure if needed (for backward compatibility)
     if not work_efforts_exists:
-        work_efforts_dir, template_path, active_dir, completed_dir, archived_dir = setup_work_efforts_structure(current_dir)
-        create_template_if_missing(template_path)
+        root_work_efforts_dir, root_template_path, root_active_dir, _, _ = setup_work_efforts_structure(current_dir)
+        create_template_if_missing(root_template_path)
 
         # Create a default work effort in the active directory
         file_path = create_work_effort(
@@ -664,26 +754,48 @@ async def setup_ai_in_current_dir():
             assignee="self",
             priority="medium",
             due_date=datetime.now().strftime("%Y-%m-%d"),
-            template_path=template_path,
-            target_dir=active_dir
+            template_path=root_template_path,
+            target_dir=root_active_dir
         )
-        print(f"✅ Work efforts directory created at: {work_efforts_dir}")
+        print(f"✅ Root work efforts directory created at: {root_work_efforts_dir}")
         if file_path:
             print(f"✅ Default work effort created at: {file_path}")
     else:
-        # If work_efforts exists, just get the paths without creating anything
-        work_efforts_dir, template_path, active_dir, completed_dir, archived_dir = setup_work_efforts_structure(current_dir, create_dirs=False)
-        print(f"ℹ️ Using existing work efforts directory at: {work_efforts_dir}")
+        print(f"ℹ️ Using existing root work efforts directory at: {work_efforts_dir}")
 
     # Create the AI-Setup folder if needed
     if not ai_setup_exists:
         try:
             create_ai_setup(current_dir)
             print(f"✅ AI-Setup folder created at: {ai_setup_dir}")
+
+            # Verify the work_efforts folder was created and create it if missing
+            ai_setup_work_efforts_dir = os.path.join(ai_setup_dir, "work_efforts")
+            if not os.path.exists(ai_setup_work_efforts_dir):
+                _, template_path, _, _, _ = setup_work_efforts_structure(current_dir, in_ai_setup=True)
+                create_template_if_missing(template_path)
+                print(f"✅ Work efforts directory created inside .AI-Setup folder")
         except Exception as e:
             print(f"⚠️ AI setup encountered an issue: {str(e)}")
     else:
         print(f"ℹ️ Using existing AI-Setup folder at: {ai_setup_dir}")
+
+        # If .AI-Setup exists but doesn't have work_efforts, create it
+        if not ai_setup_work_efforts_exists:
+            _, template_path, _, _, _ = setup_work_efforts_structure(current_dir, in_ai_setup=True)
+            create_template_if_missing(template_path)
+            print(f"✅ Work efforts directory created inside .AI-Setup folder")
+
+    # Final verification
+    ai_setup_work_efforts_dir = os.path.join(ai_setup_dir, "work_efforts")
+    if not os.path.exists(ai_setup_work_efforts_dir):
+        _, template_path, _, _, _ = setup_work_efforts_structure(current_dir, in_ai_setup=True)
+        create_template_if_missing(template_path)
+    else:
+        # Ensure template exists
+        ai_template_path = os.path.join(ai_setup_work_efforts_dir, "templates", "work-effort-template.md")
+        if not os.path.exists(ai_template_path):
+            create_template_if_missing(ai_template_path)
 
     print(f"\n✅ Setup completed in: {current_dir}")
     print("\nYou can now use the following commands:")
@@ -810,11 +922,17 @@ def parse_arguments():
     parser.add_argument("--model", default="phi3", help="Ollama model to use for content generation (with --use-ai)")
     parser.add_argument("--timeout", type=int, default=30,
                         help="Timeout in seconds for AI content generation (default: 30)")
+    parser.add_argument("-v", "--version", action="store_true", help="Show the version number and exit")
     parser.add_argument("command", nargs="?", help="Command to run (setup, work, list, select)")
     return parser.parse_args()
 
 async def main():
     args = parse_arguments()
+
+    # Handle version flag
+    if args.version:
+        print(f"AI-Setup version {__version__}")
+        return 0
 
     # If run with no args, automatically check for existing components and set up as needed
     if not args.command and not args.interactive:

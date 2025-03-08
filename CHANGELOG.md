@@ -2,6 +2,34 @@
 
 All notable changes to the AI-Setup project will be documented in this file.
 
+## [0.4.0] - 2025-03-08
+
+### Added
+- Enhanced testing to verify proper installation in various locations
+- Updated setup_ai_in_current_dir function for more reliable initialization
+- Added verification steps to create missing template files if needed
+- Added `--version` and `-v` flags to display the current version of the package
+
+### Changed
+- Improved code cleanup by removing debug prints
+- Enhanced error handling for more robust installation
+- Updated installation and uninstallation functionality
+- Better handling of edge cases in template creation
+- Simplified version display in CLI
+
+## [0.3.0] - 2025-03-08
+
+### Added
+- Added work_efforts folder inside the .AI-Setup directory
+- Included work effort scripts in the .AI-Setup/work_efforts/scripts folder
+- Added parameter to setup_work_efforts_structure function to support the new location
+- Updated documentation to reflect the new structure
+
+### Changed
+- Updated version number to 0.3.0 for consistency across all files
+- Improved AI-Setup folder structure with more comprehensive documentation
+- Enhanced organization of work effort scripts and templates
+
 ## [0.2.1] - 2024-03-07
 
 ### Changed
