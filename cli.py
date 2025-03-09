@@ -481,7 +481,7 @@ ai-setup work_effort -i
 
 For enhanced features like AI content generation:
 ```
-ai-work-effort -i
+cc-worke -i
 ```
 
 List all work efforts:
@@ -1063,4 +1063,5 @@ def show_instructions():
     print("  code-conductor work_effort -i        - Create a new work effort interactively")
     print("  code-conductor list                  - List existing work efforts")
     print("  code-conductor setup                 - Set up AI assistance in the current directory")
+    print("  cc-worke -i                         - Create a work effort with enhanced features")
     print("\nFor more details, run: code-conductor help")

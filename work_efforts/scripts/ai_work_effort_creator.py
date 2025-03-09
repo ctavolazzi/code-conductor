@@ -267,13 +267,69 @@ async def generate_content_with_ollama(description: str, model: str = "phi3", ti
 
     return None
 
-def create_work_effort(title, assignee, priority, due_date, content=None):
+# Function to support creating work efforts in the current directory
+def get_active_directory(use_current_dir=False):
+    """Get the directory where the work effort should be created.
+
+    Args:
+        use_current_dir: If True, use the current working directory
+
+    Returns:
+        Path to the directory where the work effort should be created
+    """
+    if use_current_dir:
+        current_dir = os.getcwd()
+        # Create a work_efforts/active directory in the current directory if it doesn't exist
+        work_efforts_dir = os.path.join(current_dir, "work_efforts")
+        active_dir = os.path.join(work_efforts_dir, "active")
+        templates_dir = os.path.join(work_efforts_dir, "templates")
+
+        # Create required directories
+        os.makedirs(active_dir, exist_ok=True)
+        os.makedirs(templates_dir, exist_ok=True)
+
+        return active_dir
+    return ACTIVE_PATH
+
+def get_template_path(use_current_dir=False):
+    """Get the path to the template file, creating it if necessary.
+
+    Args:
+        use_current_dir: If True, use a template in the current directory
+
+    Returns:
+        Path to the template file
+    """
+    if use_current_dir:
+        current_dir = os.getcwd()
+        templates_dir = os.path.join(current_dir, "work_efforts", "templates")
+        local_template_path = os.path.join(templates_dir, "work-effort-template.md")
+
+        # If the template doesn't exist in the current directory, copy it from the package
+        if not os.path.exists(local_template_path):
+            # Create the template file if it doesn't exist
+            with open(TEMPLATE_PATH, "r") as src_template:
+                template_content = src_template.read()
+
+            with open(local_template_path, "w") as dest_template:
+                dest_template.write(template_content)
+
+            print(f"Created template file at: {local_template_path}")
+
+        return local_template_path
+    return TEMPLATE_PATH
+
+def create_work_effort(title, assignee, priority, due_date, content=None, use_current_dir=False):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
     filename_timestamp = datetime.now().strftime("%Y%m%d%H%M")
     filename = f"{filename_timestamp}_{title.lower().replace(' ', '_')}.md"
-    file_path = os.path.join(ACTIVE_PATH, filename)
 
-    with open(TEMPLATE_PATH, "r") as template_file:
+    # Get the appropriate active directory and template path
+    active_dir = get_active_directory(use_current_dir)
+    template_path = get_template_path(use_current_dir)
+    file_path = os.path.join(active_dir, filename)
+
+    with open(template_path, "r") as template_file:
         template_content = template_file.read()
 
     # Replace template variables
@@ -330,6 +386,8 @@ def parse_arguments():
                         help="Ollama model to use for content generation (with --use-ai)")
     parser.add_argument("--timeout", type=int, default=DEFAULT_TIMEOUT,
                         help=f"Timeout in seconds for AI content generation (default: {DEFAULT_TIMEOUT})")
+    parser.add_argument("--current-dir", action="store_true",
+                        help="Create work effort in current directory (default: False)")
     return parser.parse_args()
 
 # Non-async entry point for the console script
@@ -357,6 +415,9 @@ async def main_async():
 
         due_date_input = input(f"Enter due date (YYYY-MM-DD) [{args.due_date}]: ")
         due_date = due_date_input if due_date_input.strip() else args.due_date
+
+        use_current_dir_input = input("Create in current directory? (y/N): [default: NO] ")
+        use_current_dir = use_current_dir_input.lower() in ('y', 'yes')
 
         # Ask if user wants to use AI content generation
         use_ai_input = input("Use AI to generate content? (y/N): [default: NO] ")
@@ -387,14 +448,24 @@ async def main_async():
         assignee = args.assignee
         priority = args.priority
         due_date = args.due_date
+        use_current_dir = args.current_dir
 
         # Only use AI if specifically requested with --use-ai flag
         if args.use_ai and args.description:
             ai_content = await generate_content_with_ollama(args.description, args.model, args.timeout)
 
-        print(f"Creating work effort with title: {title}, assignee: {assignee}, priority: {priority}, due date: {due_date}")
+        # If no arguments were provided (using defaults), assume the user wants it in the current directory
+        if (title == "Untitled" and assignee == "self" and
+            priority == "medium" and due_date == datetime.now().strftime("%Y-%m-%d") and
+            not args.use_ai and not args.current_dir):
+            use_current_dir = True
+            print("No options specified, creating default work effort in current directory.")
 
-    create_work_effort(title, assignee, priority, due_date, ai_content)
+        print(f"Creating work effort with title: {title}, assignee: {assignee}, priority: {priority}, due date: {due_date}")
+        if use_current_dir:
+            print("Creating in current working directory")
+
+    create_work_effort(title, assignee, priority, due_date, ai_content, use_current_dir)
 
 if __name__ == "__main__":
     asyncio.run(main_async())

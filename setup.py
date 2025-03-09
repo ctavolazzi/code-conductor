@@ -21,7 +21,7 @@ setup(
     entry_points={
         "console_scripts": [
             "code-conductor=cli:main_entry",
-            "code-work-effort=work_efforts.scripts.ai_work_effort_creator:main",
+            "cc-worke=work_efforts.scripts.ai_work_effort_creator:main",
         ],
     },
     install_requires=[

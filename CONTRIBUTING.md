@@ -13,7 +13,6 @@ Thanks for your interest in contributing to AI-Setup! This document provides gui
 ## Code Style
 
 - Follow PEP 8 style guidelines for Python code
-- Use 4 spaces for indentation (no tabs)
 - Include docstrings for all functions, classes, and modules
 - Write clear commit messages
 
