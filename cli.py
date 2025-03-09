@@ -5,8 +5,8 @@ import argparse
 import asyncio
 from datetime import datetime
 
-# Add version info
-__version__ = "0.4.0"
+# Update version references
+VERSION = "0.4.1"
 
 # Re-import the necessary AI setup modules
 try:
@@ -931,7 +931,7 @@ async def main():
 
     # Handle version flag
     if args.version:
-        print(f"AI-Setup version {__version__}")
+        print(f"Code Conductor version {VERSION}")
         return 0
 
     # If run with no args, automatically check for existing components and set up as needed
@@ -945,29 +945,17 @@ async def main():
     # Check for commands
     if args.command:
         if args.command.lower() in ['-h', '--help', 'help']:
-            print("\nAI-Setup and Work Effort Tracker")
-            print("===============================")
+            print("\nCode Conductor - AI Development Environment Setup Tool")
+            print(f"Version: {VERSION}")
             print("\nCommands:")
-            print("  work_effort           - Create a new work effort to track tasks and progress")
-            print("  list                  - List all existing work efforts")
-            print("  select                - Select directories to set up AI assistance")
-            print("  setup                 - Set up AI assistance in the current directory")
-            print("  help                  - Show this help message")
-            print("\nExamples:")
-            print("  python cli.py work_effort -i               - Create a work effort interactively")
-            print("  python cli.py work_effort --title \"Feature\" - Create a work effort with a specific title")
-            print("  python cli.py list                         - List all work efforts")
-            print("\nOptions:")
-            print("  --title TITLE                   - Title for the work effort")
-            print("  --assignee NAME                 - Assignee for the work effort")
-            print("  --priority {low,medium,high,critical}")
-            print("                                  - Priority level")
-            print("  --due-date YYYY-MM-DD           - Due date")
-            print("  -i, --interactive               - Run in interactive mode")
-            print("  --use-ai                        - Use AI to generate content")
-            print("  --description \"Description\"     - Description for AI content generation")
-            print("  --model MODEL                   - Ollama model to use (default: phi3)")
-            print("  --timeout TIMEOUT               - Timeout in seconds for AI content generation")
+            print("  code-conductor setup              - Set up AI assistance in the current directory")
+            print("  code-conductor work_effort        - Create a new work effort")
+            print("  code-conductor work_effort -i     - Create a new work effort interactively")
+            print("  code-conductor list               - List existing work efforts")
+            print("  code-conductor update-status      - Update the status of a work effort")
+            print("  code-conductor help               - Show this help text")
+            print("  code-conductor version            - Show the version number")
+            print("\nFor more information, visit: https://github.com/ctavolazzi/code-conductor")
             return 0
 
         # Current directory check
@@ -1064,3 +1052,15 @@ def main_entry():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+def print_version():
+    """Print the version number."""
+    print(f"Code Conductor version {VERSION}")
+
+def show_instructions():
+    """Show usage instructions."""
+    print("\nUsage Instructions:")
+    print("  code-conductor work_effort -i        - Create a new work effort interactively")
+    print("  code-conductor list                  - List existing work efforts")
+    print("  code-conductor setup                 - Set up AI assistance in the current directory")
+    print("\nFor more details, run: code-conductor help")
