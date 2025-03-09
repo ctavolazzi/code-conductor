@@ -8,7 +8,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="code-conductor",
-    version="0.4.0",
+    version="0.4.1",
     description="Code Conductor toolkit for managing AI development environments and work efforts",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -20,8 +20,8 @@ setup(
     python_requires=">=3.7",
     entry_points={
         "console_scripts": [
-            "ai-setup=cli:main_entry",
-            "ai-work-effort=work_efforts.scripts.ai_work_effort_creator:main",
+            "code-conductor=cli:main_entry",
+            "code-work-effort=work_efforts.scripts.ai_work_effort_creator:main",
         ],
     },
     install_requires=[

@@ -4,7 +4,7 @@ Code Conductor is a toolkit for setting up AI-assisted development environments 
 
 ## Version
 
-Current version: 0.4.0
+Current version: 0.4.1
 
 ## Features
 
@@ -35,10 +35,10 @@ To install the package globally on macOS so you can use it from any directory:
 
 ```bash
 # Install the package system-wide (requires administrator privileges)
-sudo pip3 install -e /path/to/ai_setup
+sudo pip3 install -e /path/to/code-conductor
 
 # Or install for the current user only
-pip3 install -e /path/to/ai_setup --user
+pip3 install -e /path/to/code-conductor --user
 ```
 
 If you install with `--user`, you may need to add the Python user bin directory to your PATH:
@@ -59,32 +59,32 @@ source ~/.zshrc  # or source ~/.bash_profile
 
 ```bash
 # Set up AI assistance in current directory
-ai-setup setup
+code-conductor setup
 
 # Create a new work effort
-ai-setup work_effort
+code-conductor work_effort
 
 # List all work efforts
-ai-setup list
+code-conductor list
 
 # Select directories to set up
-ai-setup select
+code-conductor select
 ```
 
 ### Creating Work Efforts
 
 ```bash
 # Interactive mode
-ai-setup work_effort -i
+code-conductor work_effort -i
 
 # With specific details
-ai-setup work_effort --title "New Feature" --priority high
+code-conductor work_effort --title "New Feature" --priority high
 
-# Using the enhanced AI work effort creator
-ai-work-effort -i
+# Using the enhanced work effort creator
+code-work-effort -i
 
 # With AI content generation (requires Ollama)
-ai-work-effort --use-ai --description "Implement authentication system" --model phi3
+code-work-effort --use-ai --description "Implement authentication system" --model phi3
 ```
 
 Note: AI content generation is OFF by default. Use the `--use-ai` flag to enable it.
