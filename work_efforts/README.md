@@ -15,20 +15,20 @@ Run the CLI tool to manage work efforts:
 
 ```bash
 # Set up in current directory
-python cli.py
+code-conductor setup
 
 # Create a new work effort interactively
-python cli.py work
+code-conductor work_effort
 
 # List all work efforts
-python cli.py list
+code-conductor list
 
 # Select directories to set up
-python cli.py select
+code-conductor select
 ```
 
 You can also use the thought process simulator for AI-generated content by providing a description:
 
 ```bash
-python cli.py work --description "Implement new feature X with responsive UI"
+cc-worke --use-ai --description "Implement new feature X with responsive UI"
 ```
