@@ -4,6 +4,10 @@ All notable changes to the Code Conductor project will be documented in this fil
 
 ## [0.4.1] - 2025-03-09
 
+### Added
+- Added ability to create default work efforts in the current directory when running `cc-worke` without flags
+- Improved usability with simpler command name `cc-worke`
+
 ### Fixed
 - Fixed entry points to use the new command names (`code-conductor` and `cc-worke`)
 - Updated package structure for better consistency with the new name
