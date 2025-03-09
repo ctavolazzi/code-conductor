@@ -1,10 +1,23 @@
 # Changelog
 
-All notable changes to the AI-Setup project will be documented in this file.
+All notable changes to the Code Conductor project will be documented in this file.
 
-## [0.4.0] - 2025-03-08
+## [0.4.1] - 2025-03-09
+
+### Fixed
+- Fixed entry points to use the new command names (`code-conductor` and `code-work-effort`)
+- Updated package structure for better consistency with the new name
+
+## [0.4.0] - 2025-03-09
 
 ### Added
+- Initial public release as Code Conductor
+- Renamed commands to `code-conductor` and `code-work-effort`
+- Fully functional work effort management system
+- Comprehensive CLI tools
+- Project template creation and management
+- Support for AI-generated work effort content
+- Improved documentation and examples
 - Enhanced testing to verify proper installation in various locations
 - Updated setup_ai_in_current_dir function for more reliable initialization
 - Added verification steps to create missing template files if needed
