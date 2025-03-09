@@ -25,6 +25,8 @@ wheels/
 *.egg
 
 # PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
 
@@ -53,6 +55,16 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+myenv/
+
+# Log files
+*.log
+
+# Test reports directory
+test_reports/
+
+# Custom
+*.test_temp
 
 # IDE specific files
 .idea/

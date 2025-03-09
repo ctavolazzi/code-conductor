@@ -7,12 +7,41 @@ source ./test_utils.sh
 # Global variables for tracking test runs
 MODIFIED_SCRIPTS=()  # Track modified scripts for cleanup
 
+# Function to limit log file size (truncate if too large)
+limit_log_output() {
+    local log_content="$1"
+    local max_size_kb=${2:-500}  # Default to 500KB max size
+
+    # Calculate rough size (character count as a rough estimation)
+    local log_size_chars=${#log_content}
+    local max_size_chars=$((max_size_kb * 1024))
+
+    # Check if log content exceeds max size
+    if [ $log_size_chars -gt $max_size_chars ]; then
+        # Calculate how much to keep from beginning and end
+        local third=$((max_size_chars / 3))
+        local beginning=${log_content:0:$third}
+        local ending=${log_content: -$third}
+
+        # Truncate the middle
+        echo "$beginning"
+        echo "..."
+        echo "[...LOG TRUNCATED FOR SIZE ($(($log_size_chars / 1024))KB) - SHOWING FIRST AND LAST PARTS ONLY...]"
+        echo "..."
+        echo "$ending"
+    else
+        # Return the original content if it's under the limit
+        echo "$log_content"
+    fi
+}
+
 # Function to run a test with timeout and add to report
 run_test() {
     local test_name="$1"
     local test_command="$2"
     local test_type="$3"
     local timeout_seconds="${4:-$MAX_TEST_TIME}"  # Use default if not specified
+    local max_log_size_kb="${5:-500}"  # Maximum log size in KB (default: 500KB)
 
     print_header "Running $test_name"
     echo "Command: $test_command"
@@ -22,6 +51,7 @@ run_test() {
     debug_print "Command: $test_command"
     debug_print "Type: $test_type"
     debug_print "Timeout: ${timeout_seconds}s"
+    debug_print "Max log size: ${max_log_size_kb}KB"
 
     # Add test to report
     echo "## $test_name" >> "$REPORT_FILE"
@@ -387,7 +417,7 @@ run_tests_from_array() {
         fi
 
         # Run the test
-        if run_test "$test_name" "$test_command" "$test_type" $MAX_TEST_TIME; then
+        if run_test "$test_name" "$test_command" "$test_type" $MAX_TEST_TIME $MAX_LOG_SIZE_KB; then
             passed_count=$((passed_count + 1))
             PASSED_TESTS=$((PASSED_TESTS + 1))
         else
