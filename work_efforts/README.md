@@ -30,5 +30,5 @@ code-conductor select
 You can also use the thought process simulator for AI-generated content by providing a description:
 
 ```bash
-cc-worke --use-ai --description "Implement new feature X with responsive UI"
+cc-work-e --use-ai --description "Implement new feature X with responsive UI"
 ```

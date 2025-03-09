@@ -1,0 +1,18 @@
+$ ./test_config_system.sh.test_temp
+----------------------------------------
+
+[0;34mCreating test directory structure[0m
+==================================
+
+[0;34mTest 1: Initialize project with code-conductor setup --no-input[0m
+==================================
+Running code-conductor setup --no-input in /Users/ctavolazzi/Code/code_conductor/config_system_test
+usage: code-conductor [-h] [-v] [-i] [--title TITLE] [--assignee ASSIGNEE]
+                      [--priority {low,medium,high,critical}]
+                      [--due-date DUE_DATE] [--use-ai]
+                      [--description DESCRIPTION] [--model MODEL]
+                      [--timeout TIMEOUT] [--manager MANAGER]
+                      [--manager-name MANAGER_NAME] [--target-dir TARGET_DIR]
+                      [command]
+code-conductor: error: unrecognized arguments: --no-input
+[0;31m❌ Config file not created at /Users/ctavolazzi/Code/code_conductor/config_system_test/.AI-Setup/config.json[0m

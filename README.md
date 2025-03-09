@@ -4,7 +4,7 @@ Code Conductor is a toolkit for setting up AI-assisted development environments 
 
 ## Version
 
-Current version: 0.4.1
+Current version: 0.4.2
 
 ## Features
 
@@ -80,14 +80,23 @@ code-conductor work_effort -i
 # With specific details
 code-conductor work_effort --title "New Feature" --priority high
 
-# Using the enhanced work effort creator
-cc-worke -i
+# Using the work effort creator (quick shorthand)
+cc-work-e -i
+
+# Create in current directory explicitly
+cc-work-e --current-dir
+
+# Create in package directory explicitly
+cc-work-e --package-dir
 
 # With AI content generation (requires Ollama)
-cc-worke --use-ai --description "Implement authentication system" --model phi3
+cc-work-e --use-ai --description "Implement authentication system" --model phi3
 ```
 
-Note: AI content generation is OFF by default. Use the `--use-ai` flag to enable it.
+Note:
+- AI content generation is OFF by default. Use the `--use-ai` flag to enable it.
+- `cc-work-e` creates work efforts in the current directory by default when using no parameters.
+- Use `--current-dir` or `--package-dir` to explicitly specify where to create work efforts.
 
 ## Changelog
 

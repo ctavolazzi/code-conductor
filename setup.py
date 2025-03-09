@@ -6,9 +6,13 @@ import shutil
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+# Read the requirements.txt file
+with open('requirements.txt') as f:
+    required = f.read().splitlines()
+
 setup(
     name="code-conductor",
-    version="0.4.1",
+    version="0.4.5",
     description="Code Conductor toolkit for managing AI development environments and work efforts",
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -20,14 +24,11 @@ setup(
     python_requires=">=3.7",
     entry_points={
         "console_scripts": [
-            "code-conductor=cli:main_entry",
-            "cc-worke=work_efforts.scripts.ai_work_effort_creator:main",
+            "code-conductor=cli:main",
+            "cc-work-e=work_efforts.scripts.ai_work_effort_creator:main",
         ],
     },
-    install_requires=[
-        "requests",
-        "asyncio",
-    ],
+    install_requires=required,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -35,4 +36,7 @@ setup(
         "Development Status :: 3 - Alpha",
     ],
     include_package_data=True,
+    package_data={
+        '': ['templates/*.*', 'templates/**/*.*'],
+    },
 )

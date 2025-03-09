@@ -1,0 +1,20 @@
+$ ./simple_version_test.sh.test_temp
+----------------------------------------
+
+[0;34mTesting code-conductor version command[0m
+==================================
+[0;32m✅ Version command executed successfully[0m
+Output: Code Conductor version 0.4.3
+
+[0;34mTesting code-conductor help command[0m
+==================================
+[0;32m✅ Help command executed successfully[0m
+First 5 lines of output: 
+Code Conductor - AI Development Environment Setup Tool
+Version: 0.4.3
+
+Commands:
+
+[0;34mTest Summary[0m
+==================================
+[0;32m✅ All simple tests passed![0m
