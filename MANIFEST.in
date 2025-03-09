@@ -1,2 +1,8 @@
 include .AI-Setup/*.md
 recursive-include .AI-Setup *
+include README.md
+include LICENSE
+include CHANGELOG.md
+include requirements.txt
+recursive-include templates *
+recursive-include work_efforts/templates *

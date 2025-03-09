@@ -1,10 +1,10 @@
-# AI-Setup
+# AI-DevKit
 
-AI-Setup is a toolkit for setting up AI-assisted development environments and managing work efforts.
+AI-DevKit is a toolkit for setting up AI-assisted development environments and managing work efforts.
 
 ## Version
 
-Current version: 0.2.3
+Current version: 0.4.0
 
 ## Features
 
@@ -15,13 +15,17 @@ Current version: 0.2.3
 
 ## Installation
 
+```bash
+pip install ai-devkit
+```
+
 ### Local Development
 
 Clone the repository and install:
 
 ```bash
-git clone https://github.com/username/ai_setup.git
-cd ai_setup
+git clone https://github.com/ctavolazzi/ai-devkit.git
+cd ai-devkit
 pip install -e .
 ```
 
