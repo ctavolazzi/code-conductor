@@ -1,6 +1,6 @@
-# AI-DevKit
+# Code Conductor
 
-AI-DevKit is a toolkit for setting up AI-assisted development environments and managing work efforts.
+Code Conductor is a toolkit for setting up AI-assisted development environments and managing work efforts.
 
 ## Version
 
@@ -16,7 +16,7 @@ Current version: 0.4.0
 ## Installation
 
 ```bash
-pip install ai-devkit
+pip install code-conductor
 ```
 
 ### Local Development
@@ -24,8 +24,8 @@ pip install ai-devkit
 Clone the repository and install:
 
 ```bash
-git clone https://github.com/ctavolazzi/ai-devkit.git
-cd ai-devkit
+git clone https://github.com/ctavolazzi/code-conductor.git
+cd code-conductor
 pip install -e .
 ```
 
