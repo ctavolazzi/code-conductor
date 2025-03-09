@@ -7,14 +7,14 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setup(
-    name="ai-devkit",
+    name="code-conductor",
     version="0.4.0",
-    description="AI-DevKit toolkit for managing AI development environments and work efforts",
+    description="Code Conductor toolkit for managing AI development environments and work efforts",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    author="AI-DevKit Team",
+    author="Code Conductor Team",
     author_email="ctavolazzi@gmail.com",  # Replace with your email
-    url="https://github.com/ctavolazzi/ai-devkit",
+    url="https://github.com/ctavolazzi/code-conductor",
     py_modules=["cli"],
     packages=find_packages(),
     python_requires=">=3.7",

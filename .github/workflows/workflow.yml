@@ -1,4 +1,4 @@
-name: Publish AI-DevKit to PyPI
+name: Publish Code Conductor to PyPI
 
 on:
   release:
