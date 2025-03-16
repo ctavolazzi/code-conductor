@@ -365,3 +365,39 @@ These findings will help make the Work Effort Manager more robust and reliable b
 - Only need to update the version in one place for future releases
 - Improved code maintenance and version tracking
 - Clear documentation for future developers
+
+## 2025-03-16: Project Restructuring and Package Improvements
+
+### Development Plan
+1. Implement a proper package structure with a `src` directory layout
+2. Fix import paths and package installation to avoid manual PYTHONPATH setting
+3. Improve PWD (current working directory) handling for work effort commands
+4. Enhance user messaging for directory search and work effort creation
+5. Fix work effort listing to properly detect and display work efforts in subdirectories
+
+### Progress
+- Restructured project into a proper package layout with a `src` directory
+- Modified `setup.py` to:
+  - Correctly reference the new directory structure
+  - Update entry points to point to the proper module paths
+  - Fix version reference location
+- Improved import handling in CLI module:
+  - Made package imports more robust with fallbacks
+  - Fixed module imports to use proper package paths
+- Enhanced PWD handling:
+  - Made CLI commands use the current directory by default
+  - Improved work_efforts search with clear messaging about paths
+  - Added verbose output for directory searching
+- Improved user experience:
+  - Added clear messaging when no work effort folder is found
+  - Shows exact path where new folders would be created
+  - Provides options to create or skip folder creation
+- Fixed work effort listing:
+  - Updated `list_work_efforts` to show work efforts in subdirectories
+  - Added support for listing archived work efforts
+  - Improved directory checking and file discovery
+
+### Next Steps
+- Consider adding a configuration option to set a default work effort directory
+- Add more comprehensive tests for the restructured package
+- Update documentation to reflect the new package structure

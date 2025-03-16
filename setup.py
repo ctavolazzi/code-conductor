@@ -11,8 +11,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
 with open('requirements.txt') as f:
     required = f.read().splitlines()
 
-# Get version from root package __init__.py
-with open('code_conductor/__init__.py', 'r') as f:
+# Get version from package __init__.py
+with open('src/code_conductor/__init__.py', 'r') as f:
     version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
 
 setup(
@@ -24,13 +24,13 @@ setup(
     author="Code Conductor Team",
     author_email="ctavolazzi@gmail.com",  # Replace with your email
     url="https://github.com/ctavolazzi/code-conductor",
-    py_modules=["cli"],
-    packages=find_packages(),
+    package_dir={'': 'src'},
+    packages=find_packages(where='src'),
     python_requires=">=3.7",
     entry_points={
         "console_scripts": [
-            "code-conductor=cli:main",
-            "cc-work-e=work_efforts.scripts.ai_work_effort_creator:main",
+            "code-conductor=code_conductor.cli.cli:main_entry",
+            "cc-work-e=code_conductor.work_efforts.scripts.ai_work_effort_creator:main",
         ],
     },
     install_requires=required,
