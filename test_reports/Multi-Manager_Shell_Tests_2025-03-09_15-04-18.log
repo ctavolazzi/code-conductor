@@ -15,4 +15,4 @@ usage: code-conductor [-h] [-v] [-i] [--title TITLE] [--assignee ASSIGNEE]
                       [--manager-name MANAGER_NAME] [--target-dir TARGET_DIR]
                       [command]
 code-conductor: error: unrecognized arguments: --no-input
-[0;31m❌ Config file not created at /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/config.json[0m
+[0;31m❌ Config file not created at /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/config.json[0m

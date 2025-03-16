@@ -30,10 +30,10 @@ tags: ["enhancement", "usability", "configuration", "bugfix"]
 - [x] Update version number to 0.4.3
 
 ## 📝 Notes
-- The configuration system uses a config.json file in the .AI-Setup directory
-- Default configuration specifies work efforts should be in .AI-Setup/work_efforts
+- The configuration system uses a config.json file in the _AI-Setup directory
+- Default configuration specifies work efforts should be in _AI-Setup/work_efforts
 - Configuration is discovered by walking up the directory tree
-- Scripts are correctly copied into the .AI-Setup/work_efforts/scripts directory
+- Scripts are correctly copied into the _AI-Setup/work_efforts/scripts directory
 - Help messages have been updated to indicate work effort location
 
 ### Key Configuration Features

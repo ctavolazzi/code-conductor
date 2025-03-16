@@ -40,7 +40,7 @@ cc-work-e
 
 Code Conductor creates the following structure:
 ```
-.AI-Setup/
+_AI-Setup/
 ├── work_effort/               # Main storage for all work efforts
 │   ├── active/                # In-progress work efforts
 │   ├── archived/              # Historical work efforts
@@ -70,14 +70,14 @@ Code Conductor creates the following structure:
 
 ## Next Steps
 
-1. Review the [Workflow Process](.AI-Setup/work_efforts/active/202503160710_versioned_workflow_process.md)
+1. Review the [Workflow Process](_AI-Setup/work_efforts/active/202503160710_versioned_workflow_process.md)
 2. Explore the [Work Node Feature](./work_node_README.md)
-3. Check out [Obsidian-style Linking](.AI-Setup/work_efforts/active/202503160633_obsidian_style_document_linking.md)
+3. Check out [Obsidian-style Linking](_AI-Setup/work_efforts/active/202503160633_obsidian_style_document_linking.md)
 
 ## Troubleshooting
 
 - Ensure Python 3.8+ is installed
 - Check that the Code Conductor package is in your PATH
-- Work efforts should always be created in a directory with a `.AI-Setup` folder
+- Work efforts should always be created in a directory with a `_AI-Setup` folder
 
 For more detailed information, refer to the full documentation in the project README.md.

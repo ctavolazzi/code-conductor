@@ -71,7 +71,7 @@ class TestWorkNodeManager(unittest.TestCase):
     def setUp(self):
         """Set up a temporary directory for testing."""
         self.temp_dir = tempfile.mkdtemp()
-        self.work_dir = os.path.join(self.temp_dir, '.AI-Setup', 'work_effort')
+        self.work_dir = os.path.join(self.temp_dir, '_AI-Setup', 'work_effort')
         os.makedirs(self.work_dir, exist_ok=True)
 
         # Create some test documents

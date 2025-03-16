@@ -8,10 +8,10 @@
     {
       "name": "config_system_test",
       "path": ".",
-      "work_efforts_dir": ".AI-Setup/work_efforts",
+      "work_efforts_dir": "_AI-Setup/work_efforts",
       "use_manager": true,
-      "manager_script": ".AI-Setup/work_efforts/scripts/work_effort_manager.py",
-      "runner_script": ".AI-Setup/work_efforts/scripts/run_work_effort_manager.py",
+      "manager_script": "_AI-Setup/work_efforts/scripts/work_effort_manager.py",
+      "runner_script": "_AI-Setup/work_efforts/scripts/run_work_effort_manager.py",
       "auto_start": true
     }
   ],

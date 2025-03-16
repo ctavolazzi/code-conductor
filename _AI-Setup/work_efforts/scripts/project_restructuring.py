@@ -137,20 +137,20 @@ DIR_COPY_MAPPING = {
     "templates": "src/code_conductor/templates"
 }
 
-# Special handling for .AI-Setup directory with proper directory checks
+# Special handling for _AI-Setup directory with proper directory checks
 AI_SETUP_MAPPING = {
     # These are files
-    ".AI-Setup/AI-setup-instructions.md": "docs/usage/AI-setup-instructions.md",
-    ".AI-Setup/AI-work-effort-system.md": "docs/usage/AI-work-effort-system.md",
-    ".AI-Setup/AI-setup-validation-instructions.md": "docs/usage/AI-setup-validation-instructions.md",
-    ".AI-Setup/INSTRUCTIONS.md": "docs/usage/AI-setup-INSTRUCTIONS.md",
-    ".AI-Setup/config.json": "src/code_conductor/config.json",
+    "_AI-Setup/AI-setup-instructions.md": "docs/usage/AI-setup-instructions.md",
+    "_AI-Setup/AI-work-effort-system.md": "docs/usage/AI-work-effort-system.md",
+    "_AI-Setup/AI-setup-validation-instructions.md": "docs/usage/AI-setup-validation-instructions.md",
+    "_AI-Setup/INSTRUCTIONS.md": "docs/usage/AI-setup-INSTRUCTIONS.md",
+    "_AI-Setup/config.json": "src/code_conductor/config.json",
 }
 
-# Directories in .AI-Setup to be copied
+# Directories in _AI-Setup to be copied
 AI_SETUP_DIR_MAPPING = {
-    ".AI-Setup/work_efforts": "src/code_conductor/work_efforts",
-    ".AI-Setup/release_notes": "docs/release_notes"
+    "_AI-Setup/work_efforts": "src/code_conductor/work_efforts",
+    "_AI-Setup/release_notes": "docs/release_notes"
 }
 
 # Directories to be potentially removed (only if empty after restructuring)
@@ -425,9 +425,11 @@ def create_readme_files(dry_run=False, verbose=False):
 
 
 def cleanup_files(moved_files, dry_run=False, verbose=False):
-    """Remove files that have been moved to the new structure."""
-    # Don't remove .AI-Setup contents since we're copying, not moving
-    files_to_remove = [f for f in moved_files.keys() if not f.startswith(".AI-Setup")]
+    """Remove original files that have been moved."""
+    logger.info("Cleaning up original files...")
+
+    # Don't remove _AI-Setup contents since we're copying, not moving
+    files_to_remove = [f for f in moved_files.keys() if not f.startswith("_AI-Setup")]
 
     for file in files_to_remove:
         if os.path.exists(file):
@@ -467,12 +469,12 @@ def main():
     logger.info("Copying directories...")
     copy_directories(DIR_COPY_MAPPING, args.dry_run, args.verbose, args.overwrite)
 
-    # Handle .AI-Setup directory - files only
-    logger.info("Processing .AI-Setup files...")
+    # Handle _AI-Setup directory - files only
+    logger.info("Processing _AI-Setup files...")
     move_files(AI_SETUP_MAPPING, args.dry_run, args.verbose, args.overwrite)
 
-    # Handle .AI-Setup directory - directories
-    logger.info("Processing .AI-Setup directories...")
+    # Handle _AI-Setup directory - directories
+    logger.info("Processing _AI-Setup directories...")
     copy_directories(AI_SETUP_DIR_MAPPING, args.dry_run, args.verbose, args.overwrite)
 
     # Update import statements

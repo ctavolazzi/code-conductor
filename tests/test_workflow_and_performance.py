@@ -54,7 +54,7 @@ class TestWorkflowScenarios(unittest.TestCase):
 
         # Create the directory structure that WorkEffortManager expects
         self.work_efforts_dir = os.path.join(self.test_dir, "work_efforts")
-        self.ai_setup_dir = os.path.join(self.test_dir, ".AI-Setup")
+        self.ai_setup_dir = os.path.join(self.test_dir, "_AI-Setup")
         os.makedirs(self.work_efforts_dir, exist_ok=True)
         os.makedirs(self.ai_setup_dir, exist_ok=True)
 
@@ -227,7 +227,7 @@ class TestPerformanceBenchmarks(unittest.TestCase):
 
         # Create the directory structure that WorkEffortManager expects
         self.work_efforts_dir = os.path.join(self.test_dir, "work_efforts")
-        self.ai_setup_dir = os.path.join(self.test_dir, ".AI-Setup")
+        self.ai_setup_dir = os.path.join(self.test_dir, "_AI-Setup")
         os.makedirs(self.work_efforts_dir, exist_ok=True)
         os.makedirs(self.ai_setup_dir, exist_ok=True)
 

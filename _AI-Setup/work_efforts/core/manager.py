@@ -142,10 +142,10 @@ class WorkEffortManager:
 
     def has_required_folders(self) -> bool:
         """
-        Check if the required folders exist.
+        Check if required folders exist.
 
         Returns:
-            True if both work_efforts and .AI-Setup folders exist
+            True if both work_efforts and _AI-Setup folders exist
         """
         return self.has_required_folders_flag
 
@@ -211,7 +211,7 @@ class WorkEffortManager:
         """
         # Check if required folders exist
         if not self.has_required_folders():
-            logger.error("Cannot create work effort: Required folders (work_efforts and .AI-Setup) not found")
+            logger.error("Cannot create work effort: Required folders (work_efforts and _AI-Setup) not found")
             return None
 
         # Create a timestamp for the filename

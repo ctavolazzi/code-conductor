@@ -41,7 +41,7 @@ tags: [bugfix, edge-cases, improvements]
 def create_work_effort(self, title: str, assignee: str, priority: str,
                       due_date: str, content: Dict = None, json_data: str = None) -> Optional[str]:
     """
-    Create a new work effort if both work_efforts and .AI-Setup folders exist.
+    Create a new work effort if both work_efforts and _AI-Setup folders exist.
 
     Args:
         title: Title of the work effort

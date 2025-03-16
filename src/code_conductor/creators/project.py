@@ -84,8 +84,8 @@ def setup_ai_assistance(project_dir, ai_provider="ollama", openai_api_key=None, 
     print("\nTo use AI assistance:")
     print("1. Open the project in an AI-powered editor like Cursor")
     print("2. Use the following files for AI assistance:")
-    print(f"  - {os.path.join(project_dir, '.AI-Setup/AI-setup-instructions.md')}")
-    print(f"  - {os.path.join(project_dir, '.AI-Setup/AI-work-effort-system.md')}")
+    print(f"  - {os.path.join(project_dir, '_AI-Setup/AI-setup-instructions.md')}")
+    print(f"  - {os.path.join(project_dir, '_AI-Setup/AI-work-effort-system.md')}")
 
 def setup_ollama_environment(model="phi4"):
     """

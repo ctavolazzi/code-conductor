@@ -13,11 +13,11 @@ related_efforts:
 
 ## Overview
 
-This update enhances the Workflow Runner Script to properly use the `.AI-Setup/work_efforts/scripts` directory for script creation. The original implementation created scripts in the root directory, but this update ensures all script files are generated in the appropriate directory structure.
+This update enhances the Workflow Runner Script to properly use the `_AI-Setup/work_efforts/scripts` directory for script creation. The original implementation created scripts in the root directory, but this update ensures all script files are generated in the appropriate directory structure.
 
 ## Goals
 
-- Ensure all generated script files are placed in the `.AI-Setup/work_efforts/scripts` directory
+- Ensure all generated script files are placed in the `_AI-Setup/work_efforts/scripts` directory
 - Fix issues with feature name parameter handling in non-interactive mode
 - Maintain the consistent workflow process while respecting project directory structure
 
@@ -62,4 +62,4 @@ The script was tested with the following scenarios:
 
 ## Conclusion
 
-The Workflow Runner Script now correctly utilizes the `.AI-Setup/work_efforts/scripts` directory for all script file creation, ensuring consistency with the project's organizational structure. This update maintains the automated workflow process while improving file organization and naming consistency.
+The Workflow Runner Script now correctly utilizes the `_AI-Setup/work_efforts/scripts` directory for all script file creation, ensuring consistency with the project's organizational structure. This update maintains the automated workflow process while improving file organization and naming consistency.

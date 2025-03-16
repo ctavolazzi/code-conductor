@@ -36,8 +36,8 @@ class TestWorkEffortManagerConfig(unittest.TestCase):
         # Create a temporary directory for testing
         self.test_dir = tempfile.mkdtemp()
 
-        # Create the .AI-Setup directory
-        self.ai_setup_dir = os.path.join(self.test_dir, '.AI-Setup')
+        # Create the _AI-Setup directory
+        self.ai_setup_dir = os.path.join(self.test_dir, '_AI-Setup')
         os.makedirs(self.ai_setup_dir, exist_ok=True)
 
         # Create work_efforts directory structure
@@ -246,7 +246,7 @@ class TestWorkEffortManagerConfig(unittest.TestCase):
         self.assertIn(due_date, content)
 
     def test_load_config_from_ai_setup(self):
-        """Test that the config can be loaded from the .AI-Setup directory by the run_work_effort_manager script."""
+        """Test that the config can be loaded from the _AI-Setup directory by the run_work_effort_manager script."""
         # Import the load_config_from_ai_setup function from run_work_effort_manager.py
         sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'work_efforts', 'scripts')))
         from run_work_effort_manager import load_config_from_ai_setup

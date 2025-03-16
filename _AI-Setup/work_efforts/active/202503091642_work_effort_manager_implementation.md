@@ -16,7 +16,7 @@ tags: [feature, refactor, v0.4.2]
 - Implement an event loop in the `WorkEffortManager` to handle project operations
 - Update the codebase to use the new `WorkEffortManager` for v0.4.2
 - Ensure backward compatibility with existing work effort functionality
-- Add validation to check for work_efforts and .AI-Setup folders before creating work efforts
+- Add validation to check for work_efforts and _AI-Setup folders before creating work efforts
 - Add JSON input/output capabilities for greater versatility
 - Implement advanced filtering and sorting of work efforts
 
@@ -25,7 +25,7 @@ tags: [feature, refactor, v0.4.2]
 - [x] Implement the `WorkEffortManager` class with appropriate methods
 - [x] Create an event loop to handle project operations
 - [x] Add functionality to instantiate and run the WorkEffortManager
-- [x] Add validation for required folders (work_efforts and .AI-Setup)
+- [x] Add validation for required folders (work_efforts and _AI-Setup)
 - [x] Implement JSON processing capabilities
 - [x] Add advanced filtering and sorting of work efforts
 - [ ] Write tests for the new functionality
@@ -40,7 +40,7 @@ tags: [feature, refactor, v0.4.2]
 - Implemented with a robust event system for extensibility
 - Includes file system monitoring for work effort changes
 - Provides a clean API for creating and managing work efforts
-- Added validation to check for both work_efforts and .AI-Setup folders
+- Added validation to check for both work_efforts and _AI-Setup folders
 - The manager will only create work efforts if both required folders are present
 - JSON processing added for configuration and work effort creation
 - Can accept configuration via JSON string, file, or dictionary
@@ -59,7 +59,7 @@ tags: [feature, refactor, v0.4.2]
 - Added handlers for work effort creation, updates, and status changes
 - Created a straightforward API for managing work efforts programmatically
 - Added validation to check for required folders before creating work efforts
-- Modified the manager to only proceed if both work_efforts and .AI-Setup folders exist
+- Modified the manager to only proceed if both work_efforts and _AI-Setup folders exist
 - Added comprehensive JSON handling for flexible integration
 - Implemented methods to parse JSON from strings, files, and dictionaries
 - Created dedicated method for creating work efforts directly from JSON data

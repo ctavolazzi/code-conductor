@@ -25,7 +25,7 @@ tags: [feature, enhancement, workflow, documentation]
 - [x] Document the enhancements and update the workflow process
 
 ## 📝 Notes
-- The workflow_runner.py script now uses the template file from `.AI-Setup/work_efforts/templates/work-effort-template.md`
+- The workflow_runner.py script now uses the template file from `_AI-Setup/work_efforts/templates/work-effort-template.md`
 - If the template file doesn't exist, the script creates a default template
 - The script supports full status management (active, completed, archived, paused)
 - Files are automatically moved to the appropriate directory when their status changes

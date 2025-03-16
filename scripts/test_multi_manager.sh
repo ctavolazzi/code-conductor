@@ -26,6 +26,10 @@ print_error() {
     echo -e "${RED}❌ $1${NC}"
 }
 
+print_info() {
+    echo -e "${BLUE}$1${NC}"
+}
+
 # Create test directory structure
 print_header "Creating test directory structure"
 TEST_DIR="$(pwd)/multi_manager_test"
@@ -38,13 +42,13 @@ print_header "Test 1: Initialize project with code-conductor setup"
 echo "Running code-conductor setup in $TEST_DIR"
 echo "y" | code-conductor setup
 
-# Verify config.json was created with initial work manager
-if [ -f "$TEST_DIR/.AI-Setup/config.json" ]; then
-    print_success "Config file created at $TEST_DIR/.AI-Setup/config.json"
-    echo "Contents:"
-    cat "$TEST_DIR/.AI-Setup/config.json"
+# Verify config.json was created
+if [ -f "$TEST_DIR/_AI-Setup/config.json" ]; then
+    print_success "Config file created at $TEST_DIR/_AI-Setup/config.json"
+    print_info "Contents:"
+    cat "$TEST_DIR/_AI-Setup/config.json"
 else
-    print_error "Config file not created at $TEST_DIR/.AI-Setup/config.json"
+    print_error "Config file not created at $TEST_DIR/_AI-Setup/config.json"
     exit 1
 fi
 
@@ -53,11 +57,11 @@ print_header "Test 2: Create work effort in initial manager"
 code-conductor work --title "Main Manager Test" --assignee "Tester" --priority "high"
 
 # Verify work effort was created
-MAIN_WORK_EFFORT=$(find "$TEST_DIR/.AI-Setup/work_efforts/active" -name "*main_manager_test.md")
+MAIN_WORK_EFFORT=$(find "$TEST_DIR/_AI-Setup/work_efforts/active" -name "*main_manager_test.md")
 if [ -n "$MAIN_WORK_EFFORT" ]; then
-    print_success "Work effort created at $MAIN_WORK_EFFORT"
+    print_success "Main manager work effort created at $MAIN_WORK_EFFORT"
 else
-    print_error "Work effort not created in $TEST_DIR/.AI-Setup/work_efforts/active"
+    print_error "Work effort not created in $TEST_DIR/_AI-Setup/work_efforts/active"
     exit 1
 fi
 
@@ -99,12 +103,12 @@ fi
 
 # Test 5: Verify work managers were added to config.json
 print_header "Test 5: Verify managers in config.json"
-if grep -q "Frontend" "$TEST_DIR/.AI-Setup/config.json" &&
-   grep -q "Backend" "$TEST_DIR/.AI-Setup/config.json" &&
-   grep -q "Documentation" "$TEST_DIR/.AI-Setup/config.json"; then
-    print_success "All work managers found in config.json"
+if grep -q "Frontend" "$TEST_DIR/_AI-Setup/config.json" &&
+   grep -q "Backend" "$TEST_DIR/_AI-Setup/config.json" &&
+   grep -q "Documentation" "$TEST_DIR/_AI-Setup/config.json"; then
+    print_success "All managers added to config"
 else
-    print_error "Not all work managers were added to config.json"
+    print_error "Not all managers were added to config"
     exit 1
 fi
 
@@ -177,17 +181,17 @@ fi
 print_header "Test 9: Change default manager"
 code-conductor set-default --manager-name "Backend"
 if [ $? -eq 0 ]; then
-    print_success "Set default manager to Backend"
+    print_success "Default manager changed to backend"
 else
-    print_error "Failed to set default manager"
+    print_error "Default manager not changed"
     exit 1
 fi
 
-# Verify default manager was changed in config.json
-if grep -q "\"default_work_manager\": \"backend\"" "$TEST_DIR/.AI-Setup/config.json"; then
-    print_success "Default manager updated in config.json"
+# Verify default manager was changed
+if grep -q "\"default_work_manager\": \"backend\"" "$TEST_DIR/_AI-Setup/config.json"; then
+    print_success "Default manager changed to backend"
 else
-    print_error "Default manager not updated in config.json"
+    print_error "Default manager not changed"
     exit 1
 fi
 

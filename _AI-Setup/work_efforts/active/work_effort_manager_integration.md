@@ -9,11 +9,11 @@
 
 ## Objectives
 - Integrate the Work Effort Manager into the system instead of using ai_work_effort_creator.py only
-- Create a config.json file in .AI-Setup folder to configure the system
+- Create a config.json file in _AI-Setup folder to configure the system
 - Ensure all components properly use the Work Effort Manager when specified in config
 
 ## Tasks
-- [x] Create config.json in .AI-Setup folder with work effort manager configuration
+- [x] Create config.json in _AI-Setup folder with work effort manager configuration
 - [x] Modify cli.py to check for config.json and use WorkEffortManager when specified
 - [x] Update run_work_effort_manager.py to load and use the config.json file
 - [x] Create tests to verify that the integration works correctly
@@ -23,8 +23,8 @@
 ## Implementation Details
 The implementation involved several key components:
 
-1. **Configuration File (.AI-Setup/config.json)**
-   - Created a config.json file in the .AI-Setup folder
+1. **Configuration File (_AI-Setup/config.json)**
+   - Created a config.json file in the _AI-Setup folder
    - Configured it to use the work effort manager
    - Specified paths to scripts and default settings
 

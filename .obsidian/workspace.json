@@ -11,10 +11,14 @@
             "id": "fcd9003accbdf525",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "_AI-Setup/work_efforts/active/202503091038_code_modularization___breaking_up_monolithic_files.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "202503091038_code_modularization___breaking_up_monolithic_files"
             }
           }
         ]
@@ -90,6 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
+                "file": "_AI-Setup/work_efforts/active/202503091038_code_modularization___breaking_up_monolithic_files.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -99,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks"
+              "title": "Backlinks for 202503091038_code_modularization___breaking_up_monolithic_files"
             }
           },
           {
@@ -108,11 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
+                "file": "_AI-Setup/work_efforts/active/202503091038_code_modularization___breaking_up_monolithic_files.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links"
+              "title": "Outgoing links from 202503091038_code_modularization___breaking_up_monolithic_files"
             }
           },
           {
@@ -136,12 +142,13 @@
             "state": {
               "type": "outline",
               "state": {
+                "file": "_AI-Setup/work_efforts/active/202503091038_code_modularization___breaking_up_monolithic_files.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline"
+              "title": "Outline of 202503091038_code_modularization___breaking_up_monolithic_files"
             }
           }
         ]
@@ -161,8 +168,12 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "a2f903a963a2b432",
+  "active": "fcd9003accbdf525",
   "lastOpenFiles": [
+    "_AI-Setup/work_efforts/active/202503092126_special_ch@r$_&_symbols!?/202503092126_special_ch@r$_&_symbols!?.md",
+    "_AI-Setup/work_efforts/active/202503092120_centralized_implementation_test/202503092120_centralized_implementation_test.md",
+    "_AI-Setup/work_efforts/active/2025-03-06-test-work-effort/README.md",
+    "_AI-Setup/work_efforts/active/2025-03-06-test-work-effort/work-effort-template.md",
     "src/code_conductor/utils/migrate_ai_setup.py",
     "_AI-Setup/work_efforts/active/202503160900_ai_setup_directory_rename.md",
     "_AI-Setup/work_efforts/scripts/__pycache__/project_restructuring.cpython-310.pyc",
@@ -170,8 +181,6 @@
     "_AI-Setup/work_efforts/active/202503092129_unicode_test_📊_测试_проверка/unicode_notes.txt",
     "_AI-Setup/work_efforts/active/202503092129_unicode_test_📊_测试_проверка/202503092129_unicode_test_📊_测试_проверка.md",
     "_AI-Setup/work_efforts/active/202503092126_special_ch@r$_&_symbols!?/test_file.txt",
-    "_AI-Setup/work_efforts/active/202503092126_special_ch@r$_&_symbols!?/202503092126_special_ch@r$_&_symbols!?.md",
-    "_AI-Setup/work_efforts/active/202503092120_centralized_implementation_test/202503092120_centralized_implementation_test.md",
     "_AI-Setup/work_efforts/active/202503092117_api_documentation_tool/202503092117_api_documentation_tool.md",
     "_AI-Setup/work_efforts/active/202503092116_test_folder_structure_script/202503092116_test_folder_structure_script.md",
     "_AI-Setup/work_efforts/active/202503092114_test_folder_structure/202503092114_test_folder_structure.md",
@@ -181,8 +190,6 @@
     "_AI-Setup/work_efforts/active/202503091536_improved_testing_framework/202503091536_improved_testing_framework.md",
     "_AI-Setup/work_efforts/active/202503091535_improved_testing_framework/202503091535_improved_testing_framework.md",
     "_AI-Setup/work_efforts/active/202503091312_test_package_dir/202503091312_test_package_dir.md",
-    "_AI-Setup/work_efforts/active/2025-03-06-test-work-effort/work-effort-template.md",
-    "_AI-Setup/work_efforts/active/2025-03-06-test-work-effort/README.md",
     "_AI-Setup/work_efforts/filesystem/operations.py",
     "_AI-Setup/work_efforts/filesystem/__init__.py",
     "_AI-Setup/work_efforts/utils/config.py",
@@ -190,7 +197,6 @@
     "_AI-Setup/work_efforts/templates/work-effort-template.md",
     "_AI-Setup/work_efforts/scripts/work_effort_manager.py.backup",
     "_AI-Setup/work_efforts/scripts/work_effort_manager.py",
-    "_AI-Setup/work_efforts/scripts/test_template_integration.py",
     "_AI-Setup/work_efforts/completed/202503160751_enhanced_workflow_runner.md",
     "_AI-Setup/work_efforts/completed/202503081145_add_work_efforts_folder_to_ai_setup.md",
     "_AI-Setup/work_efforts/active/work_effort_manager_integration.md",

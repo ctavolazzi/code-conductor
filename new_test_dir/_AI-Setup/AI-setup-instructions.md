@@ -30,7 +30,7 @@ To set up a new or existing project with AI assistance:
    ```
 
 This will:
-- Create a `.AI-Setup` folder with all necessary files
+- Create a `_AI-Setup` folder with all necessary files
 - Set up a `work_efforts` directory structure
 - Create an initial default work effort
 
@@ -64,7 +64,7 @@ A properly configured project will have:
 
 ```
 your-project/
-├── .AI-Setup/
+├── _AI-Setup/
 │   ├── INSTRUCTIONS.md
 │   ├── AI-setup-validation-instructions.md
 │   ├── AI-work-effort-system.md

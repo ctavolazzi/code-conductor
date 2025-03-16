@@ -464,7 +464,7 @@ No action is required from you - the AI tools will automatically utilize these f
             with open(validation_file, "w") as f:
                 f.write("""# AI-Setup Validation Instructions
 
-This file contains instructions for validating the presence and operation of .AI-Setup configured
+This file contains instructions for validating the presence and operation of _AI-Setup configured
 environments. It serves as a stable identifier that AI tools can recognize to confirm that a directory
 contains AI-friendly configurations.
 
@@ -472,7 +472,7 @@ contains AI-friendly configurations.
 
 If your AI assistant can read this file, it should:
 
-1. Recognize that .AI-Setup is properly configured
+1. Recognize that _AI-Setup is properly configured
 2. Look for structure-specific information in the accompanying files
 3. Use this structure to provide more contextually-relevant assistance
 
@@ -482,7 +482,7 @@ You don't need to modify this file. Its presence signals to AI tools that this d
 been properly configured with the AI-Setup toolkit.
 """)
 
-        # Set up the work_efforts directory within .AI-Setup
+        # Set up the work_efforts directory within _AI-Setup
         work_efforts_dir, template_path, active_dir, _, _ = setup_work_efforts_structure(root_dir, in_ai_setup=True)
         create_template_if_missing(template_path)
 
@@ -498,7 +498,7 @@ been properly configured with the AI-Setup toolkit.
 
         print(f"🔍 Selected directories: {len(target_dirs)}")
 
-        # Create a temporary .AI-Setup in the current directory
+        # Create a temporary _AI-Setup in the current directory
         temp_dir = os.getcwd()
         print(f"ℹ️ Creating temporary AI-Setup in: {temp_dir}")
         setup_folder = create_ai_setup(temp_dir)
@@ -527,8 +527,8 @@ been properly configured with the AI-Setup toolkit.
                 skipped_count += 1
                 continue
 
-            # Create .AI-Setup in target directory
-            target_setup = os.path.join(directory, ".AI-Setup")
+            # Create _AI-Setup in target directory
+            target_setup = os.path.join(directory, "_AI-Setup")
             if not os.path.exists(target_setup):
                 os.makedirs(target_setup)
                 print(f"✅ Created AI-Setup directory in: {directory}")
@@ -537,7 +537,7 @@ been properly configured with the AI-Setup toolkit.
             copied_files = 0
             existing_files = 0
 
-            # Copy all files from temporary .AI-Setup to target
+            # Copy all files from temporary _AI-Setup to target
             for item in os.listdir(setup_folder):
                 source = os.path.join(setup_folder, item)
                 target = os.path.join(target_setup, item)
@@ -562,7 +562,7 @@ been properly configured with the AI-Setup toolkit.
             print(f"✅ Successfully installed AI-Setup in: {directory}")
             success_count += 1
 
-        # Clean up temporary .AI-Setup if it was created for this operation
+        # Clean up temporary _AI-Setup if it was created for this operation
         if os.path.dirname(setup_folder) == temp_dir:
             print(f"\n🧹 Cleaning up temporary AI-Setup in: {temp_dir}")
             shutil.rmtree(setup_folder)
@@ -592,7 +592,7 @@ def setup_work_efforts_structure(base_dir=None, create_dirs=True, in_ai_setup=Fa
     Set up the work_efforts directory structure in the specified directory
     If no directory is specified, use the current directory
     If create_dirs is False, just return the paths without creating directories
-    If in_ai_setup is True, create within the .AI-Setup folder
+    If in_ai_setup is True, create within the _AI-Setup folder
 
     Returns a tuple of (work_efforts_dir, template_path, active_dir, completed_dir, archived_path)
     """
@@ -601,14 +601,14 @@ def setup_work_efforts_structure(base_dir=None, create_dirs=True, in_ai_setup=Fa
 
     # Define the work_efforts directory and its subdirectories
     if in_ai_setup:
-        # Create inside .AI-Setup folder
-        ai_setup_dir = os.path.join(base_dir, ".AI-Setup")
+        # Create inside _AI-Setup folder
+        ai_setup_dir = os.path.join(base_dir, "_AI-Setup")
         if not os.path.exists(ai_setup_dir):
             if create_dirs:
                 os.makedirs(ai_setup_dir)
-                print(f"Created .AI-Setup directory: {ai_setup_dir}")
+                print(f"Created _AI-Setup directory: {ai_setup_dir}")
             else:
-                print(f"Warning: .AI-Setup directory does not exist at {ai_setup_dir}")
+                print(f"Warning: _AI-Setup directory does not exist at {ai_setup_dir}")
 
         work_efforts_dir = os.path.join(ai_setup_dir, "work_efforts")
     else:
@@ -809,10 +809,10 @@ def validate_date(date_str):
 
 def load_config():
     """
-    Load the configuration from the .AI-Setup/config.json file if it exists.
+    Load the configuration from the _AI-Setup/config.json file if it exists.
     Returns a dictionary with the configuration or an empty dict if the file doesn't exist.
     """
-    config_path = os.path.join(os.getcwd(), ".AI-Setup", "config.json")
+    config_path = os.path.join(os.getcwd(), "_AI-Setup", "config.json")
     if os.path.exists(config_path):
         try:
             with open(config_path, "r") as f:
@@ -977,15 +977,15 @@ async def setup_ai_in_current_dir():
     current_dir = os.getcwd()
     print(f"\n📍 Checking current directory: {current_dir}")
 
-    # Check if .AI-Setup already exists
-    ai_setup_dir = os.path.join(current_dir, ".AI-Setup")
+    # Check if _AI-Setup already exists
+    ai_setup_dir = os.path.join(current_dir, "_AI-Setup")
     ai_setup_exists = os.path.exists(ai_setup_dir) and os.path.isdir(ai_setup_dir)
 
     # Check if config.json exists
     config_file = os.path.join(ai_setup_dir, "config.json") if ai_setup_exists else None
     config_exists = config_file and os.path.exists(config_file) and os.path.isfile(config_file)
 
-    # Check if work_efforts already exists inside .AI-Setup
+    # Check if work_efforts already exists inside _AI-Setup
     ai_setup_work_efforts_dir = os.path.join(ai_setup_dir, "work_efforts") if ai_setup_exists else None
     ai_setup_work_efforts_exists = ai_setup_work_efforts_dir and os.path.exists(ai_setup_work_efforts_dir) and os.path.isdir(ai_setup_work_efforts_dir)
 
@@ -1006,10 +1006,10 @@ async def setup_ai_in_current_dir():
 
     # Print status of existing components
     print("\n🔍 Checking for existing components:")
-    print(f"- .AI-Setup folder: {'✅ Exists' if ai_setup_exists else '❌ Not found'}")
+    print(f"- _AI-Setup folder: {'✅ Exists' if ai_setup_exists else '❌ Not found'}")
     if ai_setup_exists:
         print(f"- Configuration file: {'✅ Exists' if config_exists else '❌ Not found'}")
-        print(f"- .AI-Setup/work_efforts folder: {'✅ Exists' if ai_setup_work_efforts_exists else '❌ Not found'}")
+        print(f"- _AI-Setup/work_efforts folder: {'✅ Exists' if ai_setup_work_efforts_exists else '❌ Not found'}")
         if ai_setup_work_efforts_exists:
             if scripts_exist:
                 if all_scripts_present:
@@ -1026,7 +1026,7 @@ async def setup_ai_in_current_dir():
         print("\n✅ AI-Setup is already completely installed in this directory")
         print("\nNo changes will be made to existing components.")
         print("\nYou can use the following commands:")
-        print("  code-conductor work      - Create a new work effort in .AI-Setup/work_efforts")
+        print("  code-conductor work      - Create a new work effort in _AI-Setup/work_efforts")
         print("  cc-work-e                - Shorthand to create a work effort")
         print("  code-conductor list      - List existing work efforts")
         print("  code-conductor list-managers      - List all work effort managers in the project")
@@ -1046,7 +1046,7 @@ async def setup_ai_in_current_dir():
         print("  --manager TEXT                    - Name of the work effort manager to use")
         print("  -y, --yes                         - Non-interactive mode (use defaults for all prompts)")
         print("\nShorthand Command:")
-        print("  cc-work-e                            - Quick create work effort in .AI-Setup/work_efforts")
+        print("  cc-work-e                            - Quick create work effort in _AI-Setup/work_efforts")
         print("  cc-work-e -i                         - Create a work effort with interactive prompt")
         print("  cc-work-e --use-ai --description TEXT - Generate content with AI")
         print("  cc-work-e --manager NAME             - Use a specific work effort manager")
@@ -1057,11 +1057,11 @@ async def setup_ai_in_current_dir():
     print("\n📦 Installation plan:")
 
     if ai_setup_exists:
-        print(f"- ⚠️ Existing .AI-Setup folder will be preserved at: {ai_setup_dir}")
+        print(f"- ⚠️ Existing _AI-Setup folder will be preserved at: {ai_setup_dir}")
         if not config_exists:
             print(f"- 🆕 Will create configuration file at: {os.path.join(ai_setup_dir, 'config.json')}")
         if ai_setup_work_efforts_exists:
-            print(f"- ⚠️ Existing .AI-Setup/work_efforts folder will be preserved")
+            print(f"- ⚠️ Existing _AI-Setup/work_efforts folder will be preserved")
             if scripts_exist and not all_scripts_present:
                 print(f"- 🆕 Will install {len(missing_scripts)} missing work effort manager scripts:")
                 for script in missing_scripts:
@@ -1069,9 +1069,9 @@ async def setup_ai_in_current_dir():
             elif not scripts_exist:
                 print(f"- 🆕 Will install all required work effort manager scripts")
         else:
-            print(f"- 🆕 Will create work_efforts folder inside .AI-Setup")
+            print(f"- 🆕 Will create work_efforts folder inside _AI-Setup")
     else:
-        print(f"- 🆕 Will create .AI-Setup folder at: {ai_setup_dir}")
+        print(f"- 🆕 Will create _AI-Setup folder at: {ai_setup_dir}")
         print(f"- 🆕 Will create configuration file")
         print(f"- 🆕 Will create work_efforts folder and install required scripts")
 
@@ -1098,7 +1098,7 @@ async def setup_ai_in_current_dir():
                 os.makedirs(ai_setup_dir)
             print(f"✅ AI-Setup folder created at: {ai_setup_dir}")
 
-            # Ensure the work_efforts folder was created inside .AI-Setup
+            # Ensure the work_efforts folder was created inside _AI-Setup
             ai_setup_work_efforts_dir = os.path.join(ai_setup_dir, "work_efforts")
             if not os.path.exists(ai_setup_work_efforts_dir):
                 _, template_path, active_dir, _, _ = setup_work_efforts_structure(current_dir, in_ai_setup=True)
@@ -1114,7 +1114,7 @@ async def setup_ai_in_current_dir():
                     target_dir=active_dir
                 )
 
-                print(f"✅ Work efforts directory created inside .AI-Setup folder")
+                print(f"✅ Work efforts directory created inside _AI-Setup folder")
                 if file_path:
                     print(f"✅ Default work effort created at: {file_path}")
         except Exception as e:
@@ -1123,7 +1123,7 @@ async def setup_ai_in_current_dir():
         print(f"⚠️ Using existing AI-Setup folder at: {ai_setup_dir}")
         print(f"  No changes made to existing files in this directory")
 
-        # If .AI-Setup exists but doesn't have work_efforts, create it
+        # If _AI-Setup exists but doesn't have work_efforts, create it
         if not ai_setup_work_efforts_exists:
             _, template_path, active_dir, _, _ = setup_work_efforts_structure(current_dir, in_ai_setup=True)
             create_template_if_missing(template_path)
@@ -1138,11 +1138,11 @@ async def setup_ai_in_current_dir():
                 target_dir=active_dir
             )
 
-            print(f"✅ Work efforts directory created inside .AI-Setup folder")
+            print(f"✅ Work efforts directory created inside _AI-Setup folder")
             if file_path:
                 print(f"✅ Default work effort created at: {file_path}")
         else:
-            print(f"⚠️ Using existing .AI-Setup/work_efforts directory")
+            print(f"⚠️ Using existing _AI-Setup/work_efforts directory")
 
             # If scripts are missing or partially present, run setup_work_efforts_structure
             # to copy the missing scripts
@@ -1184,14 +1184,14 @@ async def setup_ai_in_current_dir():
     print(f"\n✅ Setup completed in: {current_dir}")
     print(f"  Configuration file: {config_file}")
     print("\nYou can now use the following commands:")
-    print("  code-conductor work      - Create a new work effort in .AI-Setup/work_efforts")
+    print("  code-conductor work      - Create a new work effort in _AI-Setup/work_efforts")
     print("  cc-work-e                - Shorthand to create a work effort")
     print("  code-conductor list      - List existing work efforts")
     print("  code-conductor list-managers      - List all work effort managers in the project")
     print("  code-conductor update-status      - Update the status of a work effort")
     print("  code-conductor select             - Select directories to set up AI assistance")
     print("\nEnhanced Work Effort Creator:")
-    print("  cc-work-e                            - Quick create work effort in .AI-Setup/work_efforts")
+    print("  cc-work-e                            - Quick create work effort in _AI-Setup/work_efforts")
     print("  cc-work-e -i                         - Create a work effort with interactive prompt")
     print("  cc-work-e --use-ai --description TEXT - Generate content with AI")
     print("\nFor all available options, run: code-conductor help")
@@ -1474,7 +1474,7 @@ async def main():
             print("  code-conductor setup              - Set up AI assistance in the current directory")
             print("  code-conductor new-work-manager   - Create a new work effort manager in a directory")
             print("  code-conductor set-default        - Set the default work effort manager")
-            print("  code-conductor work_effort        - Create a new work effort in .AI-Setup/work_efforts")
+            print("  code-conductor work_effort        - Create a new work effort in _AI-Setup/work_efforts")
             print("  code-conductor work               - Shorthand for work_effort")
             print("  code-conductor work_effort -i     - Create a new work effort interactively")
             print("  code-conductor list               - List existing work efforts")
@@ -1495,7 +1495,7 @@ async def main():
             print("  --manager TEXT                    - Name of the work effort manager to use")
             print("  -y, --yes                         - Non-interactive mode (use defaults for all prompts)")
             print("\nShorthand Command:")
-            print("  cc-work-e                            - Quick create work effort in .AI-Setup/work_efforts")
+            print("  cc-work-e                            - Quick create work effort in _AI-Setup/work_efforts")
             print("  cc-work-e -i                         - Create a work effort with interactive prompt")
             print("  cc-work-e --use-ai --description TEXT - Generate content with AI")
             print("  cc-work-e --manager NAME             - Use a specific work effort manager")
@@ -1597,7 +1597,7 @@ async def main():
 
             if not work_efforts_dir:
                 current_dir = os.getcwd()
-                potential_location = os.path.join(current_dir, ".AI-Setup", "work_efforts")
+                potential_location = os.path.join(current_dir, "_AI-Setup", "work_efforts")
 
                 print(f"\n📋 Work Effort Management")
                 print("======================")
@@ -1770,13 +1770,13 @@ def show_instructions():
     """Show usage instructions."""
     print("\nUsage Instructions:")
     print("  code-conductor setup                 - Set up AI assistance in the current directory")
-    print("  code-conductor work                  - Create a new work effort in .AI-Setup/work_efforts")
+    print("  code-conductor work                  - Create a new work effort in _AI-Setup/work_efforts")
     print("  code-conductor work_effort -i        - Create a new work effort interactively")
     print("  code-conductor list                  - List existing work efforts")
     print("  code-conductor update-status         - Update the status of a work effort")
     print("  code-conductor select                - Select directories to set up AI assistance")
     print("\nEnhanced Work Effort Creator:")
-    print("  cc-work-e                            - Quick create work effort in .AI-Setup/work_efforts")
+    print("  cc-work-e                            - Quick create work effort in _AI-Setup/work_efforts")
     print("  cc-work-e -i                         - Create a work effort with interactive prompt")
     print("  cc-work-e --use-ai --description TEXT - Generate content with AI")
     print("\nFor all available options, run: code-conductor help")

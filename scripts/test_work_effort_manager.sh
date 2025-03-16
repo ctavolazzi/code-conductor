@@ -24,7 +24,8 @@ trap cleanup EXIT
 
 # Set up the test environment
 echo -e "${YELLOW}Setting up test environment...${NC}"
-mkdir -p "$TEST_DIR/.AI-Setup"
+mkdir -p "$TEST_DIR"
+mkdir -p "$TEST_DIR/_AI-Setup"
 mkdir -p "$TEST_DIR/work_efforts/active"
 mkdir -p "$TEST_DIR/work_efforts/completed"
 mkdir -p "$TEST_DIR/work_efforts/archived"
@@ -53,7 +54,7 @@ cat > "$TEST_DIR/work_efforts/templates/default.md" << EOF
 EOF
 
 # Create the config.json file
-cat > "$TEST_DIR/.AI-Setup/config.json" << EOF
+cat > "$TEST_DIR/_AI-Setup/config.json" << EOF
 {
   "work_efforts": {
     "use_manager": true,
@@ -71,6 +72,17 @@ cat > "$TEST_DIR/.AI-Setup/config.json" << EOF
       "completed": "work_efforts/completed",
       "archived": "work_efforts/archived",
       "templates": "work_efforts/templates"
+    },
+    "work_effort_manager": {
+        "enabled": true,
+        "path": "$TEST_DIR/work_efforts",
+        "work_effort_managers": {
+            "default": {
+                "name": "Default Work Effort Manager",
+                "path": "$TEST_DIR/work_efforts"
+            }
+        },
+        "default_work_manager": "default"
     }
   },
   "ai_settings": {

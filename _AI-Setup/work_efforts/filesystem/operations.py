@@ -65,17 +65,20 @@ def ensure_directory_structure(project_dir: str) -> Dict[str, str]:
 
 def ensure_required_folders(project_dir: str) -> bool:
     """
-    Check if the required folders exist in the project.
+    Ensure that the required folders exist.
 
     Args:
-        project_dir: The project directory
+        project_dir: Project directory path
 
     Returns:
-        True if both work_efforts and .AI-Setup folders exist
+        True if both work_efforts and _AI-Setup folders exist
     """
-    work_efforts_dir = os.path.join(project_dir, "work_efforts")
-    ai_setup_dir = os.path.join(project_dir, ".AI-Setup")
+    if not project_dir:
+        return False
 
+    ai_setup_dir = os.path.join(project_dir, "_AI-Setup")
+
+    work_efforts_dir = os.path.join(project_dir, "work_efforts")
     has_work_efforts = os.path.exists(work_efforts_dir) and os.path.isdir(work_efforts_dir)
     has_ai_setup = os.path.exists(ai_setup_dir) and os.path.isdir(ai_setup_dir)
 

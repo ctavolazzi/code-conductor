@@ -31,10 +31,11 @@ tags: [refactor, organization, structure, cleanup]
 - [ ] Update any affected documentation
 
 ## 📝 Notes
+- The project structure is now more organized with clear separation of concerns
+- The _AI-Setup directory contains the work_efforts which is well-organized
 - Current project structure has many scripts at the root level
 - Many test files are scattered across the root directory
 - Several directories (like test_dir, setup_test, etc.) seem temporary or redundant
-- The .AI-Setup directory contains the work_efforts which is well-organized
 - Need to be careful to maintain backward compatibility
 
 ## 🐞 Issues Encountered

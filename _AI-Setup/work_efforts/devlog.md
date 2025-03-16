@@ -2,6 +2,35 @@
 
 ## 2025-03-16
 
+### Obsidian Integration and Migration Script Enhancements
+
+**Goal:** Improve user experience by adding Obsidian integration and enhancing the migration script.
+
+#### Implemented Changes:
+1. **Obsidian Integration**
+   - Added comprehensive documentation for using Code Conductor with Obsidian and Cursor
+   - Created detailed guide in docs/usage/obsidian_cursor_guide.md
+   - Updated main README.md with a section on recommended workflow
+   - Updated usage README.md to reference the new guide
+
+2. **Improved .gitignore**
+   - Added .obsidian/ to .gitignore to prevent Obsidian workspace files from being committed
+   - This ensures better compatibility for users working with Obsidian
+
+3. **Enhanced Migration Script**
+   - Updated migrate_ai_setup.py to exclude specific files:
+     - The script itself (migrate_ai_setup.py)
+     - Log files (*.log)
+     - CHANGELOG.md (historical record)
+     - devlog.md (development log)
+   - Added a helper method to check for excluded files
+   - Improved summary output to clearly indicate which files are intentionally skipped
+
+#### Benefits:
+- Better integration with popular knowledge management tools
+- Clearer guidance for users on optimal workflow
+- More precise migration process that preserves historical records
+
 ### AI Setup Directory Rename (.AI-Setup to _AI-Setup)
 
 **Goal:** Replace all references to ".AI-Setup" with "_AI-Setup" throughout the codebase to improve directory visibility.

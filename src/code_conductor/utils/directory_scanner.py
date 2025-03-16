@@ -77,13 +77,13 @@ It helps AI assistants understand how to verify that everything is working corre
 
 ## Validation Steps
 
-1. Check that the _.AI-Setup_ folder exists and contains all required files
+1. Check that the `_AI-Setup` folder exists and contains all required files
 2. Verify that the `work_efforts` directory structure is properly set up
 3. Confirm that the AI-setup commands are working as expected
 
 ## Required Components
 
-1. _.AI-Setup_ folder with:
+1. `_AI-Setup` folder with:
    - INSTRUCTIONS.md
    - AI-setup-validation-instructions.md
    - AI-work-effort-system.md
@@ -218,7 +218,7 @@ To set up a new or existing project with AI assistance:
    ```
 
 This will:
-- Create a _.AI-Setup_ folder with all necessary files
+- Create a `_AI-Setup` folder with all necessary files
 - Set up a `work_efforts` directory structure
 - Create an initial default work effort
 
@@ -252,7 +252,7 @@ A properly configured project will have:
 
 ```
 your-project/
-├── _.AI-Setup_/
+├── _AI-Setup/
 │   ├── INSTRUCTIONS.md
 │   ├── AI-setup-validation-instructions.md
 │   ├── AI-work-effort-system.md
@@ -281,7 +281,7 @@ The `ai-work-effort` command supports integration with Ollama for AI-powered con
 
 def install_ai_setup(target_dirs):
     """Install AI-Setup in target directories."""
-    # Create a temporary .AI-Setup in the current directory
+    # Create a temporary _AI-Setup in the current directory
     temp_dir = os.getcwd()
     setup_folder = create_ai_setup(temp_dir)
 
@@ -297,12 +297,12 @@ def install_ai_setup(target_dirs):
             print(f"⚠️ AI-Setup already installed in: {directory}")
             continue
 
-        # Create .AI-Setup in target directory
+        # Create _AI-Setup in target directory
         target_setup = os.path.join(directory, "_AI-Setup")
         if not os.path.exists(target_setup):
             os.makedirs(target_setup)
 
-        # Copy all files from temporary .AI-Setup to target
+        # Copy all files from temporary _AI-Setup to target
         print(f"Copying AI-Setup files to {directory}...")
         for item in os.listdir(setup_folder):
             source = os.path.join(setup_folder, item)
@@ -312,7 +312,7 @@ def install_ai_setup(target_dirs):
 
         print(f"✅ Installed AI-Setup in: {directory}")
 
-    # Clean up temporary .AI-Setup if it was created for this operation
+    # Clean up temporary _AI-Setup if it was created for this operation
     if os.path.dirname(setup_folder) == temp_dir:
         shutil.rmtree(setup_folder)
 

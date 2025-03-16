@@ -41,7 +41,7 @@ setup_test_env() {
     echo -e "${YELLOW}Setting up test environment...${NC}"
 
     # Create necessary directories
-    mkdir -p "$TEST_DIR/.AI-Setup"
+    mkdir -p "$TEST_DIR/_AI-Setup"
     mkdir -p "$TEST_DIR/work_efforts/active"
     mkdir -p "$TEST_DIR/work_efforts/completed"
     mkdir -p "$TEST_DIR/work_efforts/archived"
@@ -69,14 +69,13 @@ setup_test_env() {
 - Context, links to relevant code, designs, references.
 EOF
 
-    # Create the config.json file
-    cat > "$TEST_DIR/.AI-Setup/config.json" << EOF
+    # Create config.json in _AI-Setup
+    cat > "$TEST_DIR/_AI-Setup/config.json" << EOF
 {
   "work_efforts": {
     "use_manager": true,
-    "manager_script": "$PROJECT_ROOT/work_efforts/scripts/work_effort_manager.py",
-    "runner_script": "$PROJECT_ROOT/work_efforts/scripts/run_work_effort_manager.py",
-    "project_dir": "$TEST_DIR",
+    "manager_script": "$TEST_DIR/work_efforts/scripts/work_effort_manager.py",
+    "runner_script": "$TEST_DIR/work_efforts/scripts/run_work_effort_manager.py",
     "auto_start": true,
     "default_settings": {
       "assignee": "Test User",
@@ -89,10 +88,6 @@ EOF
       "archived": "work_efforts/archived",
       "templates": "work_efforts/templates"
     }
-  },
-  "ai_settings": {
-    "preferred_model": "phi3",
-    "timeout": 60
   }
 }
 EOF

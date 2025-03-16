@@ -10,7 +10,7 @@ Usage:
     python find_todays_work_efforts.py [--directory DIR] [--format FORMAT]
 
 Options:
-    --directory DIR    The work efforts directory to search (default: .AI-Setup/work_efforts)
+    --directory DIR    The work efforts directory to search (default: _AI-Setup/work_efforts)
     --format FORMAT    Output format: 'simple', 'detailed', or 'json' (default: simple)
 """
 
@@ -137,7 +137,7 @@ def parse_args():
     """Parse command line arguments."""
     parser = argparse.ArgumentParser(description="Find work efforts created today")
     parser.add_argument("--directory", "-d",
-                        default=".AI-Setup/work_efforts",
+                        default="_AI-Setup/work_efforts",
                         help="The work efforts directory to search")
     parser.add_argument("--format", "-f",
                         choices=["simple", "detailed", "json"],

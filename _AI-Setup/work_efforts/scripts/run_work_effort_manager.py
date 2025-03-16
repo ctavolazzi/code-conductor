@@ -212,14 +212,25 @@ def main():
         # Check if the required folders exist
         if not manager.has_required_folders():
             print("\n⚠️ Required folders not found!")
-            print(f"- work_efforts directory exists: {manager.has_work_efforts_dir}")
-            print(f"- .AI-Setup directory exists: {manager.has_ai_setup_dir}")
-            print("\nBoth folders must exist to create work efforts.")
+            print(f"Project directory: {manager.project_dir}")
+            print(f"- Work efforts directory exists: {manager.has_work_efforts_dir}")
+            print(f"- _AI-Setup directory exists: {manager.has_ai_setup_dir}")
+
+            print("Directories:")
+            print(f"- Work efforts directory: {manager.work_efforts_dir}")
+            print(f"- Active work efforts: {manager.active_dir}")
+            print(f"- _AI-Setup directory: {manager.ai_setup_dir}")
             return 1
 
         print("\n✅ Found required folders:")
-        print(f"- work_efforts directory: {manager.work_efforts_dir}")
-        print(f"- .AI-Setup directory: {manager.ai_setup_dir}")
+        print(f"Project directory: {manager.project_dir}")
+        print(f"- Work efforts directory exists: {manager.has_work_efforts_dir}")
+        print(f"- _AI-Setup directory exists: {manager.has_ai_setup_dir}")
+
+        print("Directories:")
+        print(f"- Work efforts directory: {manager.work_efforts_dir}")
+        print(f"- Active work efforts: {manager.active_dir}")
+        print(f"- _AI-Setup directory: {manager.ai_setup_dir}")
 
         # Register example event handlers
         manager.register_handler("work_effort_created", example_event_handler)

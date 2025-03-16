@@ -34,7 +34,7 @@ We started by creating a work effort document to track the development of the wo
 
 ```bash
 # Create a new work effort document manually
-touch .AI-Setup/work_efforts/active/202503171244_work_node_creation_workflow.md
+touch _AI-Setup/work_efforts/active/202503171244_work_node_creation_workflow.md
 ```
 
 This established a structured location to document the development process.
@@ -67,7 +67,7 @@ We developed a Python script (`create_work_node.py`) to implement the work node 
    - Dry-run mode for testing
 
 3. Used a consistent convention of singular naming for files and directories:
-   - `.AI-Setup/work_effort/node/` for node storage
+   - `_AI-Setup/work_effort/node/` for node storage
    - Consistent field naming in frontmatter (`connected_document` vs `connected_documents`)
 
 ### 4. Execute and Test Script

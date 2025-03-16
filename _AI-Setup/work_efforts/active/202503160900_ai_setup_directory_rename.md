@@ -1,5 +1,5 @@
 ---
-title: "AI Setup Directory Rename (.AI-Setup to _AI-Setup)"
+title: "AI Setup Directory Rename (_AI-Setup to _AI-Setup)"
 status: "active" # options: active, paused, completed
 priority: "high" # options: low, medium, high, critical
 assignee: "AI Assistant"
@@ -9,10 +9,10 @@ due_date: "2025-03-23" # YYYY-MM-DD
 tags: [refactor, structure, visibility]
 ---
 
-# AI Setup Directory Rename (.AI-Setup to _AI-Setup)
+# AI Setup Directory Rename (_AI-Setup to _AI-Setup)
 
 ## 🚩 Objectives
-- Replace all references to ".AI-Setup" with "_AI-Setup" throughout the codebase
+- Replace all references to "_AI-Setup" with "_AI-Setup" throughout the codebase
 - Make the AI-Setup directory visible in file systems that hide dotfiles by default
 - Ensure backward compatibility for users transitioning from the old naming convention
 - Update all documentation and code to reflect the new naming convention
@@ -27,17 +27,17 @@ tags: [refactor, structure, visibility]
 - [ ] Test to ensure changes don't break existing functionality
 
 ## 📝 Notes
-- The codebase has numerous references to ".AI-Setup" across many file types
+- The codebase has numerous references to "_AI-Setup" across many file types
 - We already have a "_AI-Setup" directory with an established structure
-- Test directories still use ".AI-Setup" in many places
+- Test directories still use "_AI-Setup" in many places
 - This change improves visibility and usability but requires careful coordination
 
 ## 🐞 Issues Encountered
-- Some test directories still use ".AI-Setup" and will need to be updated during testing
-- The migration script needs to handle cases where both ".AI-Setup" and "_AI-Setup" exist
+- Some test directories still use "_AI-Setup" and will need to be updated during testing
+- The migration script needs to handle cases where both "_AI-Setup" and "_AI-Setup" exist
 
 ## ✅ Outcomes & Results
-- All core code now uses "_AI-Setup" instead of ".AI-Setup"
+- All core code now uses "_AI-Setup" instead of "_AI-Setup"
 - Created a comprehensive migration script to help users transition
 - Updated documentation to reflect the new naming convention
 - Added changelog entry to document the change

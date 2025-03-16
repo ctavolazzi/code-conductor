@@ -8,15 +8,15 @@ This directory contains instructions and resources for AI assistants working wit
 
 1. **First Interaction**: When first working with this codebase, familiarize yourself with the Code Conductor workflow process by reviewing:
    - The workflow steps in the workflow_runner.py script
-   - The structure of work efforts in .AI-Setup/work_efforts/
-   - The templates used in .AI-Setup/work_efforts/templates/
+   - The structure of work efforts in _AI-Setup/work_efforts/
+   - The templates used in _AI-Setup/work_efforts/templates/
 
 2. **Prioritize Existing Scripts**: After initial familiarity, ALWAYS prefer using existing scripts for work effort management:
    - Use `workflow_runner.py` for the complete workflow process
    - Use `update_status.py` for changing work effort status
-   - Use `.AI-Setup/work_efforts/scripts/work_effort_manager.py` for specific work effort operations
-   - Use `.AI-Setup/work_efforts/scripts/run_work_effort_manager.py` for interactive work effort management
-   - Use `.AI-Setup/work_efforts/scripts/new_work_effort.py` for creating individual work efforts
+   - Use `_AI-Setup/work_efforts/scripts/work_effort_manager.py` for specific work effort operations
+   - Use `_AI-Setup/work_efforts/scripts/run_work_effort_manager.py` for interactive work effort management
+   - Use `_AI-Setup/work_efforts/scripts/new_work_effort.py` for creating individual work efforts
    - Use `retrieve_work_effort.py` to gather comprehensive context for AI assistants
 
 3. **Only Manual Creation When Necessary**: Only create work efforts manually if:
@@ -46,7 +46,7 @@ This directory contains instructions and resources for AI assistants working wit
 
 ### Creating a New Work Effort
 ```bash
-python .AI-Setup/work_efforts/scripts/new_work_effort.py --title "Feature Title" --description "Description" [--priority high]
+python _AI-Setup/work_efforts/scripts/new_work_effort.py --title "Feature Title" --description "Description" [--priority high]
 ```
 
 ## Documentation
@@ -62,5 +62,5 @@ When using scripts, always:
 When beginning a new task:
 1. Use `retrieve_work_effort.py` to gather context on related efforts
 2. Check recent changes with `git diff` or `diff_history`
-3. Review existing scripts in `.AI-Setup/work_efforts/scripts/`
+3. Review existing scripts in `_AI-Setup/work_efforts/scripts/`
 4. THEN proceed with the workflow process using `workflow_runner.py`

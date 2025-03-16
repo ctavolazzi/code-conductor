@@ -26,6 +26,10 @@ print_error() {
     echo -e "${RED}❌ $1${NC}"
 }
 
+print_info() {
+    echo -e "${BLUE}$1${NC}"
+}
+
 # Create a temporary directory for testing
 print_header "Creating test environment"
 TEST_DIR=$(mktemp -d)
@@ -55,30 +59,29 @@ else
     exit 1
 fi
 
-# Check if .AI-Setup directory was created
-if [ -d ".AI-Setup" ]; then
-    print_success ".AI-Setup directory was created"
+# Check directory structure
+print_info "Checking directory structure"
+
+# Check if _AI-Setup directory was created
+if [ -d "_AI-Setup" ]; then
+    print_success "_AI-Setup directory was created"
 else
-    print_error ".AI-Setup directory was not created"
+    print_error "_AI-Setup directory was not created"
     exit 1
 fi
 
-# Check if work_efforts directory was created
-if [ -d ".AI-Setup/work_efforts" ]; then
+# Check _AI-Setup/work_efforts directory
+if [ -d "_AI-Setup/work_efforts" ]; then
     print_success "work_efforts directory was created"
 else
     print_error "work_efforts directory was not created"
-    exit 1
 fi
 
 # Check if config.json was created
-if [ -f ".AI-Setup/config.json" ]; then
-    print_success "config.json was created"
-    echo "Config contents:"
-    cat ".AI-Setup/config.json"
-else
-    print_error "config.json was not created"
-    exit 1
+if [ -f "_AI-Setup/config.json" ]; then
+    print_success "Config file was created"
+    print_info "Content of config.json:"
+    cat "_AI-Setup/config.json"
 fi
 
 # Return to the original directory

@@ -11,50 +11,50 @@ Running code-conductor setup in /Users/ctavolazzi/Code/code_conductor/multi_mana
 📍 Checking current directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test
 
 🔍 Checking for existing components:
-- .AI-Setup folder: ❌ Not found
+- _AI-Setup folder: ❌ Not found
 
 📦 Installation plan:
-- 🆕 Will create .AI-Setup folder at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup
+- 🆕 Will create _AI-Setup folder at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup
 - 🆕 Will create configuration file
 - 🆕 Will create work_efforts folder and install required scripts
 
-Proceed with installation? (y/n): 2025-03-09 14:41:16,669 - CodeConductor - INFO - Created .AI-Setup directory at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup
-2025-03-09 14:41:16,669 - CodeConductor - INFO - Wrote config to: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/config.json
-2025-03-09 14:41:16,685 - WorkEffortManager - INFO - Initialized with configuration: {'name': 'multi_manager_test', 'path': '.', 'work_efforts_dir': '.AI-Setup/work_efforts', 'use_manager': True, 'manager_script': '.AI-Setup/work_efforts/scripts/work_effort_manager.py', 'runner_script': '.AI-Setup/work_efforts/scripts/run_work_effort_manager.py', 'auto_start': True}
+Proceed with installation? (y/n): 2025-03-09 14:41:16,669 - CodeConductor - INFO - Created _AI-Setup directory at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup
+2025-03-09 14:41:16,669 - CodeConductor - INFO - Wrote config to: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/config.json
+2025-03-09 14:41:16,685 - WorkEffortManager - INFO - Initialized with configuration: {'name': 'multi_manager_test', 'path': '.', 'work_efforts_dir': '_AI-Setup/work_efforts', 'use_manager': True, 'manager_script': '_AI-Setup/work_efforts/scripts/work_effort_manager.py', 'runner_script': '_AI-Setup/work_efforts/scripts/run_work_effort_manager.py', 'auto_start': True}
 2025-03-09 14:41:16,685 - WorkEffortManager - INFO - Work efforts directory exists: False
-2025-03-09 14:41:16,685 - WorkEffortManager - INFO - .AI-Setup directory exists: True
+2025-03-09 14:41:16,685 - WorkEffortManager - INFO - _AI-Setup directory exists: True
 2025-03-09 14:41:16,685 - WorkEffortManager - WARNING - work_efforts directory does not exist at ./work_efforts
 2025-03-09 14:41:16,685 - WorkEffortManager - INFO - Loaded 0 work efforts
-2025-03-09 14:41:16,688 - WorkEffortManager - ERROR - Cannot create work effort: Required folders (work_efforts and .AI-Setup) not found
+2025-03-09 14:41:16,688 - WorkEffortManager - ERROR - Cannot create work effort: Required folders (work_efforts and _AI-Setup) not found
 
 📦 Installing components...
-✅ Configuration file created/updated at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/config.json
-✅ AI-Setup folder created at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup
-Created directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts
-Created directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/templates
-Created directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/active
-Created directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/completed
-Created directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/archived
-Created directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/scripts
-Created README at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/README.md
-Created __init__.py at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/scripts/__init__.py
-Created __init__.py at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/__init__.py
-✅ Copied script: run_work_effort_manager.py to /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/scripts
-✅ Copied script: work_effort_manager.py to /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/scripts
-✅ Copied script: ai_work_effort_creator.py to /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/scripts
-✅ Copied script: new_work_effort.py to /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/scripts
-Created template file at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/work_efforts/templates/work-effort-template.md
+✅ Configuration file created/updated at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/config.json
+✅ AI-Setup folder created at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup
+Created directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts
+Created directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/templates
+Created directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/active
+Created directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/completed
+Created directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/archived
+Created directory: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/scripts
+Created README at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/README.md
+Created __init__.py at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/scripts/__init__.py
+Created __init__.py at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/__init__.py
+✅ Copied script: run_work_effort_manager.py to /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/scripts
+✅ Copied script: work_effort_manager.py to /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/scripts
+✅ Copied script: ai_work_effort_creator.py to /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/scripts
+✅ Copied script: new_work_effort.py to /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/scripts
+Created template file at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/work_efforts/templates/work-effort-template.md
 ❌ Error creating work effort with WorkEffortManager.
-✅ Work efforts directory created inside .AI-Setup folder
+✅ Work efforts directory created inside _AI-Setup folder
 
 ✅ Setup completed in: /Users/ctavolazzi/Code/code_conductor/multi_manager_test
-  Configuration file: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/config.json
+  Configuration file: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/config.json
 
 You can now use the following commands:
-  code-conductor work      - Create a new work effort in .AI-Setup/work_efforts
+  code-conductor work      - Create a new work effort in _AI-Setup/work_efforts
   cc-work-e                - Shorthand to create a work effort
   code-conductor list      - List existing work efforts
-[0;32m✅ Config file created at /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/config.json[0m
+[0;32m✅ Config file created at /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/config.json[0m
 Contents:
 {
   "version": "0.4.3",
@@ -66,10 +66,10 @@ Contents:
     {
       "name": "multi_manager_test",
       "path": ".",
-      "work_efforts_dir": ".AI-Setup/work_efforts",
+      "work_efforts_dir": "_AI-Setup/work_efforts",
       "use_manager": true,
-      "manager_script": ".AI-Setup/work_efforts/scripts/work_effort_manager.py",
-      "runner_script": ".AI-Setup/work_efforts/scripts/run_work_effort_manager.py",
+      "manager_script": "_AI-Setup/work_efforts/scripts/work_effort_manager.py",
+      "runner_script": "_AI-Setup/work_efforts/scripts/run_work_effort_manager.py",
       "auto_start": true
     }
   ],
@@ -81,7 +81,7 @@ Contents:
 }
 [0;34mTest 2: Create work effort in initial manager[0m
 ==================================
-2025-03-09 14:41:16,975 - CodeConductor - INFO - Found config file at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/.AI-Setup/config.json
+2025-03-09 14:41:16,975 - CodeConductor - INFO - Found config file at: /Users/ctavolazzi/Code/code_conductor/multi_manager_test/_AI-Setup/config.json
 Warning: Could not start WorkEffortManager: [Errno 2] No such file or directory: 'python'
 
 📝 Create a New Work Effort

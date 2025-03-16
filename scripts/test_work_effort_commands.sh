@@ -52,7 +52,7 @@ print_info "Test directory: $TEST_DIR"
 # 1. Test setup command - with check for existing folders
 print_header "1. Testing 'code-conductor setup' command"
 
-# Check for existing work_efforts and .AI-Setup folders
+# Check for existing work_efforts and _AI-Setup folders
 WORK_EFFORTS_EXISTS=false
 AI_SETUP_EXISTS=false
 
@@ -61,8 +61,8 @@ if check_dir_exists "work_efforts"; then
     WORK_EFFORTS_EXISTS=true
 fi
 
-if check_dir_exists ".AI-Setup"; then
-    print_info ".AI-Setup folder already exists"
+if check_dir_exists "_AI-Setup"; then
+    print_info "_AI-Setup folder already exists"
     AI_SETUP_EXISTS=true
 fi
 

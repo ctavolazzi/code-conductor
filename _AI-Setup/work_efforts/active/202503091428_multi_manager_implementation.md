@@ -30,7 +30,7 @@ tags: ["enhancement", "usability", "configuration", "multi-manager"]
 - [x] Create test script to validate multi-manager functionality
 
 ## 📝 Notes
-- The configuration system now uses a central registry in `.AI-Setup/config.json` to track all work effort managers
+- The configuration system now uses a central registry in `_AI-Setup/config.json` to track all work effort managers
 - Multiple work managers can exist within a project in different directories
 - Each manager has a name, path, and configuration settings
 - The system can intelligently determine which manager to use based on current directory
@@ -51,10 +51,10 @@ The updated configuration system stores multiple work managers:
     {
       "name": "main",
       "path": ".",
-      "work_efforts_dir": ".AI-Setup/work_efforts",
+      "work_efforts_dir": "_AI-Setup/work_efforts",
       "use_manager": true,
-      "manager_script": ".AI-Setup/work_efforts/scripts/work_effort_manager.py",
-      "runner_script": ".AI-Setup/work_efforts/scripts/run_work_effort_manager.py",
+      "manager_script": "_AI-Setup/work_efforts/scripts/work_effort_manager.py",
+      "runner_script": "_AI-Setup/work_efforts/scripts/run_work_effort_manager.py",
       "auto_start": true
     },
     {

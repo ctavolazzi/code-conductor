@@ -46,15 +46,15 @@ class TestWorkEffortManagerInvalidInput(unittest.TestCase):
         # Create a temporary directory for testing
         self.test_dir = tempfile.mkdtemp()
 
-        # Create necessary directory structure including .AI-Setup directory
+        # Create necessary directory structure including _AI-Setup directory
         self.work_efforts_dir = os.path.join(self.test_dir, 'work_efforts')
         os.makedirs(os.path.join(self.work_efforts_dir, 'active'), exist_ok=True)
         os.makedirs(os.path.join(self.work_efforts_dir, 'completed'), exist_ok=True)
         os.makedirs(os.path.join(self.work_efforts_dir, 'archived'), exist_ok=True)
         os.makedirs(os.path.join(self.work_efforts_dir, 'templates'), exist_ok=True)
 
-        # Create .AI-Setup directory which is expected by the manager
-        self.ai_setup_dir = os.path.join(self.test_dir, '.AI-Setup')
+        # Create _AI-Setup directory which is expected by the manager
+        self.ai_setup_dir = os.path.join(self.test_dir, '_AI-Setup')
         os.makedirs(self.ai_setup_dir, exist_ok=True)
 
         # Create a basic configuration
@@ -69,8 +69,9 @@ class TestWorkEffortManagerInvalidInput(unittest.TestCase):
             }
         }
 
-        # Save the config to a file in the .AI-Setup directory
-        with open(os.path.join(self.ai_setup_dir, 'config.json'), 'w') as f:
+        # Save the config to a file in the _AI-Setup directory
+        self.config_path = os.path.join(self.ai_setup_dir, "config.json")
+        with open(self.config_path, 'w') as f:
             json.dump(self.config, f)
 
         # Create a template file
@@ -214,8 +215,8 @@ class TestWorkEffortManagerFileSystem(unittest.TestCase):
         os.makedirs(os.path.join(self.work_efforts_dir, 'archived'), exist_ok=True)
         os.makedirs(os.path.join(self.work_efforts_dir, 'templates'), exist_ok=True)
 
-        # Create .AI-Setup directory which is expected by the manager
-        self.ai_setup_dir = os.path.join(self.test_dir, '.AI-Setup')
+        # Create _AI-Setup directory which is expected by the manager
+        self.ai_setup_dir = os.path.join(self.test_dir, '_AI-Setup')
         os.makedirs(self.ai_setup_dir, exist_ok=True)
 
         # Create a basic configuration
@@ -230,8 +231,9 @@ class TestWorkEffortManagerFileSystem(unittest.TestCase):
             }
         }
 
-        # Save the config to a file in the .AI-Setup directory
-        with open(os.path.join(self.ai_setup_dir, 'config.json'), 'w') as f:
+        # Save the config to a file in the _AI-Setup directory
+        self.config_path = os.path.join(self.ai_setup_dir, "config.json")
+        with open(self.config_path, 'w') as f:
             json.dump(self.config, f)
 
         # Create a template file
@@ -377,8 +379,8 @@ class TestWorkEffortManagerConcurrency(unittest.TestCase):
         os.makedirs(os.path.join(self.work_efforts_dir, 'archived'), exist_ok=True)
         os.makedirs(os.path.join(self.work_efforts_dir, 'templates'), exist_ok=True)
 
-        # Create .AI-Setup directory which is expected by the manager
-        self.ai_setup_dir = os.path.join(self.test_dir, '.AI-Setup')
+        # Create _AI-Setup directory which is expected by the manager
+        self.ai_setup_dir = os.path.join(self.test_dir, '_AI-Setup')
         os.makedirs(self.ai_setup_dir, exist_ok=True)
 
         # Create a basic configuration
@@ -393,8 +395,9 @@ class TestWorkEffortManagerConcurrency(unittest.TestCase):
             }
         }
 
-        # Save the config to a file in the .AI-Setup directory
-        with open(os.path.join(self.ai_setup_dir, 'config.json'), 'w') as f:
+        # Save the config to a file in the _AI-Setup directory
+        self.config_path = os.path.join(self.ai_setup_dir, "config.json")
+        with open(self.config_path, 'w') as f:
             json.dump(self.config, f)
 
         # Create a template file
@@ -549,8 +552,8 @@ class TestWorkEffortManagerErrorHandling(unittest.TestCase):
         os.makedirs(os.path.join(self.work_efforts_dir, 'archived'), exist_ok=True)
         os.makedirs(os.path.join(self.work_efforts_dir, 'templates'), exist_ok=True)
 
-        # Create .AI-Setup directory which is expected by the manager
-        self.ai_setup_dir = os.path.join(self.test_dir, '.AI-Setup')
+        # Create _AI-Setup directory which is expected by the manager
+        self.ai_setup_dir = os.path.join(self.test_dir, '_AI-Setup')
         os.makedirs(self.ai_setup_dir, exist_ok=True)
 
         # Create a basic configuration
@@ -565,8 +568,9 @@ class TestWorkEffortManagerErrorHandling(unittest.TestCase):
             }
         }
 
-        # Save the config to a file in the .AI-Setup directory
-        with open(os.path.join(self.ai_setup_dir, 'config.json'), 'w') as f:
+        # Save the config to a file in the _AI-Setup directory
+        self.config_path = os.path.join(self.ai_setup_dir, "config.json")
+        with open(self.config_path, 'w') as f:
             json.dump(self.config, f)
 
         # Create a template file
@@ -690,8 +694,8 @@ class TestWorkEffortManagerPerformance(unittest.TestCase):
         os.makedirs(os.path.join(self.work_efforts_dir, 'archived'), exist_ok=True)
         os.makedirs(os.path.join(self.work_efforts_dir, 'templates'), exist_ok=True)
 
-        # Create .AI-Setup directory which is expected by the manager
-        self.ai_setup_dir = os.path.join(self.test_dir, '.AI-Setup')
+        # Create _AI-Setup directory which is expected by the manager
+        self.ai_setup_dir = os.path.join(self.test_dir, '_AI-Setup')
         os.makedirs(self.ai_setup_dir, exist_ok=True)
 
         # Create a basic configuration
@@ -706,8 +710,9 @@ class TestWorkEffortManagerPerformance(unittest.TestCase):
             }
         }
 
-        # Save the config to a file in the .AI-Setup directory
-        with open(os.path.join(self.ai_setup_dir, 'config.json'), 'w') as f:
+        # Save the config to a file in the _AI-Setup directory
+        self.config_path = os.path.join(self.ai_setup_dir, "config.json")
+        with open(self.config_path, 'w') as f:
             json.dump(self.config, f)
 
         # Create a template file
@@ -841,8 +846,8 @@ class TestWorkEffortManagerInternationalization(unittest.TestCase):
         os.makedirs(os.path.join(self.work_efforts_dir, 'archived'), exist_ok=True)
         os.makedirs(os.path.join(self.work_efforts_dir, 'templates'), exist_ok=True)
 
-        # Create .AI-Setup directory which is expected by the manager
-        self.ai_setup_dir = os.path.join(self.test_dir, '.AI-Setup')
+        # Create _AI-Setup directory which is expected by the manager
+        self.ai_setup_dir = os.path.join(self.test_dir, '_AI-Setup')
         os.makedirs(self.ai_setup_dir, exist_ok=True)
 
         # Create a basic configuration
@@ -857,8 +862,9 @@ class TestWorkEffortManagerInternationalization(unittest.TestCase):
             }
         }
 
-        # Save the config to a file in the .AI-Setup directory
-        with open(os.path.join(self.ai_setup_dir, 'config.json'), 'w') as f:
+        # Save the config to a file in the _AI-Setup directory
+        self.config_path = os.path.join(self.ai_setup_dir, "config.json")
+        with open(self.config_path, 'w') as f:
             json.dump(self.config, f)
 
         # Create a template file
@@ -982,8 +988,8 @@ class TestWorkEffortManagerConfiguration(unittest.TestCase):
         self.work_efforts_dir = os.path.join(self.test_dir, 'work_efforts')
         os.makedirs(self.work_efforts_dir, exist_ok=True)
 
-        # Create .AI-Setup directory which is expected by the manager
-        self.ai_setup_dir = os.path.join(self.test_dir, '.AI-Setup')
+        # Create _AI-Setup directory which is expected by the manager
+        self.ai_setup_dir = os.path.join(self.test_dir, '_AI-Setup')
         os.makedirs(self.ai_setup_dir, exist_ok=True)
 
     def tearDown(self):

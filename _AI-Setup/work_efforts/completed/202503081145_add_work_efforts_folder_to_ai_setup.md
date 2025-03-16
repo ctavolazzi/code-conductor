@@ -1,5 +1,5 @@
 ---
-title: "Add work_efforts folder to .AI-Setup"
+title: "Add work_efforts folder to _AI-Setup"
 status: "completed" # options: active, paused, completed
 priority: "medium" # options: low, medium, high, critical
 assignee: "AI-Setup Team"
@@ -9,13 +9,16 @@ due_date: "2025-03-09" # YYYY-MM-DD
 tags: [feature, refactor]
 ---
 
-# Add work_efforts folder to .AI-Setup
+# Add work_efforts folder to _AI-Setup
 
 ## 🚩 Objectives
-- Update AI-Setup to create a "work_efforts" folder inside the .AI-Setup directory
+- Update AI-Setup to create a "work_efforts" folder inside the _AI-Setup directory
 - Include work effort scripts in the new folder structure
 - Create a version bump (current version 0.2.3 → 0.3.0)
 - Update documentation to reflect the new structure
+- Ensure all work effort scripts work with the new structure
+- Maintain backward compatibility with existing projects
+- Improve organization of project files
 
 ## 🛠 Tasks
 - [x] Modify create_ai_setup() function to create a work_efforts folder
@@ -28,19 +31,19 @@ tags: [feature, refactor]
 ## 📝 Notes
 - Current implementation creates work_efforts at the root level
 - Need to maintain backward compatibility
-- The .AI-Setup/work_efforts should include all subdirectories (templates, active, completed, archived, scripts)
-- Implementation now creates work_efforts both at the root level (for backward compatibility) and inside .AI-Setup
-- Fixed issue with template not being properly created in .AI-Setup/work_efforts/templates
-- Ensured scripts are copied correctly to both root and .AI-Setup work_efforts folders
+- The _AI-Setup/work_efforts should include all subdirectories (templates, active, completed, archived, scripts)
+- Implementation now creates work_efforts both at the root level (for backward compatibility) and inside _AI-Setup
+- Fixed issue with template not being properly created in _AI-Setup/work_efforts/templates
+- Ensured scripts are copied correctly to both root and _AI-Setup work_efforts folders
 
 ## 🐞 Issues Encountered
-- Initial implementation had an issue where work_efforts directory wasn't being properly created inside .AI-Setup
+- Initial implementation had an issue where work_efforts directory wasn't being properly created inside _AI-Setup
 - Fixed by using setup_work_efforts_structure with in_ai_setup parameter instead of custom directory creation
-- Template file was missing in .AI-Setup/work_efforts/templates
+- Template file was missing in _AI-Setup/work_efforts/templates
 - Added explicit call to create_template_if_missing to ensure template existence
 
 ## ✅ Outcomes & Results
-- Successfully implemented the work_efforts directory inside the .AI-Setup folder
+- Successfully implemented the work_efforts directory inside the _AI-Setup folder
 - Updated version to 0.3.0 across all relevant files
 - Maintained backward compatibility with the root-level work_efforts directory
 - Updated documentation to reflect the new structure
@@ -61,13 +64,13 @@ tags: [feature, refactor]
 ## 📋 Development Plan
 
 ### 1. Modify create_ai_setup() function ✓
-- Added code to create the work_efforts folder inside .AI-Setup
+- Added code to create the work_efforts folder inside _AI-Setup
 - Created all subdirectories: templates, active, completed, archived, scripts
 - Created README.md in the work_efforts folder
 - Added code to copy necessary template files and scripts
 
 ### 2. Update setup_work_efforts_structure() function ✓
-- Added in_ai_setup parameter to specify whether to create in .AI-Setup or root
+- Added in_ai_setup parameter to specify whether to create in _AI-Setup or root
 - Maintained backward compatibility
 - Ensured proper script copying to both locations
 

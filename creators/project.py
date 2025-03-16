@@ -3,10 +3,10 @@ import sys
 from datetime import datetime
 
 # Import internal modules
-from ai_setup.utils.helpers import sanitize_directory_name, create_env_file, create_readme, create_makefile, init_git_repo
-from ai_setup.creators.setup_files import create_ai_setup_folder, create_devlog_folder, create_docs_folder
-from ai_setup.creators.work_efforts import create_work_efforts_structure, update_readme_with_work_efforts
-from ai_setup.providers import ollama, openai
+from code_conductor.utils.helpers import sanitize_directory_name, create_env_file, create_readme, create_makefile, init_git_repo
+from code_conductor.creators.setup_files import create_ai_setup_folder, create_devlog_folder, create_docs_folder
+from code_conductor.creators.work_efforts import create_work_efforts_structure, update_readme_with_work_efforts
+from code_conductor.providers import ollama, openai
 
 def create_project(project_name, ai_assisted=False, ai_provider="ollama", openai_api_key=None, ollama_model="phi4", code_dir=None):
     """
@@ -84,8 +84,8 @@ def setup_ai_assistance(project_dir, ai_provider="ollama", openai_api_key=None, 
     print("\nTo use AI assistance:")
     print("1. Open the project in an AI-powered editor like Cursor")
     print("2. Use the following files for AI assistance:")
-    print(f"  - {os.path.join(project_dir, '.AI-Setup/AI-setup-instructions.md')}")
-    print(f"  - {os.path.join(project_dir, '.AI-Setup/AI-work-effort-system.md')}")
+    print(f"  - {os.path.join(project_dir, '_AI-Setup/AI-setup-instructions.md')}")
+    print(f"  - {os.path.join(project_dir, '_AI-Setup/AI-work-effort-system.md')}")
 
 def setup_ollama_environment(model="phi4"):
     """

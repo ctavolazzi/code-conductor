@@ -3,21 +3,21 @@
 ## 2023-03-09: Work Effort Manager Integration
 
 ### Development Plan
-1. Create a config.json file in the .AI-Setup folder to configure the system to use the Work Effort Manager
+1. Create a config.json file in the _AI-Setup folder to configure the system to use the Work Effort Manager
 2. Modify cli.py to check for and use the Work Effort Manager when specified in config
 3. Update run_work_effort_manager.py to load and use the config.json file
 4. Create tests to verify that the integration works correctly
 5. Document the changes in a work effort
 
 ### Progress
-- Created config.json in .AI-Setup folder with work effort manager configuration
+- Created config.json in _AI-Setup folder with work effort manager configuration
 - Modified cli.py to:
   - Load the config.json file with a new load_config function
   - Set up the Python path with a setup_work_effort_manager_path function
   - Use the Work Effort Manager when specified in config
   - Start the manager in the background when needed
 - Updated run_work_effort_manager.py to:
-  - Check for and load config.json from .AI-Setup
+  - Check for and load config.json from _AI-Setup
   - Use configuration for manager initialization
   - Simplify the script to focus on its primary responsibilities
 - Created tests to verify the integration:
@@ -101,7 +101,7 @@ The code-conductor v0.4.1 package works as expected with a few minor issues:
 2. Implement the WorkEffortManager class with appropriate methods
 3. Create an event loop to handle project operations
 4. Add functionality to instantiate and run the WorkEffortManager
-5. Add validation for required folders (work_efforts and .AI-Setup)
+5. Add validation for required folders (_AI-Setup)
 6. Implement JSON processing capabilities
 7. Add advanced filtering and sorting capabilities
 8. Write tests for the new functionality
@@ -116,7 +116,7 @@ The code-conductor v0.4.1 package works as expected with a few minor issues:
 - Created run_work_effort_manager.py script to instantiate and run the manager
 - Implemented file system monitoring and events system in the manager
 - Completed core functionality for the WorkEffortManager
-- Added validation to check for both work_efforts and .AI-Setup folders
+- Added validation to check for both _AI-Setup folders
 - Modified the manager to only create work efforts if both required folders exist
 - Updated sample script to demonstrate folder validation and work effort creation
 - Added comprehensive JSON handling capabilities to the WorkEffortManager

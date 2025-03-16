@@ -61,9 +61,12 @@ fi
 
 # Print instructions
 print_header "Next Steps"
-echo "1. The work effort has been created in the .AI-Setup/work_efforts/active directory"
-echo "2. You can list all work efforts with: code-conductor list"
-echo "3. You can add more details to the work effort by editing the markdown file"
+echo "-----------------------------------------"
+echo "Work Effort Creation Results:"
+echo "-----------------------------------------"
+echo "1. The work effort has been created in the _AI-Setup/work_efforts/active directory"
+echo "2. You can find it here: $(find . -name "*_${TITLE_SLUG}.md" | head -1)"
+echo "-----------------------------------------"
 
 print_success "Process completed!"
 exit 0

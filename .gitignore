@@ -72,6 +72,7 @@ test_reports/
 .vscode/
 *.swp
 *.swo
+.obsidian/
 
 # OS specific files
 .DS_Store
@@ -92,9 +93,9 @@ test_new/
 test_work_effort_cmd/
 
 # Temporary work files
-.AI-Setup/work_efforts/active/*/
-!.AI-Setup/work_efforts/active/*/*.md
-!.AI-Setup/work_efforts/scripts/
+_AI-Setup/work_efforts/active/*/
+!_AI-Setup/work_efforts/active/*/*.md
+!_AI-Setup/work_efforts/scripts/
 
 # Debug files
 *.pyc

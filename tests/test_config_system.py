@@ -24,7 +24,7 @@ class TestConfigSystem(unittest.TestCase):
     def setUp(self):
         """Set up a temporary directory for tests."""
         self.test_dir = tempfile.mkdtemp()
-        self.ai_setup_dir = os.path.join(self.test_dir, ".AI-Setup")
+        self.ai_setup_dir = os.path.join(self.test_dir, "_AI-Setup")
         self.work_efforts_dir = os.path.join(self.ai_setup_dir, "work_efforts")
         self.config_file = os.path.join(self.ai_setup_dir, "config.json")
 

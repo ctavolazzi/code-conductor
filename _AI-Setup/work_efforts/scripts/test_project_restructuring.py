@@ -46,17 +46,17 @@ class TestProjectRestructuring(unittest.TestCase):
         Path('README.md').write_text("# Code Conductor")
 
         # Create directories
-        os.makedirs('.AI-Setup/work_efforts/active', exist_ok=True)
-        os.makedirs('.AI-Setup/work_efforts/completed', exist_ok=True)
-        os.makedirs('.AI-Setup/work_efforts/scripts', exist_ok=True)
+        os.makedirs('_AI-Setup/work_efforts/active', exist_ok=True)
+        os.makedirs('_AI-Setup/work_efforts/completed', exist_ok=True)
+        os.makedirs('_AI-Setup/work_efforts/scripts', exist_ok=True)
         os.makedirs('utils', exist_ok=True)
         os.makedirs('providers', exist_ok=True)
         os.makedirs('docs', exist_ok=True)
         os.makedirs('tests', exist_ok=True)
 
         # Create a few files in these directories
-        Path('.AI-Setup/work_efforts/active/test.md').write_text("# Test Work Effort")
-        Path('.AI-Setup/config.json').write_text("{}")
+        Path('_AI-Setup/work_efforts/active/test.md').write_text("# Test Work Effort")
+        Path('_AI-Setup/config.json').write_text("{}")
         Path('utils/helpers.py').write_text("def help_function(): pass")
         Path('tests/test_cli.py').write_text("import unittest\ndef test_cli(): pass")
         Path('providers/openai.py').write_text("def call_openai(): pass")

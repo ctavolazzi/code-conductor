@@ -27,7 +27,7 @@ tags: [feature, bugfix, installation, upgrade, version]
 ## 📝 Notes
 - Version 0.2.0 includes clearer messaging that AI content generation is OFF by default
 - Updated command structure: "work_effort" is the new command for creating work effort files
-- Project structure has been cleaned up (removed duplicate .AI-Setup directories)
+- Project structure has been cleaned up (removed duplicate _AI-Setup directories)
 
 ## 🐞 Issues Encountered
 - Previous unclear command naming led to confusion about functionality

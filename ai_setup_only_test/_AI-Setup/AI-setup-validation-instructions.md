@@ -5,13 +5,13 @@ It helps AI assistants understand how to verify that everything is working corre
 
 ## Validation Steps
 
-1. Check that the `.AI-Setup` folder exists and contains all required files
+1. Check that the `_AI-Setup` folder exists and contains all required files
 2. Verify that the `work_efforts` directory structure is properly set up
 3. Confirm that the AI-setup commands are working as expected
 
 ## Required Components
 
-1. `.AI-Setup` folder with:
+1. `_AI-Setup` folder with:
    - INSTRUCTIONS.md
    - AI-setup-validation-instructions.md
    - AI-work-effort-system.md

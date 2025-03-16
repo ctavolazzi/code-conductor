@@ -88,7 +88,7 @@ This document defines the standard workflow process for developing new features 
 
 ```bash
 # Create a timestamped work effort document
-touch .AI-Setup/work_efforts/active/$(date +"%Y%m%d%H%M")_feature_name.md
+touch _AI-Setup/work_efforts/active/$(date +"%Y%m%d%H%M")_feature_name.md
 ```
 
 Each new feature or enhancement begins with a dedicated work effort document. This document serves as the central reference point for all work related to the feature.

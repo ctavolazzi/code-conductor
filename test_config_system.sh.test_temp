@@ -43,12 +43,12 @@ echo "Running yes | code-conductor setup in $TEST_DIR"
 yes | code-conductor setup
 
 # Verify config.json was created
-if [ -f "$TEST_DIR/.AI-Setup/config.json" ]; then
-    print_success "Config file created at $TEST_DIR/.AI-Setup/config.json"
+if [ -f "$TEST_DIR/_AI-Setup/config.json" ]; then
+    print_success "Config file created at $TEST_DIR/_AI-Setup/config.json"
     echo "Contents:"
-    cat "$TEST_DIR/.AI-Setup/config.json"
+    cat "$TEST_DIR/_AI-Setup/config.json"
 else
-    print_error "Config file not created at $TEST_DIR/.AI-Setup/config.json"
+    print_error "Config file not created at $TEST_DIR/_AI-Setup/config.json"
     exit 1
 fi
 
@@ -57,11 +57,11 @@ print_header "Test 2: Create work effort and verify location"
 yes | code-conductor work --title "Test Config System" --assignee "Tester" --priority "high"
 
 # Verify work effort was created
-WORK_EFFORT=$(find "$TEST_DIR/.AI-Setup/work_efforts/active" -name "*test_config_system.md")
+WORK_EFFORT=$(find "$TEST_DIR/_AI-Setup/work_efforts/active" -name "*test_config_system.md")
 if [ -n "$WORK_EFFORT" ]; then
     print_success "Work effort created at $WORK_EFFORT"
 else
-    print_error "Work effort not created in $TEST_DIR/.AI-Setup/work_efforts/active"
+    print_error "Work effort not created in $TEST_DIR/_AI-Setup/work_efforts/active"
     exit 1
 fi
 
@@ -87,11 +87,11 @@ print_header "Test 4: Create work effort from subdirectory"
 yes | code-conductor work --title "Nested Subdirectory Test" --assignee "Tester" --priority "medium"
 
 # Verify work effort was created in the correct location
-NESTED_WORK_EFFORT=$(find "$TEST_DIR/.AI-Setup/work_efforts/active" -name "*nested_subdirectory_test.md")
+NESTED_WORK_EFFORT=$(find "$TEST_DIR/_AI-Setup/work_efforts/active" -name "*nested_subdirectory_test.md")
 if [ -n "$NESTED_WORK_EFFORT" ]; then
     print_success "Work effort created at $NESTED_WORK_EFFORT from subdirectory"
 else
-    print_error "Work effort not created in $TEST_DIR/.AI-Setup/work_efforts/active"
+    print_error "Work effort not created in $TEST_DIR/_AI-Setup/work_efforts/active"
     exit 1
 fi
 
@@ -106,10 +106,10 @@ echo "Running yes | code-conductor setup in $SEPARATE_DIR"
 yes | code-conductor setup
 
 # Verify config.json was created
-if [ -f "$SEPARATE_DIR/.AI-Setup/config.json" ]; then
-    print_success "Config file created at $SEPARATE_DIR/.AI-Setup/config.json"
+if [ -f "$SEPARATE_DIR/_AI-Setup/config.json" ]; then
+    print_success "Config file created at $SEPARATE_DIR/_AI-Setup/config.json"
 else
-    print_error "Config file not created at $SEPARATE_DIR/.AI-Setup/config.json"
+    print_error "Config file not created at $SEPARATE_DIR/_AI-Setup/config.json"
     exit 1
 fi
 
@@ -117,17 +117,17 @@ fi
 yes | code-conductor work --title "Separate Project Test" --assignee "Tester" --priority "low"
 
 # Verify work effort was created in the correct location
-SEPARATE_WORK_EFFORT=$(find "$SEPARATE_DIR/.AI-Setup/work_efforts/active" -name "*separate_project_test.md")
+SEPARATE_WORK_EFFORT=$(find "$SEPARATE_DIR/_AI-Setup/work_efforts/active" -name "*separate_project_test.md")
 if [ -n "$SEPARATE_WORK_EFFORT" ]; then
     print_success "Work effort created at $SEPARATE_WORK_EFFORT in separate project"
 else
-    print_error "Work effort not created in $SEPARATE_DIR/.AI-Setup/work_efforts/active"
+    print_error "Work effort not created in $SEPARATE_DIR/_AI-Setup/work_efforts/active"
     exit 1
 fi
 
 # Test 6: Modify config to use root location for one project
 print_header "Test 6: Modify config to use root location"
-CONFIG_FILE="$TEST_DIR/.AI-Setup/config.json"
+CONFIG_FILE="$TEST_DIR/_AI-Setup/config.json"
 # Create a backup
 cp "$CONFIG_FILE" "${CONFIG_FILE}.bak"
 

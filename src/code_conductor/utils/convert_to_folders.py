@@ -71,7 +71,7 @@ def convert_work_efforts_to_folders(work_efforts_dir, dry_run=False):
 
 def main():
     parser = argparse.ArgumentParser(description="Convert existing work efforts to folder structure")
-    parser.add_argument("--dir", help="Path to the .AI-Setup/work_efforts directory")
+    parser.add_argument("--dir", help="Path to the _AI-Setup/work_efforts directory")
     parser.add_argument("--dry-run", action="store_true", help="Don't make changes, just show what would be done")
     args = parser.parse_args()
 
@@ -80,12 +80,12 @@ def main():
     else:
         # Try to find the work_efforts directory
         current_dir = os.getcwd()
-        work_efforts_dir = os.path.join(current_dir, ".AI-Setup", "work_efforts")
+        work_efforts_dir = os.path.join(current_dir, "_AI-Setup", "work_efforts")
 
         if not os.path.exists(work_efforts_dir):
             # Try one level up
             parent_dir = os.path.dirname(current_dir)
-            work_efforts_dir = os.path.join(parent_dir, ".AI-Setup", "work_efforts")
+            work_efforts_dir = os.path.join(parent_dir, "_AI-Setup", "work_efforts")
 
             if not os.path.exists(work_efforts_dir):
                 print("❌ Could not find work_efforts directory. Please specify with --dir.")

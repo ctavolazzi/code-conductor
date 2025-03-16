@@ -38,7 +38,7 @@ class TestWorkEffortManagerEdgeCaseFixes(unittest.TestCase):
         self.completed_dir = os.path.join(self.work_efforts_dir, "completed")
         self.archived_dir = os.path.join(self.work_efforts_dir, "archived")
         self.templates_dir = os.path.join(self.work_efforts_dir, "templates")
-        self.ai_setup_dir = os.path.join(self.test_dir, ".AI-Setup")
+        self.ai_setup_dir = os.path.join(self.test_dir, "_AI-Setup")
 
         os.makedirs(self.work_efforts_dir, exist_ok=True)
         os.makedirs(self.active_dir, exist_ok=True)

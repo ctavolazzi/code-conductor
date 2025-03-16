@@ -40,6 +40,40 @@ cd code-conductor
 pip install -e .
 ```
 
+## Recommended Usage with Cursor and Obsidian
+
+For the optimal Code Conductor experience, we recommend using it with:
+
+### Cursor IDE + Obsidian Setup
+
+1. **Install [Cursor](https://cursor.sh/)** - An AI-powered code editor based on VS Code
+2. **Install [Obsidian](https://obsidian.md/)** - A powerful knowledge base that works on top of a local folder of plain text Markdown files
+
+### Setup Process
+
+1. **Open your project in Obsidian**:
+   - Open Obsidian and select "Open folder as vault"
+   - Navigate to your project directory and select it
+   - This allows you to visualize work efforts and their connections
+
+2. **Open your project in Cursor**:
+   - Launch Cursor and open your project folder
+   - Install Code Conductor:
+     ```bash
+     pip install code-conductor
+     ```
+   - Run the setup command:
+     ```bash
+     code-conductor setup
+     ```
+
+3. **Working with both tools**:
+   - Use Cursor for coding and AI assistance
+   - Use Obsidian for viewing, navigating, and editing the work effort documentation
+   - The _AI-Setup folder will contain all your work efforts and documentation
+
+This dual-tool approach combines the power of AI-assisted coding in Cursor with Obsidian's knowledge management capabilities, creating a seamless development experience with comprehensive documentation.
+
 ## Quick Start
 
 Code Conductor now works with your current directory by default. Just run:

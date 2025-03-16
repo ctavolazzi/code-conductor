@@ -55,9 +55,9 @@ The work node feature is included in Code Conductor v0.5.0 and above. No additio
 ./test_work_node.py
 ```
 
-## Node Structure
+## Work Node Structure
 
-Work nodes are stored as markdown files in the `.AI-Setup/work_effort/node/` directory with frontmatter metadata:
+Work nodes are stored as markdown files in the `_AI-Setup/work_effort/node/` directory with frontmatter metadata:
 
 ```markdown
 ---
@@ -104,17 +104,24 @@ Documents related to feature implementation
 Work nodes integrate seamlessly with other Code Conductor features:
 
 - **Obsidian-Style Linking**: Work nodes extend the basic wiki linking with semantic connection points
-- **Work Effort Structure**: Nodes are stored in a dedicated `.AI-Setup/work_effort/node/` directory
+- **Work Effort Structure**: Nodes are stored in a dedicated `_AI-Setup/work_effort/node/` directory
 - **Markdown Workflow**: Everything is stored as simple markdown files with yaml frontmatter
+
+## Technical Details
+
+- **Metadata Management**: Nodes store relationship data in frontmatter metadata
+- **Work Effort Structure**: Nodes are stored in a dedicated `_AI-Setup/work_effort/node/` directory
+- **Event-Based Updates**: Changes to nodes automatically update connected documents
 
 ## Contributing
 
 To contribute to the work node feature:
 
 1. Submit issues for bugs or enhancement ideas
-2. Follow the [development workflow](.AI-Setup/work_efforts/active/202503171244_work_node_creation_workflow.md)
-3. Add tests for any new functionality
-4. Ensure all tests pass before submitting changes
+2. Check out the [Work Node Specification](../specifications/work_node_spec.md)
+3. Follow the [development workflow](_AI-Setup/work_efforts/active/202503171244_work_node_creation_workflow.md)
+4. Add tests for any new functionality
+5. Ensure all tests pass before submitting changes
 
 ## License
 

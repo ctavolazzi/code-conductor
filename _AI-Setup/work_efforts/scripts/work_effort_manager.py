@@ -85,14 +85,14 @@ class WorkEffortManager:
         self.archived_dir = os.path.join(self.work_efforts_dir, "archived")
         self.templates_dir = os.path.join(self.work_efforts_dir, "templates")
         self.scripts_dir = os.path.join(self.work_efforts_dir, "scripts")
-        self.ai_setup_dir = os.path.join(self.project_dir, ".AI-Setup")
+        self.ai_setup_dir = os.path.join(self.project_dir, "_AI-Setup")
 
         # Check if required directories exist
         self.has_work_efforts_dir = os.path.exists(self.work_efforts_dir) and os.path.isdir(self.work_efforts_dir)
         self.has_ai_setup_dir = os.path.exists(self.ai_setup_dir) and os.path.isdir(self.ai_setup_dir)
 
         logger.info(f"Work efforts directory exists: {self.has_work_efforts_dir}")
-        logger.info(f".AI-Setup directory exists: {self.has_ai_setup_dir}")
+        logger.info(f"_AI-Setup directory exists: {self.has_ai_setup_dir}")
 
         # We only load work efforts if the directory exists
         if self.has_work_efforts_dir:
@@ -161,7 +161,7 @@ class WorkEffortManager:
         Check if the required folders exist.
 
         Returns:
-            True if both work_efforts and .AI-Setup folders exist
+            True if both work_efforts and _AI-Setup folders exist
         """
         return self.has_work_efforts_dir and self.has_ai_setup_dir
 
@@ -367,7 +367,7 @@ class WorkEffortManager:
     def create_work_effort(self, title: str, assignee: str, priority: str,
                           due_date: str, content: Dict = None, json_data: str = None) -> Optional[str]:
         """
-        Create a new work effort if both work_efforts and .AI-Setup folders exist.
+        Create a new work effort if both work_efforts and _AI-Setup folders exist.
 
         Args:
             title: Title of the work effort
@@ -382,7 +382,7 @@ class WorkEffortManager:
         """
         # Check if required folders exist
         if not self.has_required_folders():
-            logger.error("Cannot create work effort: Required folders (work_efforts and .AI-Setup) not found")
+            logger.error("Cannot create work effort: Required folders (work_efforts and _AI-Setup) not found")
             return None
 
         # Process JSON data if provided

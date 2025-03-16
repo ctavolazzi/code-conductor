@@ -5,6 +5,10 @@ All notable changes to the Code Conductor project will be documented in this fil
 ## [Unreleased]
 
 ### Added
+- Added comprehensive documentation for using Code Conductor with Obsidian and Cursor
+- Created detailed guide for setting up an optimal workflow with Obsidian and Cursor
+- Updated .gitignore to exclude .obsidian directory for better compatibility with Obsidian users
+- Enhanced migration script to exclude log files, itself, and changelog when updating references
 - Changed directory naming from ".AI-Setup" to "_AI-Setup" for better visibility in file systems
 - Created migration script to help users transition from .AI-Setup to _AI-Setup
 - Updated all code references and documentation to use the new naming convention
