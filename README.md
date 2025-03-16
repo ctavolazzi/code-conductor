@@ -247,6 +247,22 @@ code-conductor list-managers
 ./workflow_runner.py --non-interactive --feature-name "Data Import Module"
 ```
 
+### Managing Work Effort Status
+
+```bash
+# Update a work effort's status
+code-conductor update-status --work-effort <name> --new-status <status>
+
+# Mark a work effort as completed
+code-conductor update-status --work-effort feature-implementation --new-status completed
+
+# Archive a completed work effort
+code-conductor update-status --work-effort old-feature --new-status archived --old-status completed
+
+# Return a work effort to active status
+code-conductor update-status --work-effort feature-implementation --new-status active --old-status completed
+```
+
 ### Retrieving Work Effort Context
 
 ```bash
