@@ -401,3 +401,37 @@ These findings will help make the Work Effort Manager more robust and reliable b
 - Consider adding a configuration option to set a default work effort directory
 - Add more comprehensive tests for the restructured package
 - Update documentation to reflect the new package structure
+
+## 2025-03-16: CLI Command for Updating Work Effort Status
+
+### Development Plan
+1. Implement a CLI command for updating work effort status
+2. Add command-line options for specifying work effort name, new status, and current status
+3. Create a fuzzy matching mechanism to find work efforts by partial name
+4. Implement both primary (WorkEffortManager-based) and fallback (direct file manipulation) methods
+5. Document the new functionality in the test suite implementation work effort
+
+### Progress
+- Implemented the `update-status` command in `cli.py`:
+  - Added command-line arguments:
+    - `--work-effort`: Name/part of name of the work effort to update
+    - `--new-status`: New status to set (active, completed, archived, paused)
+    - `--old-status`: Current status of the work effort (default: active)
+  - Created search functionality to find work efforts by partial name matching
+  - Added handling for multiple matching work efforts
+  - Implemented two status update methods:
+    1. Primary: Using the WorkEffortManager if available
+    2. Fallback: Direct file manipulation if WorkEffortManager is not available
+- Enhanced the command to:
+  - Update the status in the work effort content
+  - Update the last_updated timestamp
+  - Move the file to the appropriate directory
+  - Handle potential errors gracefully
+- Documented the feature in the test suite implementation work effort
+- Added usage examples and feature descriptions to the work effort documentation
+
+### Next Steps
+- Add automated tests for the new command
+- Consider creating similar commands for other work effort management tasks
+- Update project documentation to include the new command
+- Ensure the command works reliably with complex directory structures and special characters

@@ -1479,9 +1479,16 @@ def parse_arguments():
     parser.add_argument("--manager-name", help="Name for a new work effort manager")
     parser.add_argument("--target-dir", help="Target directory for a new work effort manager")
 
+    # Update status options
+    parser.add_argument("--work-effort", help="Name of the work effort to update status for")
+    parser.add_argument("--new-status", choices=["active", "completed", "archived", "paused"],
+                       help="New status for the work effort")
+    parser.add_argument("--old-status", default="active",
+                       help="Current status of the work effort (default: active)")
+
     # Command argument
     parser.add_argument("command", nargs="?",
-                       help="Command to run (setup, new-work-manager, set-default, work, list, list-managers, select, find-root)")
+                       help="Command to run (setup, new-work-manager, set-default, work, list, list-managers, update-status, select, find-root)")
 
     return parser.parse_args()
 
@@ -1902,6 +1909,160 @@ async def main():
             else:
                 print(f"❌ Could not find project root. Are you in a Code Conductor project?")
                 print(f"   Try running 'code-conductor setup' to initialize a project.")
+                return 1
+
+        elif args.command.lower() == 'update-status':
+            # Get required arguments
+            work_effort_name = getattr(args, 'work_effort', None)
+            new_status = getattr(args, 'new_status', None)
+            old_status = getattr(args, 'old_status', 'active')
+
+            # Validate inputs
+            if not work_effort_name:
+                print("❌ Error: Work effort name is required")
+                print("Usage: code-conductor update-status --work-effort <name> --new-status <status> [--old-status <status>]")
+                return 1
+
+            if not new_status:
+                print("❌ Error: New status is required")
+                print("Usage: code-conductor update-status --work-effort <name> --new-status <status> [--old-status <status>]")
+                return 1
+
+            if new_status not in ['active', 'completed', 'archived', 'paused']:
+                print(f"❌ Error: Invalid status: {new_status}")
+                print("Valid statuses: active, completed, archived, paused")
+                return 1
+
+            # Get work efforts directory using appropriate manager
+            manager_name = getattr(args, 'manager', None)
+            work_efforts_dir, manager_info = find_work_efforts_directory(manager_name)
+
+            if not work_efforts_dir:
+                print(f"❌ Error: Work efforts directory not found")
+                if manager_name:
+                    print(f"⚠️ Manager '{manager_name}' not found")
+                return 1
+
+            # Find the work effort
+            old_dir = os.path.join(work_efforts_dir, old_status)
+            matched_files = []
+
+            if os.path.exists(old_dir):
+                # Look for files directly in the status directory
+                for filename in os.listdir(old_dir):
+                    if filename.endswith('.md') and work_effort_name.lower() in filename.lower():
+                        matched_files.append(os.path.join(old_dir, filename))
+
+                # Also check subdirectories
+                for root, dirs, files in os.walk(old_dir):
+                    if root == old_dir:
+                        continue  # Skip the top directory as we've already processed it
+                    for filename in files:
+                        if filename.endswith('.md') and work_effort_name.lower() in filename.lower():
+                            matched_files.append(os.path.join(root, filename))
+
+            if not matched_files:
+                print(f"❌ Error: No work effort found matching '{work_effort_name}' with status '{old_status}'")
+                return 1
+
+            if len(matched_files) > 1:
+                print(f"⚠️ Multiple work efforts found matching '{work_effort_name}':")
+                for i, file_path in enumerate(matched_files):
+                    print(f"  {i+1}. {os.path.basename(file_path)}")
+
+                # Ask user to select one
+                selection = input("Please select a work effort by number (or 'q' to quit): ")
+                if selection.lower() == 'q':
+                    return 0
+
+                try:
+                    index = int(selection) - 1
+                    if index < 0 or index >= len(matched_files):
+                        print("❌ Invalid selection.")
+                        return 1
+                    selected_path = matched_files[index]
+                except ValueError:
+                    print("❌ Invalid selection. Please enter a number.")
+                    return 1
+            else:
+                selected_path = matched_files[0]
+
+            # Get just the filename
+            filename = os.path.basename(selected_path)
+
+            print(f"Updating status of '{filename}' from '{old_status}' to '{new_status}'...")
+
+            # Try to update using WorkEffortManager if available
+            try:
+                # Determine the current directory
+                current_dir = os.getcwd()
+
+                # Check if we can import the WorkEffortManager
+                # Assuming _AI-Setup is in the sys.path
+                sys.path.append(os.path.join(current_dir, "_AI-Setup"))
+
+                try:
+                    from work_efforts.scripts.work_effort_manager import WorkEffortManager
+
+                    # Initialize the WorkEffortManager
+                    manager = WorkEffortManager(project_dir=current_dir)
+
+                    # Update the status
+                    success = manager.update_work_effort_status(filename, new_status, old_status)
+
+                    if success:
+                        print(f"✅ Work effort status updated successfully")
+                        new_dir = os.path.join(work_efforts_dir, new_status)
+                        new_path = os.path.join(new_dir, filename)
+                        print(f"New location: {new_path}")
+                        return 0
+                    else:
+                        print("❌ Failed to update work effort status using WorkEffortManager")
+                except ImportError:
+                    print("⚠️ WorkEffortManager not available, using fallback method...")
+            except Exception as e:
+                print(f"⚠️ Error with WorkEffortManager: {str(e)}")
+                print("Using fallback method...")
+
+            # Fallback method: Direct file manipulation
+            try:
+                # Read the content
+                with open(selected_path, 'r') as f:
+                    content = f.read()
+
+                # Update the status in the content
+                status_pattern = r'status: "(active|completed|archived|paused)"'
+                replacement = f'status: "{new_status}"'
+
+                if re.search(status_pattern, content):
+                    updated_content = re.sub(status_pattern, replacement, content)
+                else:
+                    print(f"❌ Status field not found in work effort document")
+                    return 1
+
+                # Update the last_updated timestamp
+                timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
+                updated_content = re.sub(r'last_updated: "[^"]+"', f'last_updated: "{timestamp}"', updated_content)
+
+                # Determine the target directory
+                new_dir = os.path.join(work_efforts_dir, new_status)
+                if not os.path.exists(new_dir):
+                    os.makedirs(new_dir)
+
+                # Write to the new location
+                new_path = os.path.join(new_dir, filename)
+                with open(new_path, 'w') as f:
+                    f.write(updated_content)
+
+                # Remove the old file if it's different
+                if new_path != selected_path:
+                    os.remove(selected_path)
+
+                print(f"✅ Work effort status updated successfully")
+                print(f"New location: {new_path}")
+                return 0
+            except Exception as e:
+                print(f"❌ Error updating work effort status: {str(e)}")
                 return 1
 
         else:
