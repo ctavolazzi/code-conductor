@@ -5,12 +5,15 @@ All notable changes to the Code Conductor project will be documented in this fil
 ## [Unreleased]
 
 ### Added
+- Reimagined Code Conductor as a lightweight system for creating powerful AI work circuits
+- Enhanced documentation emphasizing scalable, hardware-agnostic knowledge management
 - Implemented Obsidian-style wiki links between work efforts using double bracket syntax `[[link]]`
 - Added `related_efforts` field in work effort frontmatter for structured document linking
 - Created examples of different work effort naming conventions (timestamp-based, sequential, UUID, semantic)
 - Added comprehensive documentation on work effort naming strategies
 
 ### Changed
+- Refined project description to highlight text-based, contextual workflow capabilities
 - Consolidated all work efforts into a single location at `.AI-Setup/work_efforts`
 - Improved organization and structure of work effort directories
 - Enhanced linking between related work efforts for better navigation

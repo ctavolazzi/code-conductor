@@ -1,6 +1,6 @@
 # Code Conductor
 
-Code Conductor is a toolkit for setting up AI-assisted development environments and managing work efforts.
+Code Conductor is a lightweight, text-based system for creating powerful AI work circuits. Build contextual workflows using markdown files with Obsidian-style linking that scale infinitely. Works with any LLM on any hardware, delivering human-readable, durable knowledge management without complexity.
 
 ## Version
 
@@ -8,11 +8,13 @@ Current version: 0.4.5
 
 ## Features
 
-- AI-assisted development setup
-- Work effort tracking and management
+- **AI-powered workflows that scale with your needs**
+- **Markdown-based knowledge management**
   - **New: Folder-based work efforts for better organization**
-- Project template creation
-- CLI tools for AI integration
+  - **New: Obsidian-style document linking between work efforts**
+  - **New: Consolidated work effort management**
+- **Hardware-agnostic performance** - works on any machine
+- **Universal LLM compatibility** - use your preferred AI models
 
 ## Installation
 
@@ -65,6 +67,26 @@ Work efforts now create dedicated folders instead of single files, allowing you 
 
 [Read the full documentation](docs/folder_based_work_efforts.md)
 
+### Obsidian-Style Document Linking
+
+Work efforts now support Obsidian-style wiki links using the `[[document]]` syntax:
+- Link related work efforts using double bracket notation
+- Navigate between connected documents
+- Create knowledge networks across your project
+- Automatically track related efforts in frontmatter
+
+[Read the full documentation](docs/obsidian_style_linking.md)
+
+### Work Effort Consolidation
+
+A new script makes it easy to organize all work efforts into a centralized location:
+- Consolidate scattered work efforts into `.AI-Setup/work_efforts`
+- Preserve directory structure (active, archived, completed)
+- Add Obsidian-style links between related documents
+- Clean up duplicate directories
+
+[Read the full documentation](docs/work_effort_consolidation.md)
+
 ## Usage
 
 ### Basic Commands
@@ -81,6 +103,9 @@ code-conductor list
 
 # Select directories to set up
 code-conductor select
+
+# Consolidate work efforts into a central location
+python consolidate_work_efforts.py
 ```
 
 ### Creating Work Efforts
