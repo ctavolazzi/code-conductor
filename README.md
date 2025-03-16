@@ -9,6 +9,8 @@ Current version: 0.4.5
 ## Features
 
 - **AI-powered workflows that scale with your needs**
+  - **NEW: Automated Workflow Runner for guided development process**
+  - **NEW: Work effort status management and lifecycle tracking**
 - **Markdown-based knowledge management**
   - **New: Folder-based work efforts for better organization**
   - **New: Obsidian-style document linking between work efforts**
@@ -58,6 +60,27 @@ source ~/.zshrc  # or source ~/.bash_profile
 
 ## What's New in 0.4.5
 
+### Automated Workflow Runner
+
+The new Workflow Runner automates the entire Code Conductor development process:
+- Step-by-step guidance through the 8 phases of feature development
+- Automatic script generation with proper structure and testing
+- Document validation to ensure complete documentation
+- Support for both interactive and non-interactive modes
+- Template integration with the official project templates
+
+[Read the full documentation](docs/workflow_runner.md)
+
+### Work Effort Status Management
+
+Work efforts now support complete lifecycle management:
+- Move work efforts between active, completed, and archived states
+- Automatic file organization based on status
+- Programmatic and interactive status changes
+- Enhanced metadata tracking for work efforts
+
+[Read the full documentation](docs/workflow_runner.md#status-management)
+
 ### Folder-Based Work Efforts
 
 Work efforts now create dedicated folders instead of single files, allowing you to:
@@ -106,6 +129,9 @@ code-conductor select
 
 # Consolidate work efforts into a central location
 python consolidate_work_efforts.py
+
+# Run the automated workflow process
+./workflow_runner.py
 ```
 
 ### Creating Work Efforts
@@ -128,6 +154,19 @@ cc-work-e --package-dir
 
 # With AI content generation (requires Ollama)
 cc-work-e --use-ai --description "Implement authentication system" --model phi3
+```
+
+### Using the Workflow Runner
+
+```bash
+# Run in interactive mode (default)
+./workflow_runner.py
+
+# Run with a specific feature name
+./workflow_runner.py --feature-name "Enhanced Search Functionality"
+
+# Run in non-interactive mode with defaults
+./workflow_runner.py --non-interactive --feature-name "Data Import Module"
 ```
 
 Note:

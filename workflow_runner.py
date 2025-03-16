@@ -30,12 +30,32 @@ import argparse
 import datetime
 import subprocess
 from pathlib import Path
+from string import Template
 
 # Constants
 WORK_EFFORTS_DIR = ".AI-Setup/work_efforts"
 ACTIVE_DIR = f"{WORK_EFFORTS_DIR}/active"
+COMPLETED_DIR = f"{WORK_EFFORTS_DIR}/completed"
+ARCHIVED_DIR = f"{WORK_EFFORTS_DIR}/archived"
+SCRIPTS_DIR = f"{WORK_EFFORTS_DIR}/scripts"
 DEVLOG_PATH = f"{WORK_EFFORTS_DIR}/devlog.md"
 CHANGELOG_PATH = "CHANGELOG.md"
+TEMPLATE_PATH = f"{WORK_EFFORTS_DIR}/templates/work-effort-template.md"
+
+# Template for devlog entries
+DEVLOG_ENTRY_TEMPLATE = """## {date}
+
+### {title}
+
+{description}
+
+**Work Effort**: [Link to Work Effort](active/{work_effort_filename})
+
+---
+
+"""
+
+# Template for generated Python scripts
 SCRIPT_TEMPLATE = """#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 \"\"\"
@@ -65,10 +85,7 @@ def parse_args():
 def main():
     \"\"\"Main function.\"\"\"
     args = parse_args()
-
-    # TODO: Implement your feature here
-    print("Implementing {feature_name}...")
-
+    print(f"Implementing {feature_name}...")
     return 0
 
 
@@ -76,6 +93,7 @@ if __name__ == "__main__":
     sys.exit(main())
 """
 
+# Template for test scripts
 TEST_TEMPLATE = """#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 \"\"\"
@@ -90,129 +108,22 @@ Usage:
 import os
 import sys
 import unittest
-from pathlib import Path
 
 # Import the module to test
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import {script_name}
 
-
 class Test{class_name}(unittest.TestCase):
     \"\"\"Test the {feature_name} functionality.\"\"\"
 
-    def setUp(self):
-        \"\"\"Set up the test environment.\"\"\"
-        # TODO: Set up test environment
-        pass
-
-    def tearDown(self):
-        \"\"\"Clean up after the tests.\"\"\"
-        # TODO: Clean up test environment
-        pass
-
     def test_basic_functionality(self):
         \"\"\"Test basic functionality.\"\"\"
-        # TODO: Implement basic test
         self.assertTrue(True)  # Placeholder assertion
 
-
-def run_tests():
-    \"\"\"Run the test suite.\"\"\"
-    unittest.main(argv=['first-arg-is-ignored'], exit=False)
-
-
 if __name__ == "__main__":
-    print("Running tests for {feature_name}...")
-    run_tests()
+    print(f"Running tests for {feature_name}...")
+    unittest.main()
     print("Tests completed successfully!")
-"""
-
-WORK_EFFORT_TEMPLATE = """---
-title: "{title}"
-created: "{created}"
-priority: "{priority}"
-status: "active"
-tags: {tags}
----
-
-# {title}
-
-## Overview
-
-{description}
-
-## Goals
-
-- TODO: Define specific goals for this feature
-
-## Requirements
-
-- TODO: List functional requirements
-- TODO: List non-functional requirements
-
-## Acceptance Criteria
-
-- TODO: Define how success will be measured
-
-## Implementation Plan
-
-1. TODO: Step 1
-2. TODO: Step 2
-3. TODO: Step 3
-
-## Progress
-
-### Phase 1: Initial Implementation
-
-**Status**: Not started
-
-**Notes**:
-- Initial planning completed
-
-### Phase 2: Testing & Refinement
-
-**Status**: Not started
-
-**Notes**:
-- Tests not yet implemented
-
-### Phase 3: Documentation & Integration
-
-**Status**: Not started
-
-**Notes**:
-- Documentation to be created
-
-## Related Work
-
-- TODO: Link related work efforts using `[[document]]` syntax
-"""
-
-DEVLOG_ENTRY_TEMPLATE = """## {date}: {title}
-
-**Goal:** {description}
-
-### Completed:
-
-1. **Planning & Setup**
-   - Created work effort document
-   - Defined goals and requirements
-   - Established implementation plan
-
-2. **Initial Implementation**
-   - TODO: Document implementation details
-   - TODO: Note any challenges encountered
-   - TODO: Describe approach taken
-
-3. **Testing & Validation**
-   - TODO: Document testing process
-   - TODO: Summarize test results
-   - TODO: Note any performance considerations
-
-TODO: Add a brief summary of the feature and its value to the project.
-
-Related to: [[{work_effort_filename}]]
-
 """
 
 
@@ -240,8 +151,15 @@ class WorkflowRunner:
         self.feature_description = ""
         self.feature_priority = "medium"
         self.feature_tags = []
+        self.assignee = "Unassigned"
         self.script_name = ""
         self.class_name = ""
+        self.status = "active"
+
+        # Set due date to 7 days from now
+        due_date = datetime.datetime.now() + datetime.timedelta(days=7)
+        self.due_date = due_date.strftime("%Y-%m-%d")
+        self.last_updated = self.created
 
         # File paths
         self.work_effort_path = ""
@@ -250,6 +168,10 @@ class WorkflowRunner:
 
         # Ensure directories exist
         os.makedirs(ACTIVE_DIR, exist_ok=True)
+        os.makedirs(SCRIPTS_DIR, exist_ok=True)
+        os.makedirs(COMPLETED_DIR, exist_ok=True)
+        os.makedirs(ARCHIVED_DIR, exist_ok=True)
+        os.makedirs(os.path.dirname(TEMPLATE_PATH), exist_ok=True)
 
     def prompt(self, message, default=""):
         """
@@ -283,6 +205,67 @@ class WorkflowRunner:
         """
         return re.sub(r'[^a-z0-9_]', '', text.lower().replace(' ', '_'))
 
+    def get_template_content(self):
+        """
+        Get the content of the template file.
+        If the template file doesn't exist, create a default one.
+
+        Returns:
+            str: The template content
+        """
+        if not os.path.exists(TEMPLATE_PATH):
+            print(f"Template file not found at {TEMPLATE_PATH}, creating default template...")
+            os.makedirs(os.path.dirname(TEMPLATE_PATH), exist_ok=True)
+
+            # Default template content if the file doesn't exist
+            default_template = """---
+title: "{{title}}"
+status: "{{status}}" # options: active, paused, completed
+priority: "{{priority}}" # options: low, medium, high, critical
+assignee: "{{assignee}}"
+created: "{{created}}" # YYYY-MM-DD HH:mm
+last_updated: "{{last_updated}}" # YYYY-MM-DD HH:mm
+due_date: "{{due_date}}" # YYYY-MM-DD
+tags: [{{tags}}]
+---
+
+# {{title}}
+
+## 🚩 Objectives
+- Clearly define goals for this work effort.
+
+## 🛠 Tasks
+- [ ] Task 1
+- [ ] Task 2
+
+## 📝 Notes
+- Context, links to relevant code, designs, references.
+
+## 🐞 Issues Encountered
+- Document issues and obstacles clearly.
+
+## ✅ Outcomes & Results
+- Explicitly log outcomes, lessons learned, and code changes.
+
+## 📌 Linked Items
+- [[Related Work Effort]]
+- [[GitHub Issue #]]
+- [[Pull Request #]]
+
+## 📅 Timeline & Progress
+- **Started**: {{created}}
+- **Updated**: {{last_updated}}
+- **Target Completion**: {{due_date}}
+"""
+            with open(TEMPLATE_PATH, 'w') as f:
+                f.write(default_template)
+
+            return default_template
+
+        # Read the template file
+        with open(TEMPLATE_PATH, 'r') as f:
+            return f.read()
+
     def create_work_effort(self):
         """
         Step 1: Create a work effort document.
@@ -290,27 +273,42 @@ class WorkflowRunner:
         print("\n=== Step 1: Create Work Effort Document ===\n")
 
         # Get feature information
-        self.feature_name = self.prompt("Feature name", "New Feature")
-        self.feature_title = self.prompt("Feature title", self.feature_name)
-        self.feature_description = self.prompt("Feature description", "A new feature for Code Conductor")
-        self.feature_priority = self.prompt("Priority (low, medium, high)", "medium")
-        tags_input = self.prompt("Tags (comma-separated)", "feature, documentation")
-        self.feature_tags = [tag.strip() for tag in tags_input.split(",")]
+        if not self.feature_name:  # Only prompt if feature_name not already set
+            self.feature_name = self.prompt("Feature name", "New Feature")
+            self.feature_title = self.prompt("Feature title", self.feature_name)
+            self.feature_description = self.prompt("Feature description", "A new feature for Code Conductor")
+            self.feature_priority = self.prompt("Priority (low, medium, high, critical)", "medium")
+            self.assignee = self.prompt("Assignee", "Unassigned")
+            tags_input = self.prompt("Tags (comma-separated)", "feature, documentation")
+            self.feature_tags = [tag.strip() for tag in tags_input.split(",")]
+
+            # Generate derived properties from feature_name
+            self.script_name = self.slugify(self.feature_name)
+            self.class_name = ''.join(word.capitalize() for word in self.slugify(self.feature_name).split('_'))
 
         # Generate file name and paths
-        self.script_name = self.slugify(self.feature_name)
-        self.class_name = ''.join(word.capitalize() for word in self.slugify(self.feature_name).split('_'))
-        work_effort_filename = f"{self.timestamp}_{self.slugify(self.feature_name)}.md"
+        work_effort_filename = f"{self.timestamp}_{self.script_name}.md"
         self.work_effort_path = os.path.join(ACTIVE_DIR, work_effort_filename)
 
-        # Create work effort content
-        content = WORK_EFFORT_TEMPLATE.format(
-            title=self.feature_title,
-            created=self.created,
-            priority=self.feature_priority,
-            tags=json.dumps(self.feature_tags),
-            description=self.feature_description
-        )
+        # Get template content
+        template_content = self.get_template_content()
+
+        # Create a dictionary of replacements
+        replacements = {
+            "{{title}}": self.feature_title,
+            "{{status}}": self.status,
+            "{{priority}}": self.feature_priority,
+            "{{assignee}}": self.assignee,
+            "{{created}}": self.created,
+            "{{last_updated}}": self.last_updated,
+            "{{due_date}}": self.due_date,
+            "{{tags}}": ", ".join(self.feature_tags)
+        }
+
+        # Replace placeholders in the template
+        content = template_content
+        for placeholder, value in replacements.items():
+            content = content.replace(placeholder, value)
 
         # Write the work effort file
         with open(self.work_effort_path, 'w') as f:
@@ -358,8 +356,8 @@ class WorkflowRunner:
         """
         print("\n=== Step 3: Create Script or Code ===\n")
 
-        # Generate script path
-        self.script_path = f"{self.script_name}.py"
+        # Generate script path in the scripts directory
+        self.script_path = os.path.join(SCRIPTS_DIR, f"{self.script_name}.py")
 
         # Create script content
         content = SCRIPT_TEMPLATE.format(
@@ -387,7 +385,7 @@ class WorkflowRunner:
         # Run the script
         print(f"Executing {self.script_path}...")
         try:
-            result = subprocess.run(['python', self.script_path], capture_output=True, text=True)
+            result = subprocess.run(['python3', self.script_path], capture_output=True, text=True)
 
             print("\nExecution Results:")
             print("-" * 50)
@@ -426,11 +424,11 @@ class WorkflowRunner:
                 with open(self.work_effort_path, 'r') as f:
                     content = f.read()
 
-                # Add results to the Progress section
-                if "## Progress" in content:
+                # Update the Outcomes & Results section
+                if "## ✅ Outcomes & Results" in content:
                     updated_content = content.replace(
-                        "**Notes**:\n- Initial planning completed",
-                        f"**Notes**:\n- Initial planning completed\n- Testing results: {results.strip()}"
+                        "## ✅ Outcomes & Results\n- Explicitly log outcomes, lessons learned, and code changes.",
+                        f"## ✅ Outcomes & Results\n- Testing results: {results.strip()}"
                     )
 
                     with open(self.work_effort_path, 'w') as f:
@@ -444,8 +442,8 @@ class WorkflowRunner:
         """
         print("\n=== Step 7: Add Tests ===\n")
 
-        # Generate test path
-        self.test_path = f"test_{self.script_name}.py"
+        # Generate test path in the scripts directory
+        self.test_path = os.path.join(SCRIPTS_DIR, f"test_{self.script_name}.py")
 
         # Create test content
         content = TEST_TEMPLATE.format(
@@ -467,7 +465,7 @@ class WorkflowRunner:
         if self.interactive and self.prompt("Would you like to run the tests? (y/n)", "y").lower() == 'y':
             print(f"Running tests in {self.test_path}...")
             try:
-                result = subprocess.run(['python', self.test_path], capture_output=True, text=True)
+                result = subprocess.run(['python3', self.test_path], capture_output=True, text=True)
 
                 print("\nTest Results:")
                 print("-" * 50)
@@ -489,11 +487,81 @@ class WorkflowRunner:
 
         return self.test_path
 
+    def update_work_effort_status(self, new_status):
+        """
+        Update the status of a work effort and move it to the appropriate directory.
+
+        Args:
+            new_status (str): The new status of the work effort (active, completed, archived, paused)
+
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        if not os.path.exists(self.work_effort_path):
+            print(f"❌ Work effort not found at {self.work_effort_path}")
+            return False
+
+        # Read the current content
+        with open(self.work_effort_path, 'r') as f:
+            content = f.read()
+
+        # Update the status in the content
+        # Use regex to replace status line in frontmatter
+        status_pattern = r'status: "(active|completed|archived|paused)"'
+        replacement = f'status: "{new_status}"'
+
+        if re.search(status_pattern, content):
+            updated_content = re.sub(status_pattern, replacement, content)
+        else:
+            print(f"❌ Status field not found in work effort document")
+            return False
+
+        # Determine the target directory
+        if new_status == "active":
+            target_dir = ACTIVE_DIR
+        elif new_status == "completed":
+            target_dir = COMPLETED_DIR
+        elif new_status == "archived":
+            target_dir = ARCHIVED_DIR
+        else:
+            # For "paused" or other statuses, keep in active directory
+            target_dir = ACTIVE_DIR
+
+        # Get just the filename from the path
+        filename = os.path.basename(self.work_effort_path)
+        target_path = os.path.join(target_dir, filename)
+
+        # Write the updated content to the new location
+        try:
+            # Create the updated file
+            with open(target_path, 'w') as f:
+                f.write(updated_content)
+
+            # If the target path is different from the current path, remove the old file
+            if target_path != self.work_effort_path:
+                os.remove(self.work_effort_path)
+
+            # Update the work effort path
+            self.work_effort_path = target_path
+            self.status = new_status
+
+            print(f"✅ Updated work effort status to '{new_status}' and moved to {target_dir}")
+            return True
+        except Exception as e:
+            print(f"❌ Error updating work effort status: {str(e)}")
+            return False
+
     def update_documentation(self):
         """
         Step 8: Update all documentation.
         """
         print("\n=== Step 8: Update All Documentation ===\n")
+
+        # Update work effort status if completed
+        if self.interactive:
+            status_choice = self.prompt("Would you like to update the work effort status? (active/completed/archived/paused)", "active")
+            if status_choice != "active":
+                self.update_work_effort_status(status_choice)
 
         # Update CHANGELOG if it exists
         if os.path.exists(CHANGELOG_PATH) and self.interactive:
@@ -610,26 +678,30 @@ class WorkflowRunner:
         return 0
 
 
-def parse_args():
-    """Parse command line arguments."""
+def main():
+    """Main function."""
     parser = argparse.ArgumentParser(description="Run the Code Conductor workflow process")
     parser.add_argument("--non-interactive", action="store_true",
                         help="Run in non-interactive mode with default values")
     parser.add_argument("--feature-name", type=str,
                         help="Name of the feature to develop")
-    return parser.parse_args()
+    args = parser.parse_args()
 
-
-def main():
-    """Main function."""
-    args = parse_args()
-
-    # Create and run the workflow
+    # Create the workflow runner
     runner = WorkflowRunner(interactive=not args.non_interactive)
 
     # Set feature name if provided
     if args.feature_name:
+        # Set all feature-related properties before running the workflow
         runner.feature_name = args.feature_name
+        runner.feature_title = args.feature_name
+        runner.feature_description = f"Implementation of {args.feature_name}"
+        runner.script_name = runner.slugify(args.feature_name)
+        runner.class_name = ''.join(word.capitalize() for word in runner.script_name.split('_'))
+
+        print(f"Using provided feature name: {args.feature_name}")
+        print(f"Script name will be: {runner.script_name}.py")
+        print(f"Script will be created at: {os.path.join(SCRIPTS_DIR, f'{runner.script_name}.py')}")
 
     # Run the workflow
     return runner.run_workflow()

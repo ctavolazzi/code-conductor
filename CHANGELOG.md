@@ -5,6 +5,12 @@ All notable changes to the Code Conductor project will be documented in this fil
 ## [Unreleased]
 
 ### Added
+- Enhanced workflow_runner.py with template integration from .AI-Setup/work_efforts/templates
+- Added work effort status management (active, completed, archived) with automatic file movement
+- Implemented directory structure integration for scripts and work efforts
+- Added support for additional metadata fields (assignee, due date, last updated)
+- Created test_status_change.py for validating status management functionality
+- Added comprehensive documentation for the workflow runner in docs/workflow_runner.md
 - Created workflow_runner.py script to automate the entire Code Conductor workflow process
 - Added interactive and non-interactive modes for guided workflow execution
 - Implemented automated documentation updating and verification as part of the workflow
@@ -21,6 +27,11 @@ All notable changes to the Code Conductor project will be documented in this fil
 - Added comprehensive documentation on work effort naming strategies
 
 ### Changed
+- Updated workflow_runner.py to use official template file instead of hardcoded template
+- Modified script path generation to use .AI-Setup/work_efforts/scripts directory
+- Improved the feature name handling in non-interactive mode
+- Enhanced feedback with detailed file paths and status information
+- Added cleanup of files in test scripts for better maintainability
 - Adopted consistent singular naming for all file and directory references
 - Refined project description to highlight text-based, contextual workflow capabilities
 - Consolidated all work efforts into a single location at `.AI-Setup/work_efforts`
