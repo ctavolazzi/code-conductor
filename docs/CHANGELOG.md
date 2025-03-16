@@ -5,6 +5,9 @@ All notable changes to the Code Conductor project will be documented in this fil
 ## [Unreleased]
 
 ### Added
+- Changed directory naming from ".AI-Setup" to "_AI-Setup" for better visibility in file systems
+- Created migration script to help users transition from .AI-Setup to _AI-Setup
+- Updated all code references and documentation to use the new naming convention
 - Created retrieve_work_effort.py script for gathering comprehensive context about work efforts
 - Implemented AI-focused workflow for work effort exploration and context gathering
 - Updated AI instructions to prioritize using existing scripts for work effort management

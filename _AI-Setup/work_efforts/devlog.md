@@ -2,6 +2,33 @@
 
 ## 2025-03-16
 
+### AI Setup Directory Rename (.AI-Setup to _AI-Setup)
+
+**Goal:** Replace all references to ".AI-Setup" with "_AI-Setup" throughout the codebase to improve directory visibility.
+
+#### Rationale:
+- The current ".AI-Setup" directory is hidden by default in many file systems
+- Using "_AI-Setup" makes it visible without requiring special configuration
+- This improves usability and discoverability for end users
+
+#### Implementation Plan:
+1. **Code Changes**
+   - Update all Python modules that reference ".AI-Setup"
+   - Update utility scripts and helper functions
+   - Update test files and test expectations
+
+2. **Documentation Updates**
+   - Update README.md, DEVLOG.md, and other markdown documentation
+   - Update code comments and docstrings
+
+3. **Migration Support**
+   - Create a migration script to help users transition existing projects
+   - Ensure backward compatibility
+
+4. **Testing**
+   - Verify all functionality works with the new directory name
+   - Ensure no breaking changes
+
 ### Project Restructuring Plan
 
 **Goal:** Implement a more structured project organizational system to improve maintainability and code organization.
@@ -512,3 +539,39 @@ Performed comprehensive testing of the `retrieve_work_effort.py` script to ensur
 4. Updated the work effort document to record testing results and document error handling behavior
 
 All tests passed successfully, confirming that the script handles both normal operation and error cases gracefully with appropriate user feedback. The script is now ready for integration into the AI assistant workflow.
+
+## 2025-03-16 10:30:00 - AI Setup Directory Rename Implementation
+
+Completed the implementation of renaming ".AI-Setup" to "_AI-Setup" throughout the codebase:
+
+1. **Core Code Updates**
+   - Updated all Python modules in src/code_conductor to use "_AI-Setup" instead of ".AI-Setup"
+   - Modified key files including:
+     - setup_files.py
+     - workflow_runner.py
+     - retrieve_work_effort.py
+     - consolidate_work_efforts.py
+     - create_work_node.py
+     - directory_scanner.py
+     - cli.py
+
+2. **Documentation Updates**
+   - Updated README.md to reflect the new naming convention
+   - Added entry to CHANGELOG.md documenting the change
+   - Updated work effort documentation
+
+3. **Migration Support**
+   - Created a comprehensive migration script (migrate_ai_setup.py) that:
+     - Finds all ".AI-Setup" directories in a project
+     - Renames them to "_AI-Setup"
+     - Updates references in files to use the new naming convention
+     - Provides detailed reporting of changes made
+     - Includes dry-run mode for testing without making changes
+
+4. **Remaining Tasks**
+   - Need to test the changes to ensure they don't break existing functionality
+   - Some test directories still use ".AI-Setup" and will need to be updated
+
+This change improves visibility of the AI-Setup directory in file systems that hide dotfiles by default, enhancing usability and discoverability for end users.
+
+**Work Effort**: [Link to Work Effort](active/202503160900_ai_setup_directory_rename.md)

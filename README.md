@@ -134,7 +134,7 @@ Work efforts now support Obsidian-style wiki links using the `[[document]]` synt
 ### Work Effort Consolidation
 
 A new script makes it easy to organize all work efforts into a centralized location:
-- Consolidate scattered work efforts into `.AI-Setup/work_efforts`
+- Consolidate scattered work efforts into _AI-Setup/work_efforts
 - Preserve directory structure (active, archived, completed)
 - Add Obsidian-style links between related documents
 - Clean up duplicate directories

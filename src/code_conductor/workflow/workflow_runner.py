@@ -33,7 +33,7 @@ from pathlib import Path
 from string import Template
 
 # Constants
-WORK_EFFORTS_DIR = ".AI-Setup/work_efforts"
+WORK_EFFORTS_DIR = "_AI-Setup/work_efforts"
 ACTIVE_DIR = f"{WORK_EFFORTS_DIR}/active"
 COMPLETED_DIR = f"{WORK_EFFORTS_DIR}/completed"
 ARCHIVED_DIR = f"{WORK_EFFORTS_DIR}/archived"

@@ -26,14 +26,14 @@ BOLD = '\033[1m' if os.name != 'nt' else ''
 RESET = '\033[0m' if os.name != 'nt' else ''
 
 def create_ai_setup(root_dir=None):
-    """Create the .AI-setup folder structure with all necessary files."""
+    """Create the _AI-setup folder structure with all necessary files."""
     if root_dir is None:
         root_dir = os.getcwd()
 
     # Define the AI setup folder
-    setup_folder = os.path.join(root_dir, ".AI-Setup")
+    setup_folder = os.path.join(root_dir, "_AI-Setup")
 
-    # Create .AI-Setup folder
+    # Create _AI-Setup folder
     if not os.path.exists(setup_folder):
         os.makedirs(setup_folder)
 
@@ -77,13 +77,13 @@ It helps AI assistants understand how to verify that everything is working corre
 
 ## Validation Steps
 
-1. Check that the `.AI-Setup` folder exists and contains all required files
+1. Check that the _.AI-Setup_ folder exists and contains all required files
 2. Verify that the `work_efforts` directory structure is properly set up
 3. Confirm that the AI-setup commands are working as expected
 
 ## Required Components
 
-1. `.AI-Setup` folder with:
+1. _.AI-Setup_ folder with:
    - INSTRUCTIONS.md
    - AI-setup-validation-instructions.md
    - AI-work-effort-system.md
@@ -218,7 +218,7 @@ To set up a new or existing project with AI assistance:
    ```
 
 This will:
-- Create a `.AI-Setup` folder with all necessary files
+- Create a _.AI-Setup_ folder with all necessary files
 - Set up a `work_efforts` directory structure
 - Create an initial default work effort
 
@@ -252,7 +252,7 @@ A properly configured project will have:
 
 ```
 your-project/
-├── .AI-Setup/
+├── _.AI-Setup_/
 │   ├── INSTRUCTIONS.md
 │   ├── AI-setup-validation-instructions.md
 │   ├── AI-work-effort-system.md
@@ -298,7 +298,7 @@ def install_ai_setup(target_dirs):
             continue
 
         # Create .AI-Setup in target directory
-        target_setup = os.path.join(directory, ".AI-Setup")
+        target_setup = os.path.join(directory, "_AI-Setup")
         if not os.path.exists(target_setup):
             os.makedirs(target_setup)
 
@@ -321,7 +321,7 @@ def is_ai_setup_installed(directory: str) -> bool:
     if not os.path.exists(directory) or not os.path.isdir(directory):
         return False
 
-    return os.path.exists(os.path.join(directory, ".AI-Setup"))
+    return os.path.exists(os.path.join(directory, "_AI-Setup"))
 
 def get_directories(base_dir: str = ".") -> List[str]:
     """

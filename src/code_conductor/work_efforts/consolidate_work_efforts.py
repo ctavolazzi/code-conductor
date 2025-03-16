@@ -5,7 +5,7 @@
 Work Effort Consolidator
 
 This script automates the consolidation of work effort files from various directories across a project
-into a single centralized location (.AI-Setup/work_efforts). It also provides options
+into a single centralized location (_AI-Setup/work_efforts). It also provides options
 for adding Obsidian-style links between related documents.
 
 Workflow Description:
@@ -50,7 +50,7 @@ Usage:
 
 Options:
     --root-dir PATH     Root directory to search for work efforts (default: current directory)
-    --dest-dir PATH     Destination directory for consolidated work efforts (default: .AI-Setup/work_efforts)
+    --dest-dir PATH     Destination directory for consolidated work efforts (default: _AI-Setup/work_efforts)
     --dry-run           Don't actually copy or delete files, just show what would be done
     --no-delete         Copy files but don't delete the original directories
     --force             Don't ask for confirmation before deleting original directories
@@ -82,7 +82,7 @@ logger = logging.getLogger(__name__)
 
 # Constants
 ROOT_DIR = os.getcwd()
-DEST_DIR = os.path.join(ROOT_DIR, '.AI-Setup', 'work_efforts')
+DEST_DIR = os.path.join(ROOT_DIR, '_AI-Setup', 'work_efforts')
 WORK_EFFORT_DIR_PATTERNS = [
     '*work_effort*',
     '*work-effort*',
@@ -97,7 +97,7 @@ MARKDOWN_EXTENSIONS = ['.md', '.markdown']
 YAML_FRONTMATTER_PATTERN = re.compile(r'^---\s*$(.*?)^---\s*$', re.MULTILINE | re.DOTALL)
 WIKI_LINK_PATTERN = re.compile(r'\[\[(.*?)\]\]')
 CHANGELOG_PATH = 'CHANGELOG.md'
-DEVLOG_PATH = os.path.join('.AI-Setup', 'work_efforts', 'devlog.md')
+DEVLOG_PATH = os.path.join('_AI-Setup', 'work_efforts', 'devlog.md')
 
 class WorkEffortConsolidator:
     """
@@ -261,7 +261,7 @@ class WorkEffortConsolidator:
             relative_path = os.path.relpath(work_dir, self.root_dir)
 
             # Skip directories that are already in the destination path
-            if relative_path.startswith('.AI-Setup/work_efforts'):
+            if relative_path.startswith('_AI-Setup/work_efforts'):
                 logger.info(f"Skipping directory already in destination: {work_dir}")
                 continue
 
@@ -432,7 +432,7 @@ class WorkEffortConsolidator:
         for directory in dirs:
             # Skip directories that are already in the destination path
             relative_path = os.path.relpath(directory, self.root_dir)
-            if relative_path.startswith('.AI-Setup/work_efforts'):
+            if relative_path.startswith('_AI-Setup/work_efforts'):
                 continue
 
             try:

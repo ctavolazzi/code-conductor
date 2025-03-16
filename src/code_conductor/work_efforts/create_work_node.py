@@ -46,7 +46,7 @@ Options:
     --max-nodes NUM       Maximum number of nodes to create in auto-discover mode (default: 10)
     --visualize           Generate a visualization of the knowledge graph
     --output FILE         Output file for visualization data (default: "knowledge_graph.json")
-    --work-dir DIR        Work efforts directory (default: .AI-Setup/work_effort)
+    --work-dir DIR        Work efforts directory (default: _AI-Setup/work_effort)
     --dry-run             Don't actually create or modify files, just show what would be done
     --verbose             Enable verbose logging
 """
@@ -78,7 +78,7 @@ logger = logging.getLogger(__name__)
 
 # Constants
 ROOT_DIR = os.getcwd()
-WORK_DIR = os.path.join(ROOT_DIR, '.AI-Setup', 'work_effort')
+WORK_DIR = os.path.join(ROOT_DIR, '_AI-Setup', 'work_effort')
 NODE_DIR = os.path.join(WORK_DIR, 'node')
 MARKDOWN_EXTENSIONS = ['.md', '.markdown']
 YAML_FRONTMATTER_PATTERN = re.compile(r'^---\s*$(.*?)^---\s*$', re.MULTILINE | re.DOTALL)

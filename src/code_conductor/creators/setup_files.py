@@ -3,32 +3,32 @@ import shutil
 
 def create_ai_setup_folder(project_dir):
     """
-    Create the .AI-Setup folder and its instruction files.
+    Create the _AI-Setup folder and its instruction files.
 
     Args:
         project_dir: Project directory path
 
     Returns:
-        str: Path to the created .AI-Setup folder
+        str: Path to the created _AI-Setup folder
     """
     # Define the AI setup folder
-    setup_folder = os.path.join(project_dir, ".AI-Setup")
+    setup_folder = os.path.join(project_dir, "_AI-Setup")
 
-    # Create .AI-Setup folder
+    # Create _AI-Setup folder
     os.makedirs(setup_folder, exist_ok=True)
 
     # Create instruction files
     create_instruction_files(setup_folder)
 
-    print(f"✅ Created .AI-Setup folder with instruction files")
+    print(f"✅ Created _AI-Setup folder with instruction files")
     return setup_folder
 
 def create_instruction_files(setup_folder):
     """
-    Create instruction files in the .AI-Setup folder.
+    Create instruction files in the _AI-Setup folder.
 
     Args:
-        setup_folder: Path to the .AI-Setup folder
+        setup_folder: Path to the _AI-Setup folder
     """
     files = {
         "AI-setup-instructions.md": """## **Cursor AI Project Initialization Prompt:**
@@ -545,16 +545,16 @@ Get it, Cursor—let's make magic happen! 🌟✨"""
 
 def copy_ai_setup_to_dirs(source_dir, target_dirs):
     """
-    Copy the .AI-Setup folder to target directories.
+    Copy the _AI-Setup folder to target directories.
 
     Args:
-        source_dir: Source directory with .AI-Setup folder
+        source_dir: Source directory with _AI-Setup folder
         target_dirs: List of target directory paths
     """
-    source_setup = os.path.join(source_dir, ".AI-Setup")
+    source_setup = os.path.join(source_dir, "_AI-Setup")
 
     if not os.path.exists(source_setup):
-        print(f"⚠️ Source .AI-Setup folder does not exist at: {source_setup}")
+        print(f"⚠️ Source _AI-Setup folder does not exist at: {source_setup}")
         return
 
     for target_dir in target_dirs:
@@ -562,15 +562,15 @@ def copy_ai_setup_to_dirs(source_dir, target_dirs):
             print(f"⚠️ Target directory does not exist, creating: {target_dir}")
             os.makedirs(target_dir, exist_ok=True)
 
-        target_setup = os.path.join(target_dir, ".AI-Setup")
+        target_setup = os.path.join(target_dir, "_AI-Setup")
 
-        # Remove existing .AI-Setup if it exists
+        # Remove existing _AI-Setup if it exists
         if os.path.exists(target_setup):
             shutil.rmtree(target_setup)
 
-        # Copy the .AI-Setup folder to the target directory
+        # Copy the _AI-Setup folder to the target directory
         shutil.copytree(source_setup, target_setup)
-        print(f"✅ Installed .AI-Setup to: {target_dir}")
+        print(f"✅ Installed _AI-Setup to: {target_dir}")
 
 def create_devlog_folder(project_dir):
     """

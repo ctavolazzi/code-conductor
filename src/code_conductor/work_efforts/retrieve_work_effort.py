@@ -27,7 +27,7 @@ import yaml
 from pprint import pprint
 
 # Define constants
-WORK_EFFORTS_DIR = ".AI-Setup/work_efforts"
+WORK_EFFORTS_DIR = "_AI-Setup/work_efforts"
 ACTIVE_DIR = os.path.join(WORK_EFFORTS_DIR, "active")
 COMPLETED_DIR = os.path.join(WORK_EFFORTS_DIR, "completed")
 ARCHIVED_DIR = os.path.join(WORK_EFFORTS_DIR, "archived")

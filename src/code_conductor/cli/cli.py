@@ -36,10 +36,10 @@ logger = logging.getLogger('CodeConductor')
 # Function to create or update configuration file
 def create_or_update_config(base_dir=None, config_data=None):
     """
-    Create or update the configuration file in the .AI-Setup directory.
+    Create or update the configuration file in the _AI-Setup directory.
 
     Args:
-        base_dir: The base directory where .AI-Setup exists or will be created
+        base_dir: The base directory where _AI-Setup exists or will be created
         config_data: Dictionary of configuration data to write (will be merged with existing)
 
     Returns:
@@ -48,14 +48,14 @@ def create_or_update_config(base_dir=None, config_data=None):
     if base_dir is None:
         base_dir = os.getcwd()
 
-    # Define the .AI-Setup directory and config file path
-    ai_setup_dir = os.path.join(base_dir, ".AI-Setup")
+    # Define the _AI-Setup directory and config file path
+    ai_setup_dir = os.path.join(base_dir, "_AI-Setup")
     config_file = os.path.join(ai_setup_dir, "config.json")
 
-    # Ensure .AI-Setup directory exists
+    # Ensure _AI-Setup directory exists
     if not os.path.exists(ai_setup_dir):
         os.makedirs(ai_setup_dir)
-        logger.info(f"Created .AI-Setup directory at: {ai_setup_dir}")
+        logger.info(f"Created _AI-Setup directory at: {ai_setup_dir}")
 
     # Default configuration
     default_config = {
@@ -68,10 +68,10 @@ def create_or_update_config(base_dir=None, config_data=None):
             {
                 "name": os.path.basename(base_dir) or "main",
                 "path": os.path.relpath(base_dir, base_dir),  # Relative to project root
-                "work_efforts_dir": os.path.join(".AI-Setup", "work_efforts"),
+                "work_efforts_dir": os.path.join("_AI-Setup", "work_efforts"),
                 "use_manager": True,
-                "manager_script": os.path.join(".AI-Setup", "work_efforts", "scripts", "work_effort_manager.py"),
-                "runner_script": os.path.join(".AI-Setup", "work_efforts", "scripts", "run_work_effort_manager.py"),
+                "manager_script": os.path.join("_AI-Setup", "work_efforts", "scripts", "work_effort_manager.py"),
+                "runner_script": os.path.join("_AI-Setup", "work_efforts", "scripts", "run_work_effort_manager.py"),
                 "auto_start": True
             }
         ],
@@ -128,7 +128,7 @@ def create_or_update_config(base_dir=None, config_data=None):
 # Function to find the nearest config.json
 def find_nearest_config(start_dir=None):
     """
-    Find the nearest .AI-Setup/config.json by walking up the directory tree
+    Find the nearest _AI-Setup/config.json by walking up the directory tree
 
     Args:
         start_dir: Directory to start searching from (default: current directory)
@@ -143,9 +143,9 @@ def find_nearest_config(start_dir=None):
     start_dir = os.path.abspath(start_dir)
     original_start = start_dir
 
-    # Walk up the directory tree looking for .AI-Setup/config.json
+    # Walk up the directory tree looking for _AI-Setup/config.json
     while start_dir:
-        config_file = os.path.join(start_dir, ".AI-Setup", "config.json")
+        config_file = os.path.join(start_dir, "_AI-Setup", "config.json")
         if os.path.exists(config_file):
             try:
                 with open(config_file, 'r') as f:
@@ -345,9 +345,9 @@ def find_work_efforts_directory(manager_name=None, verbose=False):
             print(f"Found work efforts directory in manager: {work_efforts_dir}")
         return work_efforts_dir, manager_info
 
-    # Fallback: try to find .AI-Setup/work_efforts in the current directory
+    # Fallback: try to find _AI-Setup/work_efforts in the current directory
     current_dir = os.getcwd()
-    ai_setup_dir = os.path.join(current_dir, ".AI-Setup")
+    ai_setup_dir = os.path.join(current_dir, "_AI-Setup")
 
     if verbose:
         print(f"Looking for work efforts in current directory: {current_dir}")
@@ -356,12 +356,12 @@ def find_work_efforts_directory(manager_name=None, verbose=False):
         ai_work_efforts = os.path.join(ai_setup_dir, "work_efforts")
         if os.path.exists(ai_work_efforts) and os.path.isdir(ai_work_efforts):
             if verbose:
-                print(f"Found work efforts directory in .AI-Setup: {ai_work_efforts}")
-            return ai_work_efforts, {"path": ".", "work_efforts_dir": os.path.join(".AI-Setup", "work_efforts")}
+                print(f"Found work efforts directory in _AI-Setup: {ai_work_efforts}")
+            return ai_work_efforts, {"path": ".", "work_efforts_dir": os.path.join("_AI-Setup", "work_efforts")}
         elif verbose:
-            print(f".AI-Setup exists but work_efforts directory not found at: {ai_work_efforts}")
+            print(f"_AI-Setup exists but work_efforts directory not found at: {ai_work_efforts}")
     elif verbose:
-        print(f".AI-Setup directory not found at: {ai_setup_dir}")
+        print(f"_AI-Setup directory not found at: {ai_setup_dir}")
 
     # Not found
     if verbose:
@@ -410,17 +410,17 @@ except ImportError:
             return []
 
     def is_ai_setup_installed(directory):
-        return os.path.exists(os.path.join(directory, ".AI-Setup"))
+        return os.path.exists(os.path.join(directory, "_AI-Setup"))
 
     def create_ai_setup(root_dir=None):
-        """Create the .AI-setup folder structure with all necessary files."""
+        """Create the _AI-setup folder structure with all necessary files."""
         if root_dir is None:
             root_dir = os.getcwd()
 
         # Define the AI setup folder
-        setup_folder = os.path.join(root_dir, ".AI-Setup")
+        setup_folder = os.path.join(root_dir, "_AI-Setup")
 
-        # Create .AI-Setup folder
+        # Create _AI-Setup folder
         if not os.path.exists(setup_folder):
             os.makedirs(setup_folder)
             print(f"✅ Created AI-Setup in: {root_dir}")
