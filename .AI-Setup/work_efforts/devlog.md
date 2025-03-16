@@ -410,3 +410,35 @@ Work is tracked in [[202503160637_work_effort_naming_conventions.md]]
 This consolidation simplifies maintenance, reduces duplication, and creates a consistent experience for all team members. The centralized location also allows for better integration with Obsidian-style linking by providing a known base path for all work effort documents.
 
 Works with: [[202503160637_work_effort_naming_conventions.md]] and [[202503160633_obsidian_style_document_linking.md]]
+
+# 2025-03-16 08:10:00 - Work Effort Context Retrieval
+
+Created a comprehensive system for retrieving work effort context to enhance AI assistant interactions:
+
+1. Created `retrieve_work_effort.py` script with multiple search options:
+   - Find by name: `--name "feature-name"`
+   - Find by status: `--status active|completed|archived`
+   - Find by date: `--date YYYYMMDD`
+   - Get latest work efforts: `--latest [count]`
+   - Find related work efforts: `--related "feature-name"`
+
+2. Added support for recursive exploration of work effort relationships with `--recursive` flag
+
+3. Implemented detection and display of associated implementation scripts
+
+4. Updated AI instructions in `.AI-Setup/INSTRUCTIONS.md` to prioritize using existing scripts for work effort management
+
+5. Created comprehensive documentation:
+   - Added `docs/retrieve_work_effort.md` with detailed usage instructions
+   - Updated README.md with context retrieval features
+   - Updated CHANGELOG.md with new features
+   - Updated docs/README.md to include links to context retrieval documentation
+
+6. Created work effort document at `.AI-Setup/work_efforts/active/202503160805_work_effort_context_retrieval.md`
+
+This enhancement significantly improves the AI assistant workflow by providing comprehensive context before beginning work on a feature, ensuring that AI assistants have all the necessary information about existing work efforts and their relationships.
+
+Next steps:
+- Consider adding visualization capabilities for work effort relationships
+- Implement caching for faster repeated retrieval
+- Add support for exporting context as a single file for AI training

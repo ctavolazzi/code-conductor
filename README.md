@@ -11,6 +11,7 @@ Current version: 0.4.5
 - **AI-powered workflows that scale with your needs**
   - **NEW: Automated Workflow Runner for guided development process**
   - **NEW: Work effort status management and lifecycle tracking**
+  - **NEW: Work effort context retrieval for enhanced AI assistance**
 - **Markdown-based knowledge management**
   - **New: Folder-based work efforts for better organization**
   - **New: Obsidian-style document linking between work efforts**
@@ -80,6 +81,16 @@ Work efforts now support complete lifecycle management:
 - Enhanced metadata tracking for work efforts
 
 [Read the full documentation](docs/workflow_runner.md#status-management)
+
+### Work Effort Context Retrieval
+
+The new retrieve_work_effort.py script provides comprehensive context for AI assistants:
+- Find work efforts by name, status, date, or recency
+- Display related work efforts and associated scripts
+- Recursive exploration of linked work efforts
+- Comprehensive output format for AI context gathering
+
+[Read the full documentation](docs/retrieve_work_effort.md)
 
 ### Folder-Based Work Efforts
 
@@ -167,6 +178,22 @@ cc-work-e --use-ai --description "Implement authentication system" --model phi3
 
 # Run in non-interactive mode with defaults
 ./workflow_runner.py --non-interactive --feature-name "Data Import Module"
+```
+
+### Retrieving Work Effort Context
+
+```bash
+# Find by name
+./retrieve_work_effort.py --name "feature-name"
+
+# Get latest work efforts
+./retrieve_work_effort.py --latest 3
+
+# Find by status
+./retrieve_work_effort.py --status active
+
+# Find related work efforts (with recursive traversal)
+./retrieve_work_effort.py --related "feature-name" --recursive
 ```
 
 Note:

@@ -1,25 +1,66 @@
-# AI-Setup Instructions
+# AI Setup Instructions
 
-This directory contains setup files for AI-assisted development.
+This directory contains instructions and resources for AI assistants working with this codebase.
 
-## Usage
+## Work Effort Management
 
-This setup enables your AI assistants to better understand your project structure
-and provide more contextual help and recommendations.
+### Familiarize First, Then Use Scripts
 
-### Commands
+1. **First Interaction**: When first working with this codebase, familiarize yourself with the Code Conductor workflow process by reviewing:
+   - The workflow steps in the workflow_runner.py script
+   - The structure of work efforts in .AI-Setup/work_efforts/
+   - The templates used in .AI-Setup/work_efforts/templates/
 
-The AI-Setup package provides two main commands:
+2. **Prioritize Existing Scripts**: After initial familiarity, ALWAYS prefer using existing scripts for work effort management:
+   - Use `workflow_runner.py` for the complete workflow process
+   - Use `update_status.py` for changing work effort status
+   - Use `.AI-Setup/work_efforts/scripts/work_effort_manager.py` for specific work effort operations
+   - Use `.AI-Setup/work_efforts/scripts/run_work_effort_manager.py` for interactive work effort management
+   - Use `.AI-Setup/work_efforts/scripts/new_work_effort.py` for creating individual work efforts
+   - Use `retrieve_work_effort.py` to gather comprehensive context for AI assistants
 
-1. `ai_setup` - Main command for setting up AI assistance and basic work efforts
-   - `ai_setup help` - Show help information
-   - `ai_setup setup` - Set up AI assistance in the current directory
-   - `ai_setup work_effort` - Create a new work effort
-   - `ai_setup list` - List all work efforts
+3. **Only Manual Creation When Necessary**: Only create work efforts manually if:
+   - The existing scripts do not support the specific operation needed
+   - There's a technical issue with the scripts that prevents their use
+   - The user specifically requests manual creation
 
-2. `ai_work_effort` - Enhanced work effort creator with AI content generation capabilities
-   - `ai_work_effort -i` - Create a work effort interactively
-   - `ai_work_effort --use-ai --description "Your description"` - Use AI to generate content
-   - `ai_work_effort --help` - Show help information
+## Workflow Scripts Quick Reference
 
-No action is required from you - the AI tools will automatically utilize these files.
+### Complete Workflow Process
+```bash
+./workflow_runner.py --feature-name "Feature Name" [--non-interactive]
+```
+
+### Work Effort Status Management
+```bash
+./update_status.py --work-effort path/to/work_effort.md --status completed
+```
+
+### Retrieving Work Effort Context
+```bash
+./retrieve_work_effort.py --name "feature-name"
+./retrieve_work_effort.py --status active
+./retrieve_work_effort.py --latest 3
+./retrieve_work_effort.py --related "feature-name" --recursive
+```
+
+### Creating a New Work Effort
+```bash
+python .AI-Setup/work_efforts/scripts/new_work_effort.py --title "Feature Title" --description "Description" [--priority high]
+```
+
+## Documentation
+
+When using scripts, always:
+1. Update the devlog with appropriate entries
+2. Ensure work efforts have complete metadata
+3. Link related work efforts using Obsidian-style `[[links]]`
+4. Update the main README.md and CHANGELOG.md for significant features
+
+## Context Gathering Workflow
+
+When beginning a new task:
+1. Use `retrieve_work_effort.py` to gather context on related efforts
+2. Check recent changes with `git diff` or `diff_history`
+3. Review existing scripts in `.AI-Setup/work_efforts/scripts/`
+4. THEN proceed with the workflow process using `workflow_runner.py`

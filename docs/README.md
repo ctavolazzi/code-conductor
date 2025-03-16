@@ -5,6 +5,7 @@ Welcome to the Code Conductor documentation. This directory contains detailed gu
 ## Available Documentation
 
 - [Workflow Runner](workflow_runner.md) - Comprehensive guide to the automated workflow process and status management
+- [Retrieve Work Effort](retrieve_work_effort.md) - Tool for gathering comprehensive context about work efforts for AI assistants
 - [Folder-Based Work Efforts](folder_based_work_efforts.md) - Learn about the new folder-based work effort system introduced in version 0.4.5
 - [Obsidian-Style Linking](obsidian_style_linking.md) - Documentation on linking work efforts using wiki-style syntax
 - [Work Effort Consolidation](work_effort_consolidation.md) - Guide to centralizing work efforts in one location
@@ -17,6 +18,7 @@ If you're new to Code Conductor, check out:
 1. [Installation Guide](../README.md#installation) - How to install Code Conductor
 2. [Usage Guide](../README.md#usage) - Basic usage instructions
 3. [Workflow Guide](workflow_runner.md) - Guide to the automated development workflow
+4. [Context Gathering](retrieve_work_effort.md#ai-assistant-usage) - How to gather context for AI assistants
 
 ## Version-Specific Changes
 

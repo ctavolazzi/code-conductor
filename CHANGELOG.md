@@ -5,6 +5,9 @@ All notable changes to the Code Conductor project will be documented in this fil
 ## [Unreleased]
 
 ### Added
+- Created retrieve_work_effort.py script for gathering comprehensive context about work efforts
+- Implemented AI-focused workflow for work effort exploration and context gathering
+- Updated AI instructions to prioritize using existing scripts for work effort management
 - Enhanced workflow_runner.py with template integration from .AI-Setup/work_efforts/templates
 - Added work effort status management (active, completed, archived) with automatic file movement
 - Implemented directory structure integration for scripts and work efforts
@@ -27,6 +30,8 @@ All notable changes to the Code Conductor project will be documented in this fil
 - Added comprehensive documentation on work effort naming strategies
 
 ### Changed
+- Updated AI instructions to prioritize using scripts over manual work effort creation
+- Added detailed documentation on context gathering for AI assistants
 - Updated workflow_runner.py to use official template file instead of hardcoded template
 - Modified script path generation to use .AI-Setup/work_efforts/scripts directory
 - Improved the feature name handling in non-interactive mode
