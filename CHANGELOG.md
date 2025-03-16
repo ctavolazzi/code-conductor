@@ -5,6 +5,14 @@ All notable changes to the Code Conductor project will be documented in this fil
 ## [Unreleased]
 
 ### Added
+- Created workflow_runner.py script to automate the entire Code Conductor workflow process
+- Added interactive and non-interactive modes for guided workflow execution
+- Implemented automated documentation updating and verification as part of the workflow
+- Added script generation templates with proper structure and testing framework integration
+- Implemented Work Node system for creating knowledge graph connections between documents
+- Added automatic document relationship discovery based on content similarity
+- Created visualization capabilities for exploring document relationships
+- Added command-line interface for work node management
 - Reimagined Code Conductor as a lightweight system for creating powerful AI work circuits
 - Enhanced documentation emphasizing scalable, hardware-agnostic knowledge management
 - Implemented Obsidian-style wiki links between work efforts using double bracket syntax `[[link]]`
@@ -13,6 +21,7 @@ All notable changes to the Code Conductor project will be documented in this fil
 - Added comprehensive documentation on work effort naming strategies
 
 ### Changed
+- Adopted consistent singular naming for all file and directory references
 - Refined project description to highlight text-based, contextual workflow capabilities
 - Consolidated all work efforts into a single location at `.AI-Setup/work_efforts`
 - Improved organization and structure of work effort directories
