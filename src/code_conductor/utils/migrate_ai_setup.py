@@ -45,6 +45,7 @@ OLD_DIR_NAME = ".AI-Setup"
 NEW_DIR_NAME = "_AI-Setup"
 EXCLUDED_DIRS = ['.git', 'node_modules', 'venv', '.env', '__pycache__']
 FILE_PATTERNS = ['*.py', '*.md', '*.json', '*.sh', '*.txt']
+EXCLUDED_FILES = ['migrate_ai_setup.py', 'CHANGELOG.md', 'devlog.md', '*.log']
 
 class AiSetupMigrator:
     """
@@ -119,24 +120,46 @@ class AiSetupMigrator:
                 self.errors.append(f"Could not rename {old_dir} because {new_dir} already exists")
                 continue
 
-            if not self.dry_run:
-                try:
+            try:
+                if not self.dry_run:
                     shutil.move(old_dir, new_dir)
                     renamed_dirs.append((old_dir, new_dir))
                     logger.info(f"Renamed {old_dir} to {new_dir}")
-                except Exception as e:
-                    logger.error(f"Error renaming {old_dir} to {new_dir}: {str(e)}")
-                    self.errors.append(f"Error renaming {old_dir}: {str(e)}")
-            else:
-                logger.info(f"Would rename {old_dir} to {new_dir}")
-                renamed_dirs.append((old_dir, new_dir))
+                else:
+                    logger.info(f"Would rename {old_dir} to {new_dir}")
+                    renamed_dirs.append((old_dir, new_dir))
+            except Exception as e:
+                logger.error(f"Error renaming {old_dir} to {new_dir}: {str(e)}")
+                self.errors.append(f"Error renaming {old_dir}: {str(e)}")
 
         self.renamed_dirs = renamed_dirs
         return renamed_dirs
 
+    def _is_excluded_file(self, file_path):
+        """
+        Check if a file should be excluded from processing.
+
+        Args:
+            file_path: Path to the file
+
+        Returns:
+            True if the file should be excluded, False otherwise
+        """
+        file_name = os.path.basename(file_path)
+
+        # Check for exact filename matches
+        if file_name in ['migrate_ai_setup.py', 'CHANGELOG.md', 'devlog.md']:
+            return True
+
+        # Check for file extensions
+        if file_name.endswith('.log'):
+            return True
+
+        return False
+
     def find_files_with_references(self):
         """
-        Find files that contain references to .AI-Setup.
+        Find files containing references to .AI-Setup.
 
         Returns:
             List of files with references
@@ -145,19 +168,31 @@ class AiSetupMigrator:
 
         files_with_refs = []
 
-        for pattern in FILE_PATTERNS:
-            for file_path in Path(self.root_dir).glob(f"**/{pattern}"):
-                # Skip excluded directories
-                if any(excl in str(file_path) for excl in EXCLUDED_DIRS):
+        for root, _, files in os.walk(self.root_dir):
+            # Skip excluded directories
+            if any(excl in root for excl in EXCLUDED_DIRS):
+                continue
+
+            for file in files:
+                # Check file extension matches patterns
+                if not any(file.endswith(pat[1:]) for pat in FILE_PATTERNS):
+                    continue
+
+                file_path = os.path.join(root, file)
+
+                # Skip excluded files
+                if self._is_excluded_file(file_path):
+                    logger.debug(f"Skipping excluded file: {file_path}")
                     continue
 
                 try:
                     with open(file_path, 'r', encoding='utf-8') as f:
                         content = f.read()
-                        if OLD_DIR_NAME in content:
-                            files_with_refs.append(str(file_path))
-                            if self.verbose:
-                                logger.debug(f"Found reference in {file_path}")
+
+                    if OLD_DIR_NAME in content:
+                        files_with_refs.append(file_path)
+                        if self.verbose:
+                            logger.debug(f"Found reference in {file_path}")
                 except Exception as e:
                     logger.warning(f"Error reading {file_path}: {str(e)}")
 
@@ -198,7 +233,7 @@ class AiSetupMigrator:
                         logger.info(f"Would update references in {file_path}")
                         updated_files.append(file_path)
             except Exception as e:
-                logger.error(f"Error updating {file_path}: {str(e)}")
+                logger.error(f"Error updating references in {file_path}: {str(e)}")
                 self.errors.append(f"Error updating {file_path}: {str(e)}")
 
         self.updated_files = updated_files
@@ -211,59 +246,59 @@ class AiSetupMigrator:
         Returns:
             True if successful, False otherwise
         """
-        logger.info(f"Starting migration from {OLD_DIR_NAME} to {NEW_DIR_NAME}")
-        logger.info(f"Root directory: {self.root_dir}")
-        logger.info(f"Dry run: {self.dry_run}")
+        logger.info("Starting migration from .AI-Setup to _AI-Setup")
 
-        # Find .AI-Setup directories
-        self.find_ai_setup_dirs()
+        try:
+            # Step 1: Find .AI-Setup directories
+            self.find_ai_setup_dirs()
 
-        if not self.found_dirs:
-            logger.info(f"No {OLD_DIR_NAME} directories found. Migration not needed.")
-            return True
+            if not self.found_dirs:
+                logger.info("No .AI-Setup directories found. Migration complete.")
+                return True
 
-        # Find files with references
-        files_with_refs = self.find_files_with_references()
+            # Step 2: Ask for confirmation
+            if not self.force and not self.dry_run:
+                print("\nFound the following .AI-Setup directories:")
+                for d in self.found_dirs:
+                    print(f"  {d}")
 
-        # Confirm before proceeding
-        if not self.force and not self.dry_run:
-            print(f"\nFound {len(self.found_dirs)} {OLD_DIR_NAME} directories to rename:")
-            for d in self.found_dirs:
-                print(f"  - {d}")
+                confirmation = input("\nDo you want to rename these directories and update references? (y/N): ")
+                if confirmation.lower() not in ('y', 'yes'):
+                    logger.info("Migration cancelled by user")
+                    return False
 
-            print(f"\nFound {len(files_with_refs)} files with references to update:")
-            for f in files_with_refs[:10]:  # Show first 10
-                print(f"  - {f}")
+            # Step 3: Rename directories
+            self.rename_directories()
 
-            if len(files_with_refs) > 10:
-                print(f"  - ... and {len(files_with_refs) - 10} more")
+            # Step 4: Find files with references
+            files_with_refs = self.find_files_with_references()
 
-            confirm = input("\nProceed with migration? [y/N] ")
-            if confirm.lower() != 'y':
-                logger.info("Migration cancelled by user")
-                return False
+            # Step 5: Update references in files
+            self.update_file_references(files_with_refs)
 
-        # Rename directories
-        self.rename_directories()
+            # Step 6: Print summary
+            self.print_summary()
 
-        # Update file references
-        self.update_file_references(files_with_refs)
+            return len(self.errors) == 0
 
-        # Print summary
-        self.print_summary()
-
-        return len(self.errors) == 0
+        except Exception as e:
+            logger.error(f"Error during migration: {str(e)}")
+            return False
 
     def print_summary(self):
-        """Print a summary of the migration."""
-        print("\n" + "=" * 80)
-        print(f"Migration Summary ({OLD_DIR_NAME} to {NEW_DIR_NAME})")
-        print("=" * 80)
+        """
+        Print a summary of the migration process.
+        """
+        print("\nMigration Summary:")
+        print("==================")
+        print(f"Mode: {'Dry run' if self.dry_run else 'Live run'}")
+        print(f"Root directory: {self.root_dir}")
+        print("")
 
-        print(f"\nDirectories found: {len(self.found_dirs)}")
+        print(f"Directories found: {len(self.found_dirs)}")
         print(f"Directories renamed: {len(self.renamed_dirs)}")
         print(f"Files updated: {len(self.updated_files)}")
-        print(f"Errors encountered: {len(self.errors)}")
+        print(f"Errors: {len(self.errors)}")
 
         if self.errors:
             print("\nErrors:")
@@ -271,41 +306,45 @@ class AiSetupMigrator:
                 print(f"  - {error}")
 
         if self.dry_run:
-            print("\nThis was a dry run. No actual changes were made.")
-            print("Run without --dry-run to perform the migration.")
+            print("\nThis was a dry run. No changes were made to the filesystem.")
+            print("Run without --dry-run to apply changes.")
 
-        print("\n" + "=" * 80)
+        print(f"\nNote: The following files were intentionally skipped:")
+        print("  - migrate_ai_setup.py (this script)")
+        print("  - CHANGELOG.md (historical record)")
+        print("  - devlog.md (development log)")
+        print("  - *.log files (log files)")
 
 
 def parse_args():
-    """Parse command line arguments."""
-    parser = argparse.ArgumentParser(description='Migrate from .AI-Setup to _AI-Setup')
-    parser.add_argument('--root-dir', dest='root_dir', default=None,
-                        help='Root directory to search (default: current directory)')
-    parser.add_argument('--dry-run', dest='dry_run', action='store_true',
-                        help="Don't actually make changes, just show what would be done")
-    parser.add_argument('--force', dest='force', action='store_true',
-                        help="Don't ask for confirmation before making changes")
-    parser.add_argument('--verbose', dest='verbose', action='store_true',
-                        help="Show detailed information about each change")
+    """
+    Parse command line arguments.
+
+    Returns:
+        Parsed arguments
+    """
+    parser = argparse.ArgumentParser(description='Migrate from .AI-Setup to _AI-Setup naming convention')
+    parser.add_argument('--dry-run', action='store_true', help="Don't actually make changes")
+    parser.add_argument('--force', action='store_true', help="Don't ask for confirmation")
+    parser.add_argument('--verbose', action='store_true', help="Show detailed information")
+    parser.add_argument('--root-dir', type=str, help="Root directory to search", default=None)
     return parser.parse_args()
 
 
 def main():
-    """Main entry point for the script."""
+    """
+    Main entry point.
+    """
     args = parse_args()
-
     migrator = AiSetupMigrator(
         root_dir=args.root_dir,
         dry_run=args.dry_run,
         force=args.force,
         verbose=args.verbose
     )
-
     success = migrator.run()
+    sys.exit(0 if success else 1)
 
-    return 0 if success else 1
 
-
-if __name__ == '__main__':
-    sys.exit(main())
+if __name__ == "__main__":
+    main()
