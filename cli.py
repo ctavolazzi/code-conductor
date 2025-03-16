@@ -18,8 +18,11 @@ from datetime import datetime
 import logging
 import re
 
-# Update version number
-VERSION = "0.4.5"
+# Import version from root package
+from __init__ import __version__
+
+# Use imported version
+VERSION = __version__
 
 # Setup logging
 logging.basicConfig(level=logging.INFO,
@@ -666,7 +669,7 @@ code-conductor list
         # Define possible script source locations
         script_source_dirs = [
             # Try the current package's scripts directory (most likely location)
-            os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "work_efforts", "scripts"),
+            os.path.join(os.path.dirname(os.path.abspath(__file__)), "work_efforts", "scripts"),
             # Try the current working directory + work_efforts/scripts
             os.path.join(os.getcwd(), "work_efforts", "scripts"),
             # Try direct parent + work_efforts/scripts (for installed packages)
@@ -816,64 +819,6 @@ def setup_work_effort_manager_path():
         print(f"Warning: Could not set up WorkEffortManager path: {e}")
         return False
 
-def create_work_effort_with_manager(title, assignee, priority, due_date, template_path, target_dir, content=None, create_in_root=False):
-    """
-    Create a new work effort using the WorkEffortManager
-    """
-    config = load_config()
-
-    if "work_managers" not in config or not config["work_managers"]:
-        # Use default implementation if no managers are configured
-        return create_work_effort(title, assignee, priority, due_date, template_path, target_dir, content, create_in_root)
-
-    try:
-        # Set up the Python path for the work effort manager
-        setup_work_effort_manager_path()
-
-        # Add the work_effort_manager directory to the Python path if needed
-        manager_script = config["work_managers"][0].get("manager_script")
-        if manager_script:
-            manager_dir = os.path.dirname(manager_script)
-            if manager_dir not in sys.path:
-                sys.path.append(manager_dir)
-
-        # Import the WorkEffortManager dynamically
-        try:
-            from work_effort_manager import WorkEffortManager
-        except ImportError:
-            print("Warning: Could not import WorkEffortManager. Falling back to default implementation.")
-            return create_work_effort(title, assignee, priority, due_date, template_path, target_dir, content, create_in_root)
-
-        # Initialize the WorkEffortManager with config
-        project_dir = config["work_managers"][0].get("path", os.getcwd())
-        manager = WorkEffortManager(project_dir=project_dir, config=config["work_managers"][0])
-
-        # Prepare content for work effort creation
-        full_content = {}
-        if content and isinstance(content, dict):
-            full_content = content
-
-        # Create the work effort using the manager
-        work_effort_path = manager.create_work_effort(
-            title=title,
-            assignee=assignee,
-            priority=priority,
-            due_date=due_date,
-            content=full_content
-        )
-
-        if work_effort_path:
-            print(f"🚀 New work effort created at: {work_effort_path}")
-            return work_effort_path
-        else:
-            print("❌ Error creating work effort with WorkEffortManager.")
-            return None
-
-    except Exception as e:
-        print(f"❌ Error using WorkEffortManager: {str(e)}")
-        print("Falling back to default implementation...")
-        return create_work_effort(title, assignee, priority, due_date, template_path, target_dir, content, create_in_root)
-
 def create_work_effort(title, assignee, priority, due_date, template_path, target_dir, content=None, create_in_root=False):
     """
     Create a new work effort file
@@ -889,6 +834,37 @@ def create_work_effort(title, assignee, priority, due_date, template_path, targe
         )
 
     try:
+        # Set up the Python path for the work effort manager and import it directly
+        # This ensures we use the centralized implementation
+        setup_work_effort_manager_path()
+
+        try:
+            from work_effort_manager import WorkEffortManager
+
+            # Initialize a standalone manager
+            base_dir = os.path.dirname(target_dir) if create_in_root else target_dir
+            manager = WorkEffortManager(project_dir=os.path.dirname(base_dir))
+
+            # Create the work effort using the manager
+            work_effort_path = manager.create_work_effort(
+                title=title,
+                assignee=assignee,
+                priority=priority,
+                due_date=due_date,
+                content=content or {}
+            )
+
+            if work_effort_path:
+                print(f"🚀 New work effort created at: {work_effort_path}")
+                return work_effort_path
+            else:
+                # Fall back to the direct implementation if manager fails
+                print("WorkEffortManager failed, falling back to direct implementation.")
+        except ImportError:
+            print("Could not import WorkEffortManager, using direct implementation.")
+
+        # Fall back to the direct implementation if WorkEffortManager can't be imported
+        # This is the legacy path and should rarely be used
         # Validate inputs
         priority = validate_priority(priority)
         due_date = validate_date(due_date)
@@ -898,13 +874,18 @@ def create_work_effort(title, assignee, priority, due_date, template_path, targe
 
         # Generate a safe filename
         safe_title = ''.join(c if c.isalnum() or c == ' ' else '_' for c in title)
-        filename = f"{filename_timestamp}_{safe_title.lower().replace(' ', '_')}.md"
+        safe_title_slug = safe_title.lower().replace(' ', '_')
 
-        # Determine the target file path
-        file_path = os.path.join(target_dir, filename) if not create_in_root else os.path.join(os.path.dirname(target_dir), filename)
+        # Create a folder for the work effort
+        folder_name = f"{filename_timestamp}_{safe_title_slug}"
+        md_filename = f"{filename_timestamp}_{safe_title_slug}.md"
 
-        # Create target directory if it doesn't exist
-        os.makedirs(os.path.dirname(file_path), exist_ok=True)
+        # Determine the target folder path
+        folder_path = os.path.join(target_dir, folder_name) if not create_in_root else os.path.join(os.path.dirname(target_dir), folder_name)
+        file_path = os.path.join(folder_path, md_filename)
+
+        # Create the folder if it doesn't exist
+        os.makedirs(folder_path, exist_ok=True)
 
         # Read template file
         with open(template_path, "r") as template_file:
@@ -1652,7 +1633,7 @@ async def main():
                 print(f"✅ Work effort created successfully at: {work_effort_path}")
             else:
                 print("❌ Failed to create work effort")
-                return 1
+            return 1
         else:
             # Run in interactive mode
             await interactive_mode(template_path, active_dir, manager_info)

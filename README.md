@@ -4,12 +4,13 @@ Code Conductor is a toolkit for setting up AI-assisted development environments 
 
 ## Version
 
-Current version: 0.4.2
+Current version: 0.4.5
 
 ## Features
 
 - AI-assisted development setup
 - Work effort tracking and management
+  - **New: Folder-based work efforts for better organization**
 - Project template creation
 - CLI tools for AI integration
 
@@ -52,6 +53,17 @@ source ~/.zshrc  # or source ~/.bash_profile
 ```
 
 > **Tip**: If you're having trouble with global installation, ask your preferred AI model (like Claude, ChatGPT, etc.) for help specific to your system. They can provide customized installation instructions based on your operating system and environment.
+
+## What's New in 0.4.5
+
+### Folder-Based Work Efforts
+
+Work efforts now create dedicated folders instead of single files, allowing you to:
+- Store related files alongside your work effort tracking
+- Better organize project documents and resources
+- Keep implementation files with planning documents
+
+[Read the full documentation](docs/folder_based_work_efforts.md)
 
 ## Usage
 

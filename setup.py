@@ -1,6 +1,7 @@
 from setuptools import setup, find_packages
 import os
 import shutil
+import re
 
 # Read the long description from README.md
 with open("README.md", "r", encoding="utf-8") as fh:
@@ -10,9 +11,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 with open('requirements.txt') as f:
     required = f.read().splitlines()
 
+# Get version from root package __init__.py
+with open('code_conductor/__init__.py', 'r') as f:
+    version = re.search(r'^__version__\s*=\s*[\'"]([^\'"]*)[\'"]', f.read(), re.MULTILINE).group(1)
+
 setup(
     name="code-conductor",
-    version="0.4.5",
+    version=version,
     description="Code Conductor toolkit for managing AI development environments and work efforts",
     long_description=long_description,
     long_description_content_type="text/markdown",

@@ -216,18 +216,27 @@ class TestModuleStructure(unittest.TestCase):
             self.fail(f"Module import failed: {str(e)}")
 
     def test_module_versions(self):
-        """Test that all modules have the correct version."""
+        """Test that all module versions are consistent with the root package version."""
+        import sys
+        import os
+
+        # Add parent directory to path to allow direct imports
+        sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+        # Import directly from files
         import work_efforts.core
         import work_efforts.utils
         import work_efforts.models
         import work_efforts.events
         import work_efforts.filesystem
+        from __init__ import __version__
 
-        self.assertEqual(work_efforts.core.__version__, "0.4.2")
-        self.assertEqual(work_efforts.utils.__version__, "0.4.2")
-        self.assertEqual(work_efforts.models.__version__, "0.4.2")
-        self.assertEqual(work_efforts.events.__version__, "0.4.2")
-        self.assertEqual(work_efforts.filesystem.__version__, "0.4.2")
+        # Verify all versions match the root package version
+        self.assertEqual(work_efforts.core.__version__, __version__)
+        self.assertEqual(work_efforts.utils.__version__, __version__)
+        self.assertEqual(work_efforts.models.__version__, __version__)
+        self.assertEqual(work_efforts.events.__version__, __version__)
+        self.assertEqual(work_efforts.filesystem.__version__, __version__)
 
 
 if __name__ == '__main__':

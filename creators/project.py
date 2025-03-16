@@ -212,7 +212,7 @@ def setup_python_template(project_dir, project_name):
 
     # Create __init__.py
     with open(os.path.join(package_dir, "__init__.py"), "w") as f:
-        f.write(f'"""Main package for {project_name}"""\n\n__version__ = "0.2.0"\n')
+        f.write(f'"""Main package for {project_name}"""\n\n__version__ = "0.4.5"\n')
 
     # Create main module file
     with open(os.path.join(package_dir, "main.py"), "w") as f:
@@ -234,21 +234,11 @@ if __name__ == "__main__":
 
 setup(
     name="{module_name}",
-    version="0.2.0",
+    version="0.4.5",
     packages=find_packages(),
     install_requires=[
         # Add your dependencies here
     ],
-    entry_points={{
-        "console_scripts": [
-            "{module_name}={module_name}.main:main",
-        ],
-    }},
-    author="",
-    author_email="",
-    description="A short description of {project_name}",
-    keywords="{module_name}",
-    url="",
 )
 ''')
 
@@ -307,10 +297,11 @@ def setup_node_template(project_dir):
         project_dir: Project directory path
     """
     # Create package.json
-    package_json_content = """{
-  "name": "project-name",
-  "version": "1.0.0",
-  "description": "",
+    with open(os.path.join(project_dir, "package.json"), "w") as f:
+        f.write('''{
+  "name": "%s",
+  "version": "0.4.5",
+  "description": "A Node.js project",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -318,16 +309,9 @@ def setup_node_template(project_dir):
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-  },
-  "devDependencies": {
-  }
+  "license": "MIT"
 }
-"""
-
-    with open(os.path.join(project_dir, "package.json"), "w") as f:
-        f.write(package_json_content)
+''' % project_name)
 
     # Create index.js
     index_js_content = """console.log('Hello, world!');

@@ -2,6 +2,19 @@
 
 All notable changes to the Code Conductor project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- Implemented Obsidian-style wiki links between work efforts using double bracket syntax `[[link]]`
+- Added `related_efforts` field in work effort frontmatter for structured document linking
+- Created examples of different work effort naming conventions (timestamp-based, sequential, UUID, semantic)
+- Added comprehensive documentation on work effort naming strategies
+
+### Changed
+- Consolidated all work efforts into a single location at `.AI-Setup/work_efforts`
+- Improved organization and structure of work effort directories
+- Enhanced linking between related work efforts for better navigation
+
 ## [0.4.5] - 2025-03-09
 
 ### Added

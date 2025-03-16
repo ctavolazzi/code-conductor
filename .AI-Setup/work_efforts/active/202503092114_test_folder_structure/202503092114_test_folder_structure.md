@@ -1,15 +1,15 @@
 ---
-title: "{{title}}"
-status: "{{status}}" # options: active, paused, completed
-priority: "{{priority}}" # options: low, medium, high, critical
-assignee: "{{assignee}}"
-created: "{{created}}" # YYYY-MM-DD HH:mm
-last_updated: "{{last_updated}}" # YYYY-MM-DD HH:mm
-due_date: "{{due_date}}" # YYYY-MM-DD
+title: "Test Folder Structure"
+status: "active" # options: active, paused, completed
+priority: "medium" # options: low, medium, high, critical
+assignee: "self"
+created: "2025-03-09 21:14" # YYYY-MM-DD HH:mm
+last_updated: "2025-03-09 21:14" # YYYY-MM-DD HH:mm
+due_date: "2025-03-09" # YYYY-MM-DD
 tags: [feature, bugfix, refactor, documentation, testing, devops]
 ---
 
-# {{title}}
+# Test Folder Structure
 
 ## 🚩 Objectives
 - Clearly define goals for this work effort.
@@ -33,6 +33,6 @@ tags: [feature, bugfix, refactor, documentation, testing, devops]
 - [[Pull Request #]]
 
 ## 📅 Timeline & Progress
-- **Started**: {{created}}
-- **Updated**: {{last_updated}}
-- **Target Completion**: {{due_date}}
+- **Started**: 2025-03-09 21:14
+- **Updated**: 2025-03-09 21:14
+- **Target Completion**: 2025-03-09

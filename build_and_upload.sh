@@ -2,7 +2,9 @@
 
 # Build and upload script for code-conductor
 
-echo "Building code-conductor v0.4.2 package..."
+# Get version from __init__.py
+VERSION=$(grep "__version__ = " __init__.py | cut -d '"' -f 2)
+echo "Building code-conductor v${VERSION} package..."
 
 # Clean up previous builds
 rm -rf dist/ build/ *.egg-info/
