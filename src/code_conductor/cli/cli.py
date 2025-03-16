@@ -143,6 +143,37 @@ def find_nearest_config(start_dir=None):
     start_dir = os.path.abspath(start_dir)
     original_start = start_dir
 
+    # First, try to find a .code-conductor project manifest file by walking up the directory tree
+    current_dir = start_dir
+    while current_dir:
+        manifest_file = os.path.join(current_dir, ".code-conductor")
+        if os.path.exists(manifest_file) and os.path.isfile(manifest_file):
+            try:
+                with open(manifest_file, 'r') as f:
+                    manifest_data = json.load(f)
+                    logger.info(f"Found project manifest file at: {manifest_file}")
+
+                    # If the manifest has a setup_path, use it to find the config.json
+                    if "setup_path" in manifest_data and os.path.exists(manifest_data["setup_path"]):
+                        config_file = os.path.join(manifest_data["setup_path"], "config.json")
+                        if os.path.exists(config_file):
+                            try:
+                                with open(config_file, 'r') as f:
+                                    config_data = json.load(f)
+                                    logger.info(f"Found config file via manifest at: {config_file}")
+                                    return config_file, config_data
+                            except Exception as e:
+                                logger.warning(f"Error reading config file referenced in manifest: {str(e)}")
+            except Exception as e:
+                logger.warning(f"Error reading manifest file: {str(e)}")
+
+        # Move up one directory
+        parent_dir = os.path.dirname(current_dir)
+        if parent_dir == current_dir:  # We've reached the root
+            break
+        current_dir = parent_dir
+
+    # If no manifest file found or it didn't lead to a valid config, fall back to the original behavior
     # Walk up the directory tree looking for _AI-Setup/config.json
     while start_dir:
         config_file = os.path.join(start_dir, "_AI-Setup", "config.json")
@@ -447,7 +478,7 @@ The AI-Setup package provides two main commands:
 
 1. `code-conductor` - Main command for setting up AI assistance and basic work efforts
    - `code-conductor setup` - Set up AI assistance in the current directory
-   - `code-conductor work` - Create a new work effort
+   - `code-conductor new-work-effort` - Create a new work effort
    - `code-conductor list` - List all work efforts
 
 2. `cc-work-e` - Enhanced work effort creator with AI content generation capabilities
@@ -651,7 +682,7 @@ This directory contains structured documentation for tracking tasks, features, a
 
 Create a new work effort:
 ```bash
-code-conductor work
+code-conductor new-work-effort
 # or
 cc-work-e
 ```
@@ -972,7 +1003,7 @@ async def setup_selected_directories():
     print("\n✅ Setup completed for all selected directories")
     return 0
 
-async def setup_ai_in_current_dir():
+async def setup_ai_in_current_dir(non_interactive=False):
     """Set up AI and work efforts in the current directory"""
     current_dir = os.getcwd()
     print(f"\n📍 Checking current directory: {current_dir}")
@@ -1026,7 +1057,7 @@ async def setup_ai_in_current_dir():
         print("\n✅ AI-Setup is already completely installed in this directory")
         print("\nNo changes will be made to existing components.")
         print("\nYou can use the following commands:")
-        print("  code-conductor work      - Create a new work effort in _AI-Setup/work_efforts")
+        print("  code-conductor new-work-effort - Create a new work effort in _AI-Setup/work_efforts")
         print("  cc-work-e                - Shorthand to create a work effort")
         print("  code-conductor list      - List existing work efforts")
         print("  code-conductor list-managers      - List all work effort managers in the project")
@@ -1034,7 +1065,7 @@ async def setup_ai_in_current_dir():
         print("  code-conductor select             - Select directories to set up AI assistance")
         print("  code-conductor help               - Show this help text")
         print("  code-conductor version            - Show the version number")
-        print("\nOptions for work_effort/work command:")
+        print("\nOptions for new-work-effort command:")
         print("  --title TEXT                      - Title of the work effort (default: Untitled)")
         print("  --assignee TEXT                   - Assignee of the work effort (default: self)")
         print("  --priority [low|medium|high|critical] - Priority of the work effort (default: medium)")
@@ -1075,20 +1106,50 @@ async def setup_ai_in_current_dir():
         print(f"- 🆕 Will create configuration file")
         print(f"- 🆕 Will create work_efforts folder and install required scripts")
 
-    # Get confirmation before proceeding
-    confirmation = input("\nProceed with installation? (y/n): ")
-    if confirmation.lower() not in ['y', 'yes']:
-        print("\n❌ Setup cancelled by user")
-        return 1
-
+    # Proceed with installation without any confirmation
     print("\n📦 Installing components...")
 
     # Create or update the config file first
     config_file, config_data = create_or_update_config(current_dir)
     if config_file:
         print(f"✅ Configuration file created/updated at: {config_file}")
+
+        # Check if the config has work_managers, and add a default if it doesn't
+        if "work_managers" not in config_data or not config_data["work_managers"]:
+            print(f"⚠️ No work managers found in configuration. Adding default work manager.")
+            work_manager = {
+                "name": os.path.basename(current_dir) or "main",
+                "path": os.path.relpath(current_dir, current_dir),  # Relative to project root
+                "work_efforts_dir": os.path.join("_AI-Setup", "work_efforts"),
+                "use_manager": True,
+                "manager_script": os.path.join("_AI-Setup", "work_efforts", "scripts", "work_effort_manager.py"),
+                "runner_script": os.path.join("_AI-Setup", "work_efforts", "scripts", "run_work_effort_manager.py"),
+                "auto_start": True
+            }
+            update_config = {
+                "work_managers": [work_manager],
+                "default_work_manager": os.path.relpath(current_dir, current_dir)
+            }
+            # Update the config with the work manager
+            config_file, config_data = create_or_update_config(current_dir, update_config)
+            print(f"✅ Added default work manager '{work_manager['name']}' to configuration")
     else:
         print(f"⚠️ Failed to create/update configuration file")
+
+    # Create a project manifest file in the root directory to serve as an anchor point
+    manifest_file = os.path.join(current_dir, ".code-conductor")
+    try:
+        with open(manifest_file, "w") as f:
+            manifest_content = {
+                "project_root": current_dir,
+                "version": VERSION,
+                "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "setup_path": ai_setup_dir
+            }
+            json.dump(manifest_content, f, indent=2)
+        print(f"✅ Created project manifest file at: {manifest_file}")
+    except Exception as e:
+        print(f"⚠️ Could not create project manifest file: {str(e)}")
 
     # Create the AI-Setup folder if needed (though create_or_update_config should have done this)
     if not ai_setup_exists:
@@ -1184,7 +1245,7 @@ async def setup_ai_in_current_dir():
     print(f"\n✅ Setup completed in: {current_dir}")
     print(f"  Configuration file: {config_file}")
     print("\nYou can now use the following commands:")
-    print("  code-conductor work      - Create a new work effort in _AI-Setup/work_efforts")
+    print("  code-conductor new-work-effort - Create a new work effort in _AI-Setup/work_efforts")
     print("  cc-work-e                - Shorthand to create a work effort")
     print("  code-conductor list      - List existing work efforts")
     print("  code-conductor list-managers      - List all work effort managers in the project")
@@ -1420,13 +1481,103 @@ def parse_arguments():
 
     # Command argument
     parser.add_argument("command", nargs="?",
-                       help="Command to run (setup, new-work-manager, set-default, work, list, list-managers, select)")
+                       help="Command to run (setup, new-work-manager, set-default, work, list, list-managers, select, find-root)")
 
     return parser.parse_args()
+
+def create_directory_reference(command=None):
+    """
+    Create a local reference file in the current directory that points back to the project manifest.
+    This creates a breadcrumb trail throughout the project to help trace back to the root.
+
+    Args:
+        command: The command that was executed
+    """
+    try:
+        current_dir = os.getcwd()
+
+        # First check if we're in a project by finding the config
+        config_file, _ = find_nearest_config()
+        if not config_file:
+            logger.debug("Not creating directory reference - not in a project")
+            return
+
+        # Get the project root by finding the manifest file
+        project_root = None
+        manifest_file = None
+
+        # Walk up the directory tree looking for .code-conductor
+        search_dir = current_dir
+        while search_dir:
+            potential_manifest = os.path.join(search_dir, ".code-conductor")
+            if os.path.exists(potential_manifest) and os.path.isfile(potential_manifest):
+                manifest_file = potential_manifest
+                project_root = search_dir
+                break
+
+            # Move up one directory
+            parent_dir = os.path.dirname(search_dir)
+            if parent_dir == search_dir:  # We've reached the root
+                break
+            search_dir = parent_dir
+
+        if not manifest_file or not project_root:
+            logger.debug("Could not find project manifest file")
+            return
+
+        # Don't create reference in the project root itself
+        if os.path.normpath(current_dir) == os.path.normpath(project_root):
+            logger.debug("Not creating reference in project root directory")
+            return
+
+        # Create the reference file
+        reference_file = os.path.join(current_dir, ".code-conductor-ref")
+
+        # Read existing references if the file exists
+        existing_references = []
+        if os.path.exists(reference_file):
+            try:
+                with open(reference_file, 'r') as f:
+                    existing_references = json.load(f)
+                    if not isinstance(existing_references, list):
+                        existing_references = []
+            except Exception as e:
+                logger.warning(f"Error reading existing reference file: {str(e)}")
+                existing_references = []
+
+        # Create the new reference entry
+        now = datetime.now()
+        reference_data = {
+            "timestamp": now.strftime("%Y-%m-%d %H:%M:%S"),
+            "command": command or "unknown",
+            "current_directory": current_dir,
+            "project_root": project_root,
+            "relative_path": os.path.relpath(current_dir, project_root),
+            "manifest_file": manifest_file
+        }
+
+        # Add to existing references (newest first)
+        existing_references.insert(0, reference_data)
+
+        # Limit to 10 most recent references
+        if len(existing_references) > 10:
+            existing_references = existing_references[:10]
+
+        # Write the reference file
+        with open(reference_file, 'w') as f:
+            json.dump(existing_references, f, indent=2)
+
+        logger.debug(f"Created directory reference at: {reference_file}")
+    except Exception as e:
+        logger.warning(f"Error creating directory reference: {str(e)}")
 
 async def main():
     """Main function"""
     args = parse_arguments()
+
+    # Create directory reference file for tracing
+    command = args.command if hasattr(args, 'command') else None
+    create_directory_reference(command)
 
     # Load configuration if available
     config = load_config()
@@ -1436,7 +1587,7 @@ async def main():
 
     # If there's a config with work_managers.auto_start set to true, and the manager script is specified,
     # start the WorkEffortManager in the background
-    if (args.command == "work" or args.interactive) and "work_managers" in config and \
+    if (args.command in ['new-work-effort', 'work_effort'] or args.interactive) and "work_managers" in config and \
        config["work_managers"] and \
        config["work_managers"][0].get("use_manager", False) and \
        config["work_managers"][0].get("auto_start", False) and \
@@ -1474,16 +1625,17 @@ async def main():
             print("  code-conductor setup              - Set up AI assistance in the current directory")
             print("  code-conductor new-work-manager   - Create a new work effort manager in a directory")
             print("  code-conductor set-default        - Set the default work effort manager")
-            print("  code-conductor work_effort        - Create a new work effort in _AI-Setup/work_efforts")
-            print("  code-conductor work               - Shorthand for work_effort")
+            print("  code-conductor new-work-effort    - Create a new work effort in _AI-Setup/work_efforts")
+            print("  code-conductor work_effort        - Same as new-work-effort")
             print("  code-conductor work_effort -i     - Create a new work effort interactively")
             print("  code-conductor list               - List existing work efforts")
             print("  code-conductor list-managers      - List all work effort managers in the project")
             print("  code-conductor update-status      - Update the status of a work effort")
             print("  code-conductor select             - Select directories to set up AI assistance")
+            print("  code-conductor find-root          - Show the project root and path back to it")
             print("  code-conductor help               - Show this help text")
             print("  code-conductor version            - Show the version number")
-            print("\nOptions for work_effort/work command:")
+            print("\nOptions for new-work-effort command:")
             print("  --title TEXT                      - Title of the work effort (default: Untitled)")
             print("  --assignee TEXT                   - Assignee of the work effort (default: self)")
             print("  --priority [low|medium|high|critical] - Priority of the work effort (default: medium)")
@@ -1516,7 +1668,7 @@ async def main():
             if success:
                 print(f"✅ {message}")
                 print("\nYou can now create work efforts in this directory with:")
-                print(f"  code-conductor work --manager {manager_name or os.path.basename(target_dir)}")
+                print(f"  code-conductor new-work-effort --manager {manager_name or os.path.basename(target_dir)}")
                 print("  OR")
                 print(f"  cc-work-e --manager {manager_name or os.path.basename(target_dir)}")
                 return 0
@@ -1587,7 +1739,7 @@ async def main():
 
             return 0
 
-        elif args.command.lower() in ['work_effort', 'work', 'create']:
+        elif args.command.lower() in ['work_effort', 'new-work-effort', 'create']:
             # Check for work_efforts directory using the appropriate manager
             manager_name = args.manager if hasattr(args, 'manager') and args.manager else None
 
@@ -1606,29 +1758,14 @@ async def main():
                 if manager_name:
                     print(f"⚠️ Manager '{manager_name}' not found")
 
-                # If in non-interactive mode, automatically set up
-                if args.yes:
-                    print(f"Creating work effort folder at: {potential_location}")
-                    await setup_ai_in_current_dir()
-                    # After setup, try to find the directory again
-                    work_efforts_dir, manager_info = find_work_efforts_directory(manager_name)
-                    if not work_efforts_dir:
-                        print("❌ Setup failed to create work efforts directory")
-                        return 1
-                else:
-                    print(f"Work effort folder destination: {potential_location}")
-                    setup_first = input("Would you like me to create one? (y/n): ")
-                    if setup_first.lower() == 'y':
-                        await setup_ai_in_current_dir()
-                        # After setup, try to find the directory again
-                        work_efforts_dir, manager_info = find_work_efforts_directory(manager_name)
-                        if not work_efforts_dir:
-                            print("❌ Setup failed to create work efforts directory")
-                            return 1
-                    else:
-                        return 1
-            else:
-                print(f"✅ Found work efforts directory at: {work_efforts_dir}")
+                # Automatically set up without asking
+                print(f"Creating work effort folder at: {potential_location}")
+                await setup_ai_in_current_dir()
+                # After setup, try to find the directory again
+                work_efforts_dir, manager_info = find_work_efforts_directory(manager_name)
+                if not work_efforts_dir:
+                    print("❌ Setup failed to create work efforts directory")
+                    return 1
 
             # Determine the directories to use based on manager_info
             template_dir = os.path.join(work_efforts_dir, "templates")
@@ -1643,18 +1780,18 @@ async def main():
             template_path = os.path.join(template_dir, "work-effort-template.md")
             create_template_if_missing(template_path)
 
-            # Run in appropriate mode based on args
-            if args.yes:
-                # Run in non-interactive mode
+            # Run in appropriate mode based on interactive flag
+            if args.interactive:
+                # Run in interactive mode if -i/--interactive flag was set
+                await interactive_mode(template_path, active_dir, manager_info)
+            else:
+                # Run in non-interactive mode by default
                 work_effort_path = await non_interactive_mode(args, template_path, active_dir, manager_info)
                 if work_effort_path:
                     print(f"✅ Work effort created successfully at: {work_effort_path}")
                 else:
                     print("❌ Failed to create work effort")
                     return 1
-            else:
-                # Run in interactive mode
-                await interactive_mode(template_path, active_dir, manager_info)
 
             return 0
 
@@ -1675,14 +1812,12 @@ async def main():
                 if manager_name:
                     print(f"⚠️ Manager '{manager_name}' not found")
 
-                setup_first = input("Would you like me to create a work effort folder? (y/n): ")
-                if setup_first.lower() == 'y':
-                    await setup_ai_in_current_dir()
-                    work_efforts_dir, manager_info = find_work_efforts_directory(manager_name)
-                    if not work_efforts_dir:
-                        print("❌ Setup failed to create work efforts directory")
-                        return 1
-                else:
+                # Automatically set up without asking
+                print(f"Setting up work efforts in current directory")
+                await setup_ai_in_current_dir()
+                work_efforts_dir, manager_info = find_work_efforts_directory(manager_name)
+                if not work_efforts_dir:
+                    print("❌ Setup failed to create work efforts directory")
                     return 1
 
             # If a manager was specified, mention it
@@ -1700,6 +1835,75 @@ async def main():
         elif args.command.lower() == 'setup':
             return await setup_ai_in_current_dir()
 
+        elif args.command.lower() == 'find-root':
+            # Find the project root using the manifest file
+            current_dir = os.getcwd()
+            project_root = None
+            manifest_file = None
+
+            # Check if there's a local reference file
+            local_ref_file = os.path.join(current_dir, ".code-conductor-ref")
+            if os.path.exists(local_ref_file):
+                try:
+                    with open(local_ref_file, 'r') as f:
+                        reference_data = json.load(f)
+                        if reference_data and isinstance(reference_data, list) and len(reference_data) > 0:
+                            # Use the most recent reference
+                            latest_ref = reference_data[0]
+                            project_root = latest_ref.get("project_root")
+                            manifest_file = latest_ref.get("manifest_file")
+                            relative_path = latest_ref.get("relative_path")
+
+                            print(f"\n📍 Project Information from Local Reference:")
+                            print(f"  Project Root: {project_root}")
+                            print(f"  Current Directory: {current_dir}")
+                            print(f"  Relative Path: {relative_path}")
+                            print(f"  Manifest File: {manifest_file}")
+                            print(f"  Last Command: {latest_ref.get('command')}")
+                            print(f"  Timestamp: {latest_ref.get('timestamp')}")
+
+                            # Show directory traversal command
+                            if project_root:
+                                print(f"\n🔙 To return to project root, run:")
+                                print(f"  cd {project_root}")
+
+                            return 0
+                except Exception as e:
+                    print(f"⚠️ Error reading local reference file: {str(e)}")
+
+            # If we don't have a local reference or it failed, try finding the project root
+            search_dir = current_dir
+            while search_dir:
+                potential_manifest = os.path.join(search_dir, ".code-conductor")
+                if os.path.exists(potential_manifest) and os.path.isfile(potential_manifest):
+                    manifest_file = potential_manifest
+                    project_root = search_dir
+                    break
+
+                # Move up one directory
+                parent_dir = os.path.dirname(search_dir)
+                if parent_dir == search_dir:  # We've reached the root
+                    break
+                search_dir = parent_dir
+
+            if project_root:
+                relative_path = os.path.relpath(current_dir, project_root)
+                print(f"\n📍 Project Information:")
+                print(f"  Project Root: {project_root}")
+                print(f"  Current Directory: {current_dir}")
+                print(f"  Relative Path: {relative_path}")
+                print(f"  Manifest File: {manifest_file}")
+
+                # Show directory traversal command
+                print(f"\n🔙 To return to project root, run:")
+                print(f"  cd {project_root}")
+
+                return 0
+            else:
+                print(f"❌ Could not find project root. Are you in a Code Conductor project?")
+                print(f"   Try running 'code-conductor setup' to initialize a project.")
+                return 1
+
         else:
             print(f"Unknown command: {args.command}")
             print("Run 'code-conductor help' for usage information")
@@ -1716,15 +1920,13 @@ async def main():
             if manager_name:
                 print(f"⚠️ Manager '{manager_name}' not found")
 
-            setup_first = input("Would you like to set up work efforts in the current directory? (y/n): ")
-            if setup_first.lower() == 'y':
-                await setup_ai_in_current_dir()
-                # After setup, try to find the directory again
-                work_efforts_dir, manager_info = find_work_efforts_directory(manager_name)
-                if not work_efforts_dir:
-                    print("❌ Setup failed to create work efforts directory")
-                    return 1
-            else:
+            # Setup automatically since we need the directories
+            print("\nSetting up work efforts directory first...")
+            await setup_ai_in_current_dir()
+            # After setup, try to find the directory again
+            work_efforts_dir, manager_info = find_work_efforts_directory(manager_name)
+            if not work_efforts_dir:
+                print("❌ Setup failed to create work efforts directory")
                 return 1
 
         # Determine the directories to use
@@ -1740,20 +1942,25 @@ async def main():
         template_path = os.path.join(template_dir, "work-effort-template.md")
         create_template_if_missing(template_path)
 
-        # Run in appropriate mode based on args
-        if args.yes:
-            # Run in non-interactive mode
-            work_effort_path = await non_interactive_mode(args, template_path, active_dir, manager_info)
-            if work_effort_path:
-                print(f"✅ Work effort created successfully at: {work_effort_path}")
-            else:
-                print("❌ Failed to create work effort")
-            return 1
-        else:
-            # Run in interactive mode
-            await interactive_mode(template_path, active_dir, manager_info)
-
+        # Since interactive flag was specified, always run in interactive mode
+        await interactive_mode(template_path, active_dir, manager_info)
         return 0
+
+    # If in interactive mode and no command provided, check if components exist
+    if args.interactive and not args.command:
+        # Check if _AI-Setup/work_efforts exists
+        current_dir = os.getcwd()
+        work_efforts_dir = os.path.join(current_dir, "_AI-Setup", "work_efforts")
+        if not os.path.exists(work_efforts_dir):
+            print(f"\n❓ Work efforts directory not found: {work_efforts_dir}")
+            print("Setting up interactively...")
+            # Run in interactive mode since that was specifically requested
+            # The setup function itself doesn't have interactive vs non-interactive mode anymore
+            # So just call the standard setup function
+            return await setup_ai_in_current_dir()
+        else:
+            print(f"\n✅ Work efforts directory found: {work_efforts_dir}")
+            # Continue with interactive work effort creation
 
 def main_entry():
     """Entry point for console_scripts"""
@@ -1770,11 +1977,12 @@ def show_instructions():
     """Show usage instructions."""
     print("\nUsage Instructions:")
     print("  code-conductor setup                 - Set up AI assistance in the current directory")
-    print("  code-conductor work                  - Create a new work effort in _AI-Setup/work_efforts")
+    print("  code-conductor new-work-effort       - Create a new work effort in _AI-Setup/work_efforts")
     print("  code-conductor work_effort -i        - Create a new work effort interactively")
     print("  code-conductor list                  - List existing work efforts")
     print("  code-conductor update-status         - Update the status of a work effort")
     print("  code-conductor select                - Select directories to set up AI assistance")
+    print("  code-conductor find-root             - Show the project root and path back to it")
     print("\nEnhanced Work Effort Creator:")
     print("  cc-work-e                            - Quick create work effort in _AI-Setup/work_efforts")
     print("  cc-work-e -i                         - Create a work effort with interactive prompt")
