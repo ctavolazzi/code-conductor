@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-Shared pytest fixtures for Code Conductor testing.
-This file will be moved to src/tests directory once finalized.
+Test configuration and fixtures for the code-conductor test suite.
+
+This file provides pytest fixtures and configuration to make testing easier.
 """
 
 import os
@@ -14,9 +15,66 @@ from contextlib import contextmanager
 from unittest.mock import patch, MagicMock
 from datetime import datetime
 
-# Ensure the code_conductor package is in the path
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..', '..')))
+# Add project root and src directories to Python path
+# This should work with the pytest.ini configuration, but we add it here as a backup
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
+# Import the package
+try:
+    from src.code_conductor import __version__ as VERSION
+except ImportError:
+    VERSION = "0.0.0"
+
+@pytest.fixture
+def temp_work_directory(tmp_path):
+    """Create a temporary working directory with _AI-Setup folder structure."""
+    work_dir = tmp_path / "test_project"
+    ai_setup_dir = work_dir / "_AI-Setup"
+    work_efforts_dir = ai_setup_dir / "work_efforts"
+
+    # Create directory structure
+    work_dir.mkdir(exist_ok=True)
+    ai_setup_dir.mkdir(exist_ok=True)
+    work_efforts_dir.mkdir(exist_ok=True)
+
+    # Create necessary subdirectories
+    (work_efforts_dir / "active").mkdir(exist_ok=True)
+    (work_efforts_dir / "completed").mkdir(exist_ok=True)
+    (work_efforts_dir / "archived").mkdir(exist_ok=True)
+
+    # Change to the working directory
+    original_dir = os.getcwd()
+    os.chdir(work_dir)
+
+    yield work_dir
+
+    # Change back to the original directory
+    os.chdir(original_dir)
+
+@pytest.fixture
+def mock_config():
+    """Return a mock configuration object."""
+    return {
+        "version": VERSION,
+        "name": "Test Config",
+        "work_efforts_dir": os.path.join("_AI-Setup", "work_efforts"),
+        "default_work_effort_manager": "MainManager",
+        "managers": [
+            {
+                "name": "MainManager",
+                "path": os.path.join("_AI-Setup", "work_efforts")
+            }
+        ]
+    }
+
+@pytest.fixture
+def mock_cli_context():
+    """Return a mock CLI context object with common functions."""
+    context = MagicMock()
+    context.VERSION = VERSION
+    context.find_work_efforts_directory.return_value = os.path.join("_AI-Setup", "work_efforts")
+    return context
 
 @pytest.fixture
 def temp_test_dir(tmp_path):
