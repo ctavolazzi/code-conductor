@@ -4,7 +4,7 @@ Code Conductor is a lightweight, text-based system for creating powerful AI work
 
 ## Version
 
-Current version: 0.4.5
+Current version: 0.4.6
 
 ## Features
 
@@ -18,6 +18,11 @@ Current version: 0.4.5
   - **New: Consolidated work effort management**
 - **Hardware-agnostic performance** - works on any machine
 - **Universal LLM compatibility** - use your preferred AI models
+- **NEW: Improved directory handling**
+  - **New: Works with your current directory by default**
+  - **New: Clear messaging about file locations**
+  - **New: No need to set PYTHONPATH manually**
+  - **New: Better work effort discovery and listing**
 
 ## Installation
 
@@ -33,6 +38,21 @@ Clone the repository and install:
 git clone https://github.com/ctavolazzi/code-conductor.git
 cd code-conductor
 pip install -e .
+```
+
+## Quick Start
+
+Code Conductor now works with your current directory by default. Just run:
+
+```bash
+# Set up AI assistance in the current directory:
+code-conductor setup
+
+# Create a new work effort:
+code-conductor work
+
+# List all work efforts:
+code-conductor list
 ```
 
 ### Global Installation on macOS
@@ -130,7 +150,7 @@ A new script makes it easy to organize all work efforts into a centralized locat
 code-conductor setup
 
 # Create a new work effort
-code-conductor work_effort
+code-conductor work
 
 # List all work efforts
 code-conductor list
@@ -148,23 +168,36 @@ python consolidate_work_efforts.py
 ### Creating Work Efforts
 
 ```bash
-# Interactive mode
-code-conductor work_effort -i
+# Interactive mode (uses current directory)
+code-conductor work
+
+# Quiet mode (less verbose output)
+code-conductor work -q
+
+# Non-interactive mode (automatically creates work effort folder if needed)
+code-conductor work --yes
 
 # With specific details
-code-conductor work_effort --title "New Feature" --priority high
+code-conductor work --title "New Feature" --priority high
 
 # Using the work effort creator (quick shorthand)
-cc-work-e -i
-
-# Create in current directory explicitly
-cc-work-e --current-dir
-
-# Create in package directory explicitly
-cc-work-e --package-dir
+cc-work-e
 
 # With AI content generation (requires Ollama)
 cc-work-e --use-ai --description "Implement authentication system" --model phi3
+```
+
+### Listing Work Efforts
+
+```bash
+# List work efforts in current directory
+code-conductor list
+
+# List work efforts with specific manager
+code-conductor list --manager my-manager
+
+# List available work effort managers
+code-conductor list-managers
 ```
 
 ### Using the Workflow Runner
