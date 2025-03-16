@@ -83,3 +83,24 @@ work_efforts/archived/
 
 # Local configuration
 config.local.json
+
+# Test directories
+test_auto/
+test_empty/
+test_new/
+test_work_effort_cmd/
+
+# Temporary work files
+.AI-Setup/work_efforts/active/*/
+!.AI-Setup/work_efforts/active/*/*.md
+!.AI-Setup/work_efforts/scripts/
+
+# Debug files
+*.pyc
+*.pyo
+*~
+.pytest_*
+
+# Local development
+.python-version
+.history/
