@@ -188,3 +188,106 @@ class Logger {
 Upon receiving this prompt, immediately execute all outlined steps precisely and comprehensively. Your goal is not only to set the standard but to surpass it—creating an impeccably structured project primed for rapid, scalable, reliable, and enjoyable development.
 
 Make it happen, Cursor—let's redefine what's possible!
+
+---
+
+## **Work Effort System: Proper Usage Guide for AI Assistants**
+
+As an AI assistant working with Code Conductor, understanding the work effort system is critical for effective collaboration. This guide will help you properly use and maintain the work effort system.
+
+### **Understanding the Work Effort Architecture**
+
+1. **Directory Structure**
+   - Primary location: `/work_efforts/` with subdirectories `/active/`, `/completed/`, `/archived/`
+   - Secondary location: `/_AI-Setup/work_efforts/` with the same subdirectory structure
+   - The system can also discover work efforts in custom locations with the indexing feature
+
+2. **Work Effort Identification**
+   - Work efforts are primarily Markdown files with structured content
+   - Naming conventions include:
+     - Sequential numbering: `0001_feature_name.md` (Recommended)
+     - Timestamp-based: `202503170001_feature_name.md`
+     - Custom naming: Any descriptive filename with `.md` extension
+
+3. **Content Structure**
+   - Title (H1 heading)
+   - Metadata (status, assignee, priority, etc.)
+   - Description/overview
+   - Implementation details
+   - Testing information
+   - Related work efforts
+
+### **AI Assistant Responsibilities**
+
+When working with work efforts, AI assistants should:
+
+1. **Check Existing Work Efforts First**
+   - Before creating new work efforts, search for related existing ones using:
+     ```bash
+     cc-index --thorough --filter "relevant keyword"
+     ```
+   - Reference related work efforts to maintain knowledge continuity
+
+2. **Create Structured Work Efforts**
+   - Use the sequential numbering system when creating work efforts
+     ```bash
+     cc-new "Descriptive Title" --sequential
+     ```
+   - Follow the templated structure for consistency
+   - Include complete metadata for proper categorization
+
+3. **Maintain Work Effort States**
+   - Keep work effort status current by moving between active/completed/archived
+   - Update completion dates and assignees as work progresses
+
+4. **Link Related Documents**
+   - Use Obsidian-style wiki links `[[Work Effort Title]]` to connect related documents
+   - Explicitly list related work efforts in content when appropriate
+
+5. **Index Regularly**
+   - Run `cc-index --thorough --summary` regularly to maintain awareness of all work efforts
+   - Reference the index when discussing project state or planning
+
+### **Common Work Effort Operations**
+
+**Creating Work Efforts**
+```bash
+# Recommended approach with sequential numbering
+cc-new "Feature Implementation" --sequential
+
+# With specific status
+cc-new "Bug Fix" --status active
+```
+
+**Finding Work Efforts**
+```bash
+# Comprehensive search across all directories
+cc-index --thorough
+
+# Filtering for specific content
+cc-index --filter "authentication"
+
+# Summary view
+cc-index --summary
+```
+
+**Updating Work Effort Status**
+```bash
+# Mark as completed
+code-conductor update-status --work-effort feature-name --new-status completed
+
+# Archive a work effort
+code-conductor update-status --work-effort old-feature --new-status archived
+```
+
+### **Best Practices for AI Assistants**
+
+1. **Maintain Continuity**: Always link new work efforts to related previous efforts
+2. **Be Specific**: Create focused, single-purpose work efforts rather than overly broad ones
+3. **Document Context**: Include any relevant context that would help future AI or human collaborators understand the work
+4. **Use Templates**: Follow established templates for consistency
+5. **Update Regularly**: Keep work effort status and content current
+6. **Cross-Reference**: Use wiki links extensively to build a knowledge graph
+7. **Check for Duplicates**: Use the indexing system to avoid creating duplicate efforts
+
+By following these guidelines, AI assistants can effectively maintain a valuable, interconnected knowledge base that benefits the entire project.

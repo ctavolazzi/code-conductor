@@ -23,20 +23,20 @@ from unittest.mock import patch, MagicMock
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import the modules we want to test
-from work_efforts.models.work_effort import (
+from src.code_conductor.work_effort import (
     WorkEffort,
     WorkEffortStatus,
     WorkEffortPriority,
     create_filename_from_title
 )
-from work_efforts.filesystem.operations import (
+from src.code_conductor.operations import (
     ensure_directory_structure,
     extract_metadata_from_file,
     save_work_effort,
     move_work_effort,
     load_work_efforts
 )
-from work_efforts.core.manager import (
+from src.code_conductor.manager import (
     WorkEffortManager
 )
 

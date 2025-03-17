@@ -62,7 +62,7 @@ def test_with_direct_import():
     # Uncomment the sys.path.insert line at the top of the file first
 
     # Then import and test
-    # from code_conductor import __version__
+    # from src.code_conductor import __version__
     # assert __version__, "Version should be defined"
 
     # For now, just pass this test

@@ -820,6 +820,36 @@ tags: [feature, bugfix, refactor, documentation, testing, devops]
 
     return template_path
 
+def validate_title(title):
+    """
+    Validate and sanitize the work effort title.
+
+    Args:
+        title (str): The title to validate and sanitize
+
+    Returns:
+        str: The sanitized title
+
+    Raises:
+        ValueError: If the title is empty, None, or consists only of whitespace
+    """
+    # Check if title is None or empty
+    if title is None or not title.strip():
+        raise ValueError("Work effort title cannot be empty")
+
+    # Sanitize title for use in filenames - replace invalid characters with underscores
+    import re
+    sanitized = re.sub(r'[<>:"/\\|?*]', '_', title.strip())
+
+    # Truncate extremely long titles to avoid filesystem errors
+    # Most filesystems have a 255 character limit
+    max_length = 200  # Providing some buffer for timestamp and extension
+    if len(sanitized) > max_length:
+        print(f"Warning: Title was truncated to {max_length} characters for filename compatibility")
+        sanitized = sanitized[:max_length]
+
+    return sanitized
+
 def validate_priority(priority):
     """Validate that priority is one of the allowed values"""
     valid_priorities = ["low", "medium", "high", "critical"]
@@ -829,15 +859,36 @@ def validate_priority(priority):
     return priority.lower()
 
 def validate_date(date_str):
-    """Validate the date format"""
-    try:
-        datetime.strptime(date_str, "%Y-%m-%d")
-        return date_str
-    except ValueError:
-        today = datetime.now().strftime("%Y-%m-%d")
-        print(f"Warning: Invalid date format. Using today's date ({today}) instead.")
-        return today
+    """
+    Validate a date string in the format YYYY-MM-DD.
 
+    Args:
+        date_str (str): The date string to validate
+
+    Returns:
+        str: The validated date string
+
+    Raises:
+        ValueError: If the date format is invalid
+    """
+    # First check if date_str is None or empty
+    if date_str is None or not date_str.strip():
+        raise ValueError("Date cannot be empty")
+
+    # Validate date format YYYY-MM-DD
+    import re
+    if not re.match(r'^\d{4}-\d{2}-\d{2}$', date_str):
+        raise ValueError(f"Invalid date format: {date_str}. Expected format: YYYY-MM-DD")
+
+    # Optionally add more validation (checking for valid month/day values)
+    try:
+        import datetime
+        year, month, day = map(int, date_str.split('-'))
+        datetime.date(year, month, day)  # This will raise ValueError if date is invalid
+    except ValueError as e:
+        raise ValueError(f"Invalid date: {date_str}. {str(e)}")
+
+    return date_str
 def load_config():
     """
     Load the configuration from the _AI-Setup/config.json file if it exists.
@@ -912,14 +963,15 @@ def create_work_effort(title, assignee, priority, due_date, template_path, targe
         # Fall back to the direct implementation if WorkEffortManager can't be imported
         # This is the legacy path and should rarely be used
         # Validate inputs
+        title = validate_title(title)
         priority = validate_priority(priority)
         due_date = validate_date(due_date)
 
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
         filename_timestamp = datetime.now().strftime("%Y%m%d%H%M")
 
-        # Generate a safe filename
-        safe_title = ''.join(c if c.isalnum() or c == ' ' else '_' for c in title)
+        # Validate and sanitize the title
+        safe_title = validate_title(title)
         safe_title_slug = safe_title.lower().replace(' ', '_')
 
         # Create a folder for the work effort

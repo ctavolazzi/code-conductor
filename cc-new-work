@@ -1,0 +1,100 @@
+#!/bin/bash
+# A simple shell script to create a new work effort with minimal typing
+
+# Default values
+TITLE=""
+ASSIGNEE="unassigned"
+PRIORITY="medium"
+DUE_DATE="2099-12-31"
+
+# Print usage information
+function print_usage {
+  echo "Usage: cc-new-work \"Title of Work Effort\" [OPTIONS]"
+  echo ""
+  echo "Options:"
+  echo "  -a, --assignee NAME     Person assigned to the work (default: unassigned)"
+  echo "  -p, --priority LEVEL    Priority level (low, medium, high, critical)"
+  echo "  -d, --due-date DATE     Due date in YYYY-MM-DD format"
+  echo "  -h, --help              Show this help message"
+  echo ""
+  echo "Example:"
+  echo "  cc-new-work \"Implement New Feature\" -a \"John Doe\" -p high -d 2023-12-31"
+}
+
+# Parse arguments
+if [ $# -eq 0 ]; then
+  print_usage
+  exit 1
+fi
+
+# First argument is the title
+TITLE="$1"
+shift
+
+# Parse remaining options
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -a|--assignee)
+      ASSIGNEE="$2"
+      shift 2
+      ;;
+    -p|--priority)
+      case "$2" in
+        low|medium|high|critical)
+          PRIORITY="$2"
+          shift 2
+          ;;
+        *)
+          echo "Error: Priority must be one of: low, medium, high, critical"
+          exit 1
+          ;;
+      esac
+      ;;
+    -d|--due-date)
+      DUE_DATE="$2"
+      shift 2
+      ;;
+    -h|--help)
+      print_usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1"
+      print_usage
+      exit 1
+      ;;
+  esac
+done
+
+# Execute the Python code
+python3 -c "
+import os
+import sys
+
+try:
+    # Try direct import first
+    from src.code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
+except ImportError:
+    try:
+        # Try package import next
+        from code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
+    except ImportError:
+        print('Error: Could not import WorkEffortManager. Make sure code_conductor is installed.')
+        sys.exit(1)
+
+# Create manager and work effort
+manager = WorkEffortManager(project_dir=os.getcwd())
+work_effort_path = manager.create_work_effort(
+    title='$TITLE',
+    assignee='$ASSIGNEE',
+    priority='$PRIORITY',
+    due_date='$DUE_DATE'
+)
+
+if work_effort_path:
+    print(f'\n✅ Work effort created successfully at: {work_effort_path}')
+    sys.exit(0)
+else:
+    print('\n❌ Failed to create work effort. Check logs for more information.')
+    sys.exit(1)
+"

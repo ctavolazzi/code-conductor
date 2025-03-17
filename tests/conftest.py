@@ -307,7 +307,7 @@ def cli_runner():
             sys.stdout, sys.stderr = stdout_file, stderr_file
 
             # Import the main function
-            from code_conductor.cli.cli import main_entry
+            from src.code_conductor.cli import main_entry
 
             # Call the main function
             result = main_entry()

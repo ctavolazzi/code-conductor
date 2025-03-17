@@ -156,6 +156,45 @@ def load_config(config_path):
         logging.error(f"Error loading configuration: {str(e)}")
         return {}
 
+def load_config_from_ai_setup(base_dir=None):
+    """
+    Load configuration from the _AI-Setup/config.json file.
+
+    Args:
+        base_dir: Base directory to look for _AI-Setup folder (default: current directory)
+
+    Returns:
+        Configuration dictionary with default test values if not found
+    """
+    if base_dir is None:
+        base_dir = os.getcwd()
+
+    # Look for _AI-Setup/config.json
+    config_path = os.path.join(base_dir, "_AI-Setup", "config.json")
+
+    # Default config for tests
+    default_config = {
+        "work_efforts": {
+            "use_manager": True,
+            "default_settings": {
+                "assignee": "Test User",
+                "priority": "medium",
+                "due_date": "+7d"
+            }
+        }
+    }
+
+    if os.path.exists(config_path):
+        try:
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+            logging.info(f"Found config file at: {config_path}")
+            return config
+        except Exception as e:
+            logging.error(f"Error loading config from {config_path}: {str(e)}")
+
+    return default_config
+
 def example_event_handler(data):
     """Example event handler function."""
     print(f"Event received: {data}")

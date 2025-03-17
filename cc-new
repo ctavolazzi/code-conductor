@@ -1,0 +1,125 @@
+#!/usr/bin/env python3
+"""
+cc-new - A clean, simple command for creating work efforts
+
+This is a streamlined interface to the WorkEffortManager that focuses on just
+one thing: creating work efforts correctly and reliably.
+
+Usage:
+  cc-new "Title of Work Effort" [OPTIONS]
+
+Examples:
+  cc-new "New Feature Implementation"
+  cc-new "Bug Fix" -p high -a "Developer Name"
+  cc-new "Documentation Update" --due-date 2023-12-31
+"""
+
+import os
+import sys
+import argparse
+from datetime import datetime
+from pathlib import Path
+
+# Set up imports with fallbacks for different installation scenarios
+try:
+    # Direct import if installed as a package
+    from code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
+except ImportError:
+    try:
+        # Import from src if in development mode
+        from src.code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
+    except ImportError:
+        try:
+            # Try using path-based import as last resort
+            sys.path.append(str(Path(__file__).parent.parent))
+            from src.code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
+        except ImportError:
+            print("Error: Could not import WorkEffortManager.")
+            print("Make sure code_conductor is installed or you're in the correct directory.")
+            sys.exit(1)
+
+def parse_arguments():
+    """Parse command-line arguments with clear, simple options."""
+    parser = argparse.ArgumentParser(
+        description="Create a new work effort with minimal fuss",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  cc-new "New Feature Implementation"
+  cc-new "Bug Fix" -p high -a "Developer Name"
+  cc-new "Documentation Update" --due-date 2023-12-31
+"""
+    )
+
+    # Required argument - title
+    parser.add_argument(
+        "title",
+        help="Title of the work effort (required)"
+    )
+
+    # Optional arguments with short and long forms
+    parser.add_argument(
+        "-a", "--assignee",
+        default="unassigned",
+        help="Person assigned to the work (default: unassigned)"
+    )
+    parser.add_argument(
+        "-p", "--priority",
+        default="medium",
+        choices=["low", "medium", "high", "critical"],
+        help="Priority level (default: medium)"
+    )
+    parser.add_argument(
+        "-d", "--due-date",
+        default=datetime.now().strftime("%Y-%m-%d"),
+        help="Due date in YYYY-MM-DD format (default: today)"
+    )
+    parser.add_argument(
+        "-l", "--location",
+        help="Project directory to create work effort in (default: current directory)"
+    )
+    parser.add_argument(
+        "-v", "--verbose",
+        action="store_true",
+        help="Show detailed output"
+    )
+
+    return parser.parse_args()
+
+def main():
+    """Main function with clean workflow for creating a work effort."""
+    args = parse_arguments()
+
+    # Use specified location or current directory
+    project_dir = args.location or os.getcwd()
+
+    # Show summary if verbose
+    if args.verbose:
+        print(f"Creating new work effort:")
+        print(f"  Title:     {args.title}")
+        print(f"  Assignee:  {args.assignee}")
+        print(f"  Priority:  {args.priority}")
+        print(f"  Due Date:  {args.due_date}")
+        print(f"  Location:  {project_dir}")
+
+    # Create the WorkEffortManager instance with proper project directory
+    manager = WorkEffortManager(project_dir=project_dir)
+
+    # Single call to create the work effort
+    work_effort_path = manager.create_work_effort(
+        title=args.title,
+        assignee=args.assignee,
+        priority=args.priority,
+        due_date=args.due_date
+    )
+
+    # Handle success or failure clearly
+    if work_effort_path:
+        print(f"✅ Work effort created: {work_effort_path}")
+        return 0
+    else:
+        print("❌ Failed to create work effort")
+        return 1
+
+if __name__ == "__main__":
+    sys.exit(main())

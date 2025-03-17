@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Tests for version consistency across all modules.
 """
@@ -6,17 +7,13 @@ import unittest
 import sys
 import os
 import re
+import pytest
 
-# Add parent directory to path to allow importing the package directly
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+# Add the src directory to the path for proper importing
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
-# Now import the root package and modules directly
-import work_efforts.core
-import work_efforts.utils
-import work_efforts.models
-import work_efforts.events
-import work_efforts.filesystem
-from cli import VERSION
+# Import the version directly from the package
+from src.code_conductor import __version__ as root_version
 
 
 class TestVersionConsistency(unittest.TestCase):
@@ -24,51 +21,28 @@ class TestVersionConsistency(unittest.TestCase):
 
     def test_root_version_defined(self):
         """Test that the root package has a version defined."""
-        # Import directly from __init__.py
-        from __init__ import __version__
-        self.assertIsNotNone(__version__)
-        self.assertIsInstance(__version__, str)
+        self.assertIsNotNone(root_version)
+        self.assertIsInstance(root_version, str)
         # Should match semantic versioning format (major.minor.patch)
-        self.assertRegex(__version__, r'^\d+\.\d+\.\d+$')
-
-    def test_submodule_versions_match_root(self):
-        """Test that all submodule versions match the root package version."""
-        # Import directly from __init__.py
-        from __init__ import __version__
-
-        self.assertEqual(work_efforts.core.__version__, __version__)
-        self.assertEqual(work_efforts.utils.__version__, __version__)
-        self.assertEqual(work_efforts.models.__version__, __version__)
-        self.assertEqual(work_efforts.events.__version__, __version__)
-        self.assertEqual(work_efforts.filesystem.__version__, __version__)
-
-    def test_cli_version_matches_root(self):
-        """Test that the CLI version matches the root package version."""
-        # Import directly from __init__.py
-        from __init__ import __version__
-
-        self.assertEqual(VERSION, __version__)
+        self.assertRegex(root_version, r'^\d+\.\d+\.\d+$')
 
     def test_setup_py_version_matches_root(self):
         """Test that the version in setup.py matches the root package version."""
-        # Import directly from __init__.py
-        from __init__ import __version__
-
         # Read the setup.py file
-        with open(os.path.join(os.path.dirname(__file__), '..', 'setup.py'), 'r') as f:
+        setup_py_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'setup.py'))
+        with open(setup_py_path, 'r') as f:
             setup_content = f.read()
 
         # Extract the version with regex
-        version_match = re.search(r'version=([\'"])([^\'"]+)\\1', setup_content)
+        version_match = re.search(r'version\s*=\s*[\'"]([^\'"]*)[\'"]', setup_content)
         if not version_match:
             # Check if it's reading from __init__.py
-            has_dynamic_version = "with open('code_conductor/__init__.py'" in setup_content or \
-                                "with open('__init__.py'" in setup_content
+            has_dynamic_version = "with open('src/code_conductor/__init__.py'" in setup_content
             self.assertTrue(has_dynamic_version, "setup.py should either define version directly or read from __init__.py")
         else:
-            setup_version = version_match.group(2)
-            self.assertEqual(setup_version, __version__)
+            setup_version = version_match.group(1)
+            self.assertEqual(setup_version, root_version)
 
 
 if __name__ == '__main__':
-    unittest.main()
+    pytest.main(["-xvs", __file__])

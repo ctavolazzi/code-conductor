@@ -8,14 +8,15 @@ import shutil
 import tempfile
 from unittest.mock import patch
 
-# Add the current directory to the Python path
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+    from src.code_conductor.cli.cli import create_work_effort
+    from src.code_conductor.config import Config
+except ModuleNotFoundError:
+    print("Warning: Required modules not found. Some functionality will be limited.")
+    Config = None
 
-# Import the create_work_effort function
-from src.code_conductor.cli.cli import create_work_effort
-
-from code_conductor.utils.config import Config
-from code_conductor.utils.folder_scanner import FolderStructureValidator
+from src.code_conductor.folder_scanner import FolderStructureValidator
 
 # Test data
 basic_structure = [
@@ -110,7 +111,7 @@ class TestFolderStructure:
         with patch('code_conductor.utils.work_effort.datetime') as mock_datetime:
             mock_datetime.now.return_value.strftime.return_value = "20230101_test"
 
-            from code_conductor.utils.work_effort import WorkEffortManager
+            from src.code_conductor.work_effort import WorkEffortManager
 
             config = Config(public_apis_dir)
             manager = WorkEffortManager(config)

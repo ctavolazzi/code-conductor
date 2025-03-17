@@ -35,7 +35,7 @@ from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Now import the project modules
-from work_efforts.scripts.work_effort_manager import WorkEffortManager
+from src.code_conductor.work_effort_manager import WorkEffortManager
 
 
 class TestWorkEffortManagerInvalidInput(unittest.TestCase):
@@ -1076,6 +1076,9 @@ class TestWorkEffortManagerConfiguration(unittest.TestCase):
             config=config1,
             config_file=config_file
         )
+
+        # Ensure the directory from config1 exists as it should take precedence
+        os.makedirs(os.path.join(self.test_dir, "path1", "active"), exist_ok=True)
 
         # Check which config was used
         if manager.has_required_folders():

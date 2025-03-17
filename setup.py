@@ -31,6 +31,8 @@ setup(
         "console_scripts": [
             "code-conductor=code_conductor.cli.cli:main_entry",
             "cc-work-e=code_conductor.work_efforts.scripts.ai_work_effort_creator:main",
+            "cc-index=code_conductor.scripts.index_work_efforts:main",
+            "cc-new=code_conductor.scripts.cc_new:main",
         ],
     },
     install_requires=required,

@@ -11,7 +11,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Import the work effort creation function
-from work_efforts.scripts.ai_work_effort_creator import create_work_effort
+from src.code_conductor.ai_work_effort_creator import create_work_effort
 
 def main():
     """Test Unicode characters in title."""

@@ -72,7 +72,98 @@ For the optimal Code Conductor experience, we recommend using it with:
    - Use Obsidian for viewing, navigating, and editing the work effort documentation
    - The _AI-Setup folder will contain all your work efforts and documentation
 
-This dual-tool approach combines the power of AI-assisted coding in Cursor with Obsidian's knowledge management capabilities, creating a seamless development experience with comprehensive documentation.
+4. **Configure Obsidian to use your Code Conductor directory**
+   - Open Obsidian and create a new vault pointing to your Code Conductor project directory
+   - This allows you to navigate and edit your work efforts with Obsidian's powerful markdown editor and graph view
+
+## How to Use Work Efforts Properly
+
+Code Conductor's work effort system provides a structured way to manage AI-assisted development tasks while maintaining a comprehensive knowledge base. Here's how to use it effectively:
+
+### Work Effort Creation
+
+You can create work efforts in several ways:
+
+```bash
+# Create a new work effort in the default location with timestamp naming
+cc-new "My Work Effort Title"
+
+# Create a work effort with sequential numbering (recommended)
+cc-new "My Work Effort Title" --sequential
+
+# Create a work effort in a specific status
+cc-new "My Work Effort Title" --status active|completed|archived
+```
+
+### Work Effort Organization
+
+Work efforts can be stored in different locations:
+
+- `/work_efforts/` - The default directory for work efforts
+- `/_AI-Setup/work_efforts/` - Alternative directory for system-level work efforts
+- Custom directories can also contain work efforts, which will be found by the indexing system
+
+Within these directories, work efforts are organized by status:
+- `/active/` - Currently in-progress work efforts
+- `/completed/` - Finished work efforts
+- `/archived/` - Historical or inactive work efforts
+
+### Naming Conventions
+
+Code Conductor supports multiple naming conventions for work efforts:
+
+1. **Sequential Numbering (Recommended)**: `0001_my_work_effort.md`
+   - Simple, clean, and easy to reference
+   - Automatically increments based on existing files
+   - Use `--sequential` flag with `cc-new`
+
+2. **Timestamp-based**: `202503170001_my_work_effort.md`
+   - Default behavior
+   - Includes date and time information
+   - Good for chronological organization
+
+3. **Free-form**: `my_work_effort.md`
+   - Supported by the indexing system
+   - Good for specific use cases
+   - Less structured but more flexible
+
+### Indexing and Discovery
+
+The indexing system helps you find work efforts across your project:
+
+```bash
+# Basic indexing of work efforts
+cc-index
+
+# Comprehensive indexing that finds non-standard work efforts
+cc-index --thorough
+
+# Display a summary of all indexed work efforts
+cc-index --summary
+
+# Filter work efforts by content or title
+cc-index --filter "keyword"
+```
+
+### Document Linking
+
+Connect related work efforts using Obsidian-style wiki links:
+
+```markdown
+# My Work Effort
+
+This work effort is related to [[Another Work Effort]].
+```
+
+### Best Practices
+
+1. **Use Sequential Numbering**: Makes work efforts easy to reference and organize
+2. **Keep Status Current**: Move work efforts between active/completed/archived as they progress
+3. **Link Related Documents**: Create a knowledge graph by linking related work efforts
+4. **Run Regular Indexing**: Use `cc-index --thorough --summary` periodically to maintain an overview
+5. **Follow Templates**: Use the built-in templates to ensure consistent structure
+6. **Include Metadata**: Add relevant metadata like assignee, due date, and status
+7. **Use Folders for Complex Work**: For larger efforts, use folder-based work efforts with supporting files
 
 ## Quick Start
 
@@ -113,7 +204,47 @@ source ~/.zshrc  # or source ~/.bash_profile
 
 > **Tip**: If you're having trouble with global installation, ask your preferred AI model (like Claude, ChatGPT, etc.) for help specific to your system. They can provide customized installation instructions based on your operating system and environment.
 
-## What's New in 0.4.5
+## What's New in 0.4.6
+
+### Work Effort Indexing
+
+New comprehensive work effort indexing system:
+- Scans the entire project for work efforts regardless of their location
+- Identifies work efforts in both `work_efforts` and `_AI-Setup` directories
+- Creates a structured JSON index for easy tracking and referencing
+- Includes command-line tool for convenient access and visualization
+- Provides statistical summary of work effort distribution
+
+```bash
+# Scan project and show work efforts as a table
+python src/code_conductor/scripts/index_work_efforts.py
+
+# Show summary statistics
+python src/code_conductor/scripts/index_work_efforts.py --summary
+
+# Output as JSON
+python src/code_conductor/scripts/index_work_efforts.py --format json
+```
+
+### Sequential Work Effort Numbering
+
+Work efforts now support sequential numbering for better organization:
+- Automatic sequential numbering (e.g., 0001, 0002, 0003)
+- Graceful transition to 5+ digits when needed (9999 → 10000)
+- Option to use date-prefixed numbering (e.g., 202304250001)
+- Intelligent initialization from existing work efforts
+- Durable counter system that survives system shutdowns
+
+```python
+# Create work effort with sequential numbering (default)
+code-conductor work
+
+# Create work effort with date-prefixed numbering
+code-conductor work --date-prefix
+
+# Use timestamp-based naming instead of sequential numbering
+code-conductor work --no-sequential-numbering
+```
 
 ### Automated Workflow Runner
 
@@ -157,137 +288,37 @@ Work efforts now create dedicated folders instead of single files, allowing you 
 
 ### Obsidian-Style Document Linking
 
-Work efforts now support Obsidian-style wiki links using the `[[document]]` syntax:
-- Link related work efforts using double bracket notation
-- Navigate between connected documents
-- Create knowledge networks across your project
-- Automatically track related efforts in frontmatter
+Work efforts now support Obsidian-style wiki links using the `
 
-[Read the full documentation](docs/obsidian_style_linking.md)
-
-### Work Effort Consolidation
-
-A new script makes it easy to organize all work efforts into a centralized location:
-- Consolidate scattered work efforts into _AI-Setup/work_efforts
-- Preserve directory structure (active, archived, completed)
-- Add Obsidian-style links between related documents
-- Clean up duplicate directories
-
-[Read the full documentation](docs/work_effort_consolidation.md)
-
-## Usage
-
-### Basic Commands
-
-```bash
-# Set up AI assistance in current directory
-code-conductor setup
-
-# Create a new work effort
-code-conductor work
-
-# List all work efforts
-code-conductor list
-
-# Select directories to set up
-code-conductor select
-
-# Consolidate work efforts into a central location
-python consolidate_work_efforts.py
-
-# Run the automated workflow process
-./workflow_runner.py
-```
+## Command Line Tools
 
 ### Creating Work Efforts
 
-```bash
-# Interactive mode (uses current directory)
-code-conductor work
-
-# Quiet mode (less verbose output)
-code-conductor work -q
-
-# Non-interactive mode (automatically creates work effort folder if needed)
-code-conductor work --yes
-
-# With specific details
-code-conductor work --title "New Feature" --priority high
-
-# Using the work effort creator (quick shorthand)
-cc-work-e
-
-# With AI content generation (requires Ollama)
-cc-work-e --use-ai --description "Implement authentication system" --model phi3
-```
-
-### Listing Work Efforts
+The simplest way to create a new work effort is with the `cc-new` command:
 
 ```bash
-# List work efforts in current directory
-code-conductor list
+# Basic usage:
+cc-new "Title of Work Effort"
 
-# List work efforts with specific manager
-code-conductor list --manager my-manager
+# With options:
+cc-new "Bug Fix" -p high -a "Developer Name" -d 2023-12-31
 
-# List available work effort managers
-code-conductor list-managers
+# Show verbose output:
+cc-new "Feature Implementation" -v
 ```
 
-### Using the Workflow Runner
+This command creates a properly formatted work effort using the WorkEffortManager.
 
-```bash
-# Run in interactive mode (default)
-./workflow_runner.py
+#### Options:
 
-# Run with a specific feature name
-./workflow_runner.py --feature-name "Enhanced Search Functionality"
+- `-a, --assignee`: Person assigned to the work (default: unassigned)
+- `-p, --priority`: Priority level (low, medium, high, critical) (default: medium)
+- `-d, --due-date`: Due date in YYYY-MM-DD format (default: today)
+- `-l, --location`: Project directory to create work effort in (default: current directory)
+- `-v, --verbose`: Show detailed output
 
-# Run in non-interactive mode with defaults
-./workflow_runner.py --non-interactive --feature-name "Data Import Module"
-```
+Other available commands include:
 
-### Managing Work Effort Status
-
-```bash
-# Update a work effort's status
-code-conductor update-status --work-effort <name> --new-status <status>
-
-# Mark a work effort as completed
-code-conductor update-status --work-effort feature-implementation --new-status completed
-
-# Archive a completed work effort
-code-conductor update-status --work-effort old-feature --new-status archived --old-status completed
-
-# Return a work effort to active status
-code-conductor update-status --work-effort feature-implementation --new-status active --old-status completed
-```
-
-### Retrieving Work Effort Context
-
-```bash
-# Find by name
-./retrieve_work_effort.py --name "feature-name"
-
-# Get latest work efforts
-./retrieve_work_effort.py --latest 3
-
-# Find by status
-./retrieve_work_effort.py --status active
-
-# Find related work efforts (with recursive traversal)
-./retrieve_work_effort.py --related "feature-name" --recursive
-```
-
-Note:
-- AI content generation is OFF by default. Use the `--use-ai` flag to enable it.
-- `cc-work-e` creates work efforts in the current directory by default when using no parameters.
-- Use `--current-dir` or `--package-dir` to explicitly specify where to create work efforts.
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for version history and latest changes.
-
-## License
-
-MIT
+- `code-conductor`: The main CLI for the project
+- `cc-work-e`: Interactive work effort creator with AI capabilities
+- `cc-index`: Index and list all work efforts in the project

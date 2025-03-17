@@ -20,7 +20,7 @@ from datetime import datetime
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import the module under test
-from work_efforts.scripts.ai_work_effort_creator import (
+from src.code_conductor.ai_work_effort_creator import (
     parse_arguments,
     main_async,
     create_work_effort
@@ -55,11 +55,11 @@ class TestCCWorkECommand(unittest.TestCase):
             self.assertEqual(args.due_date, datetime.now().strftime("%Y-%m-%d"))
             self.assertFalse(args.interactive)
             self.assertFalse(args.use_ai)
-            self.assertFalse(args.current_dir)  # Default should not force current_dir
+            self.assertFalse(args.use_current_dir)  # Default should not force current_dir
             self.assertFalse(args.package_dir)  # Default should not force package_dir
 
     def test_parse_arguments_current_dir(self):
-        """Test that parse_arguments accepts current_dir flag."""
+        """Test that parse_arguments accepts use_current_dir flag."""
         # Replace sys.argv temporarily for testing
         with patch('sys.argv', [
             'cc-work-e',
@@ -67,14 +67,14 @@ class TestCCWorkECommand(unittest.TestCase):
             '--assignee', 'tester',
             '--priority', 'high',
             '--due-date', '2025-04-01',
-            '--current-dir'
+            '--use-current-dir'
         ]):
             args = parse_arguments()
             self.assertEqual(args.title, "Test Task")
             self.assertEqual(args.assignee, "tester")
             self.assertEqual(args.priority, "high")
             self.assertEqual(args.due_date, "2025-04-01")
-            self.assertTrue(args.current_dir)  # Should use current directory
+            self.assertTrue(args.use_current_dir)  # Should use current directory
             self.assertFalse(args.package_dir)  # Should not use package directory
 
     def test_parse_arguments_package_dir(self):
@@ -93,7 +93,7 @@ class TestCCWorkECommand(unittest.TestCase):
             self.assertEqual(args.assignee, "tester")
             self.assertEqual(args.priority, "high")
             self.assertEqual(args.due_date, "2025-04-01")
-            self.assertFalse(args.current_dir)  # Should not use current directory
+            self.assertFalse(args.use_current_dir)  # Should not use current directory
             self.assertTrue(args.package_dir)  # Should use package directory
 
     @patch('asyncio.run')
@@ -106,7 +106,7 @@ class TestCCWorkECommand(unittest.TestCase):
             '--assignee', 'tester',
             '--priority', 'high',
             '--due-date', '2025-04-01',
-            '--current-dir'
+            '--use-current-dir'
         ]):
             # Import the main function directly
             from work_efforts.scripts.ai_work_effort_creator import main
