@@ -31,7 +31,7 @@ try:
 except ImportError:
     print("Warning: CLI module not found. Tests may fail.")
 
-from code_conductor.core.work_effort.manager import WorkEffortManager
+from src.code_conductor.core.work_effort.manager import WorkEffortManager
 
 class TestWorkEffortManagerConfig(unittest.TestCase):
     """Test the work effort manager configuration and integration."""

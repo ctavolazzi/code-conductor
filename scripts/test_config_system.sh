@@ -31,6 +31,7 @@ print_header "Creating test directory structure"
 TEST_DIR="$(pwd)/config_system_test"
 rm -rf "$TEST_DIR"
 mkdir -p "$TEST_DIR"
+mkdir -p "$TEST_DIR/src/code_conductor/scripts"
 cd "$TEST_DIR"
 
 # Test 1: Initialize a project with code-conductor setup

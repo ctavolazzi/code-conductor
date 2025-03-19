@@ -61,6 +61,7 @@ import sys
 import argparse
 from collections import defaultdict
 import difflib
+import yaml
 
 # Setup logging
 logging.basicConfig(

@@ -128,12 +128,15 @@ class WorkflowRunner:
     Guides users through the Code Conductor workflow process.
     """
 
-    def __init__(self, interactive=True):
+    def __init__(self, interactive=True, work_efforts_dir=None, devlog_file=None, changelog_file=None):
         """
         Initialize the workflow runner.
 
         Args:
             interactive (bool): Whether to run in interactive mode
+            work_efforts_dir (str): Path to the work efforts directory
+            devlog_file (str): Path to the devlog file
+            changelog_file (str): Path to the changelog file
         """
         self.interactive = interactive
         self.timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
@@ -162,12 +165,22 @@ class WorkflowRunner:
         self.script_path = ""
         self.test_path = ""
 
+        # Set up directories and paths
+        self.work_efforts_dir = work_efforts_dir or WORK_EFFORTS_DIR
+        self.active_dir = os.path.join(self.work_efforts_dir, "active")
+        self.completed_dir = os.path.join(self.work_efforts_dir, "completed")
+        self.archived_dir = os.path.join(self.work_efforts_dir, "archived")
+        self.scripts_dir = os.path.join(self.work_efforts_dir, "scripts")
+        self.devlog_path = devlog_file or DEVLOG_PATH
+        self.changelog_path = changelog_file or CHANGELOG_PATH
+        self.template_path = os.path.join(self.work_efforts_dir, "templates", "work-effort-template.md")
+
         # Ensure directories exist
-        os.makedirs(ACTIVE_DIR, exist_ok=True)
-        os.makedirs(SCRIPTS_DIR, exist_ok=True)
-        os.makedirs(COMPLETED_DIR, exist_ok=True)
-        os.makedirs(ARCHIVED_DIR, exist_ok=True)
-        os.makedirs(os.path.dirname(TEMPLATE_PATH), exist_ok=True)
+        os.makedirs(self.active_dir, exist_ok=True)
+        os.makedirs(self.scripts_dir, exist_ok=True)
+        os.makedirs(self.completed_dir, exist_ok=True)
+        os.makedirs(self.archived_dir, exist_ok=True)
+        os.makedirs(os.path.dirname(self.template_path), exist_ok=True)
 
     def prompt(self, message, default=""):
         """
@@ -209,9 +222,9 @@ class WorkflowRunner:
         Returns:
             str: The template content
         """
-        if not os.path.exists(TEMPLATE_PATH):
-            print(f"Template file not found at {TEMPLATE_PATH}, creating default template...")
-            os.makedirs(os.path.dirname(TEMPLATE_PATH), exist_ok=True)
+        if not os.path.exists(self.template_path):
+            print(f"Template file not found at {self.template_path}, creating default template...")
+            os.makedirs(os.path.dirname(self.template_path), exist_ok=True)
 
             # Default template content if the file doesn't exist
             default_template = """---
@@ -253,13 +266,13 @@ tags: [{{tags}}]
 - **Updated**: {{last_updated}}
 - **Target Completion**: {{due_date}}
 """
-            with open(TEMPLATE_PATH, 'w') as f:
+            with open(self.template_path, 'w') as f:
                 f.write(default_template)
 
             return default_template
 
         # Read the template file
-        with open(TEMPLATE_PATH, 'r') as f:
+        with open(self.template_path, 'r') as f:
             return f.read()
 
     def create_work_effort(self):
@@ -284,7 +297,7 @@ tags: [{{tags}}]
 
         # Generate file name and paths
         work_effort_filename = f"{self.timestamp}_{self.script_name}.md"
-        self.work_effort_path = os.path.join(ACTIVE_DIR, work_effort_filename)
+        self.work_effort_path = os.path.join(self.active_dir, work_effort_filename)
 
         # Get template content
         template_content = self.get_template_content()
@@ -324,8 +337,8 @@ tags: [{{tags}}]
         Args:
             work_effort_filename (str): The filename of the work effort
         """
-        if os.path.exists(DEVLOG_PATH):
-            with open(DEVLOG_PATH, 'r') as f:
+        if os.path.exists(self.devlog_path):
+            with open(self.devlog_path, 'r') as f:
                 content = f.read()
 
             # Create new devlog entry
@@ -339,12 +352,12 @@ tags: [{{tags}}]
             # Add to the beginning of the devlog
             updated_content = "# Development Log\n\n" + new_entry + content[len("# Development Log"):]
 
-            with open(DEVLOG_PATH, 'w') as f:
+            with open(self.devlog_path, 'w') as f:
                 f.write(updated_content)
 
-            print(f"✅ Updated devlog: {DEVLOG_PATH}")
+            print(f"✅ Updated devlog: {self.devlog_path}")
         else:
-            print(f"⚠️ Devlog not found at {DEVLOG_PATH}, skipping update")
+            print(f"⚠️ Devlog not found at {self.devlog_path}, skipping update")
 
     def create_script(self):
         """
@@ -353,7 +366,7 @@ tags: [{{tags}}]
         print("\n=== Step 3: Create Script or Code ===\n")
 
         # Generate script path in the scripts directory
-        self.script_path = os.path.join(SCRIPTS_DIR, f"{self.script_name}.py")
+        self.script_path = os.path.join(self.scripts_dir, f"{self.script_name}.py")
 
         # Create script content
         content = SCRIPT_TEMPLATE.format(
@@ -439,7 +452,7 @@ tags: [{{tags}}]
         print("\n=== Step 7: Add Tests ===\n")
 
         # Generate test path in the scripts directory
-        self.test_path = os.path.join(SCRIPTS_DIR, f"test_{self.script_name}.py")
+        self.test_path = os.path.join(self.scripts_dir, f"test_{self.script_name}.py")
 
         # Create test content
         content = TEST_TEMPLATE.format(
@@ -514,14 +527,14 @@ tags: [{{tags}}]
 
         # Determine the target directory
         if new_status == "active":
-            target_dir = ACTIVE_DIR
+            target_dir = self.active_dir
         elif new_status == "completed":
-            target_dir = COMPLETED_DIR
+            target_dir = self.completed_dir
         elif new_status == "archived":
-            target_dir = ARCHIVED_DIR
+            target_dir = self.archived_dir
         else:
             # For "paused" or other statuses, keep in active directory
-            target_dir = ACTIVE_DIR
+            target_dir = self.active_dir
 
         # Get just the filename from the path
         filename = os.path.basename(self.work_effort_path)
@@ -560,13 +573,13 @@ tags: [{{tags}}]
                 self.update_work_effort_status(status_choice)
 
         # Update CHANGELOG if it exists
-        if os.path.exists(CHANGELOG_PATH) and self.interactive:
+        if os.path.exists(self.changelog_path) and self.interactive:
             if self.prompt("Would you like to update the CHANGELOG? (y/n)", "y").lower() == 'y':
                 print("Enter the changelog entry for the Unreleased section:")
                 entry = input("- ")
 
                 if entry:
-                    with open(CHANGELOG_PATH, 'r') as f:
+                    with open(self.changelog_path, 'r') as f:
                         content = f.read()
 
                     # Find the Unreleased section and add entry
@@ -584,10 +597,10 @@ tags: [{{tags}}]
                                 content[insert_pos:]
                             )
 
-                            with open(CHANGELOG_PATH, 'w') as f:
+                            with open(self.changelog_path, 'w') as f:
                                 f.write(updated_content)
 
-                            print(f"✅ Updated CHANGELOG: {CHANGELOG_PATH}")
+                            print(f"✅ Updated CHANGELOG: {self.changelog_path}")
 
         # Validate documentation
         self.validate_documentation()
@@ -600,7 +613,7 @@ tags: [{{tags}}]
             ("Work Effort Document", os.path.exists(self.work_effort_path)),
             ("Script", os.path.exists(self.script_path)),
             ("Tests", os.path.exists(self.test_path)),
-            ("Devlog Entry", os.path.exists(DEVLOG_PATH))
+            ("Devlog Entry", os.path.exists(self.devlog_path))
         ]
 
         print("\nDocumentation Checklist:")
@@ -697,7 +710,7 @@ def main():
 
         print(f"Using provided feature name: {args.feature_name}")
         print(f"Script name will be: {runner.script_name}.py")
-        print(f"Script will be created at: {os.path.join(SCRIPTS_DIR, f'{runner.script_name}.py')}")
+        print(f"Script will be created at: {os.path.join(runner.scripts_dir, f'{runner.script_name}.py')}")
 
     # Run the workflow
     return runner.run_workflow()

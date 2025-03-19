@@ -1,0 +1,60 @@
+{
+  "version": "0.5.0",
+  "project_root": "/Users/ctavolazzi/Code/code_conductor",
+  "created_at": "2025-03-16 12:48:12",
+  "updated_at": "2025-03-19 15:36:39",
+  "default_work_manager": "/Users/ctavolazzi/Code/code_conductor/test_workspace/manager2",
+  "work_managers": [
+    {
+      "name": "TestManager",
+      "path": "test_workspace",
+      "work_efforts_dir": "work_efforts",
+      "use_manager": true,
+      "manager_script": "work_efforts/scripts/work_effort_manager.py",
+      "runner_script": "work_efforts/scripts/run_work_effort_manager.py",
+      "auto_start": true
+    },
+    {
+      "name": "TestManager2",
+      "path": "/Users/ctavolazzi/Code/code_conductor/test_workspace/manager2",
+      "work_efforts_dir": "/Users/ctavolazzi/Code/code_conductor/test_workspace/manager2/work_efforts",
+      "use_manager": true,
+      "auto_start": true
+    },
+    {
+      "name": "TestManager2",
+      "path": "/Users/ctavolazzi/Code/code_conductor/test_workspace/manager2",
+      "work_efforts_dir": "/Users/ctavolazzi/Code/code_conductor/test_workspace/manager2/work_efforts",
+      "use_manager": true,
+      "auto_start": true
+    }
+  ],
+  "default_settings": {
+    "assignee": "AI Assistant",
+    "priority": "medium",
+    "due_date": "+7d"
+  },
+  "work_efforts": {
+    "location": "in_ai_setup",
+    "directories": {
+      "active": "test_workspace/work_efforts/active",
+      "completed": "test_workspace/work_efforts/completed",
+      "archived": "test_workspace/work_efforts/archived",
+      "templates": "test_workspace/work_efforts/templates"
+    },
+    "use_manager": true,
+    "manager_script": "src/code_conductor/core/work_effort/manager.py",
+    "runner_script": "src/code_conductor/core/work_effort/runner.py",
+    "project_dir": "/Users/ctavolazzi/Code/code_conductor",
+    "auto_start": true,
+    "default_settings": {
+      "assignee": "AI Assistant",
+      "priority": "medium",
+      "due_date": "+7d"
+    }
+  },
+  "ai_settings": {
+    "preferred_model": "phi3",
+    "timeout": 60
+  }
+}

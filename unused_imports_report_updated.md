@@ -26,7 +26,7 @@
 | src/code_conductor/utils/convert_to_folders.py | 1 |
 | src/code_conductor/utils/helpers.py | 1 |
 | src/code_conductor/work_effort.py | 1 |
-| src/code_conductor/work_effort_manager.py | 1 |
+| src/code_conductor/core/work_effort/manager.py | 3 |
 | src/code_conductor/work_efforts/update_status.py | 1 |
 | src/code_conductor/workflow/run_workflow.py | 1 |
 
@@ -169,7 +169,7 @@
 |--------|------|--------|
 | `os` | 11 | 0 |
 
-### src/code_conductor/work_effort_manager.py
+### src/code_conductor/core/work_effort/manager.py
 
 | Import | Line | Column |
 |--------|------|--------|

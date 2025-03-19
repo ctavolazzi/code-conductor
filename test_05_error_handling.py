@@ -26,6 +26,7 @@ from test_utils import (
     verify_dir_exists,
     logger
 )
+from code_conductor.core.work_effort.manager import WorkEffortManager
 
 # Set up additional logging for this test file
 if __name__ == "__main__":
@@ -247,7 +248,6 @@ def test_corrupt_index_recovery():
         manager = None  # Clear the old reference
 
         # Create a new manager that should recover from the corrupted index
-        from src.code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
         manager = WorkEffortManager(project_dir=test_dir)
 
         # Verify that work efforts were recovered
@@ -384,7 +384,6 @@ def test_concurrent_updates():
             return False
 
         # Create a second instance of the manager to simulate concurrent access
-        from src.code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
         manager2 = WorkEffortManager(project_dir=test_dir)
 
         # First manager updates the status

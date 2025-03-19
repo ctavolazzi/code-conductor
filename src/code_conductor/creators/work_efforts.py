@@ -189,7 +189,7 @@ Manage development clearly and effectively with this Obsidian-inspired Work Effo
 
 ### Creating New Work Efforts
 
-Navigate to `work_efforts/scripts/` and run:
+Navigate to `src/code_conductor/scripts/` and run:
 ```bash
 python new_work_effort.py
 ```

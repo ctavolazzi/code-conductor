@@ -35,7 +35,19 @@ import sys
 import json
 import argparse
 import logging
-from work_effort_manager import WorkEffortManager
+from pathlib import Path
+
+try:
+    # Direct import if installed as a package
+    from code_conductor.core.work_effort.manager import WorkEffortManager
+except ImportError:
+    try:
+        # Try importing from src directory
+        from src.code_conductor.core.work_effort.manager import WorkEffortManager
+    except ImportError:
+        print("Error: Could not import WorkEffortManager. Make sure code_conductor is installed.")
+        sys.exit(1)
+
 from datetime import datetime
 
 def parse_args():

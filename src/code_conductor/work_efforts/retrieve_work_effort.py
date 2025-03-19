@@ -20,6 +20,11 @@ import sys
 import re
 import argparse
 import yaml
+import logging
+
+# Setup logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # Define constants
 WORK_EFFORTS_DIR = "_AI-Setup/work_efforts"
@@ -38,6 +43,7 @@ def ensure_project_root():
 
 def extract_frontmatter(content):
     """Extract frontmatter from markdown content."""
+    logger.debug("Extracting frontmatter from content: %s", content[:100])  # Log first 100 characters
     frontmatter = {}
     if content.startswith('---'):
         end_marker = content.find('---', 3)
@@ -46,7 +52,9 @@ def extract_frontmatter(content):
             try:
                 # Try parsing as YAML
                 frontmatter = yaml.safe_load(frontmatter_text)
-            except yaml.YAMLError:
+                logger.debug("Parsed frontmatter: %s", frontmatter)
+            except yaml.YAMLError as e:
+                logger.error("YAML parsing error: %s", e)
                 # If YAML parsing fails, try a simple key-value approach
                 for line in frontmatter_text.split('\n'):
                     if ':' in line:

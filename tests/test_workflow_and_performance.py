@@ -23,6 +23,17 @@ from unittest.mock import patch, MagicMock
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Import the modules we want to test
+from src.code_conductor.core.work_effort.manager import WorkEffortManager
+from src.code_conductor.core.work_effort.manager_info import WorkEffortManagerInfo
+from src.code_conductor.core.work_effort.manager_config import WorkEffortManagerConfig
+from src.code_conductor.core.work_effort.manager_factory import WorkEffortManagerFactory
+from src.code_conductor.core.work_effort.manager_registry import WorkEffortManagerRegistry
+from src.code_conductor.core.work_effort.manager_loader import WorkEffortManagerLoader
+from src.code_conductor.core.work_effort.manager_validator import WorkEffortManagerValidator
+from src.code_conductor.core.work_effort.manager_parser import WorkEffortManagerParser
+from src.code_conductor.core.work_effort.manager_formatter import WorkEffortManagerFormatter
+from src.code_conductor.core.work_effort.manager_tracer import WorkEffortManagerTracer
+from src.code_conductor.core.work_effort.manager_indexer import WorkEffortManagerIndexer
 from src.code_conductor.work_effort import (
     WorkEffort,
     WorkEffortStatus,
@@ -35,9 +46,6 @@ from src.code_conductor.operations import (
     save_work_effort,
     move_work_effort,
     load_work_efforts
-)
-from src.code_conductor.manager import (
-    WorkEffortManager
 )
 
 

@@ -25,7 +25,7 @@ For more details, see the migration guide in `docs/development/migration/MIGRATI
 2. **Prioritize Existing Scripts**: After initial familiarity, ALWAYS prefer using existing scripts for work effort management:
    - Use `workflow_runner.py` for the complete workflow process
    - Use `update_status.py` for changing work effort status
-   - Use `_AI-Setup/work_efforts/scripts/work_effort_manager.py` for specific work effort operations
+   - Use `src/code_conductor/core/work_effort/manager.py` for specific work effort operations
    - Use `_AI-Setup/work_efforts/scripts/run_work_effort_manager.py` for interactive work effort management
    - Use `_AI-Setup/work_efforts/scripts/new_work_effort.py` for creating individual work efforts
    - Use `retrieve_work_effort.py` to gather comprehensive context for AI assistants

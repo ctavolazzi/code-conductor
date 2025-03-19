@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 """
 Script to index all work efforts across the project.
 
@@ -12,12 +14,14 @@ import json
 import logging
 import argparse
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
+from datetime import datetime
 
 # Add parent directory to path to allow imports
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
 
-from code_conductor.manager import WorkEffortManager
+from code_conductor.core.project import find_project_root
+from code_conductor.core.work_effort.manager import WorkEffortManager
 
 # Set up logging
 logging.basicConfig(
@@ -195,67 +199,30 @@ def generate_summary(work_efforts: List[Dict[str, Any]]) -> str:
     return "\n".join(summary)
 
 def main():
-    """Main entry point."""
-    args = parse_args()
+    """Main entry point for the index_work_efforts script."""
+    try:
+        # Get project root
+        project_root = find_project_root()
+        if not project_root:
+            logger.error("❌ Could not find project root")
+            return 1
 
-    # Get absolute path of project directory
-    project_dir = os.path.abspath(args.project_dir)
-    logger.info(f"Scanning project directory: {project_dir}")
+        # Initialize manager
+        manager = WorkEffortManager(project_dir=project_root)
+        logger.info(f"Scanning project directory: {project_root}")
 
-    # Determine aggressive search mode
-    aggressive_search = True
-    if args.simple:
-        aggressive_search = False
-    elif args.thorough:
-        aggressive_search = True
+        # Index all work efforts
+        work_efforts = manager.index_all_work_efforts()
+        if work_efforts is None:
+            logger.error("❌ Failed to index work efforts")
+            return 1
 
-    # Initialize manager and scan for work efforts
-    manager = WorkEffortManager(project_dir=project_dir)
-    work_efforts = manager.index_all_work_efforts(
-        save_to_file=not args.no_save,
-        aggressive_search=aggressive_search
-    )
+        logger.info(f"✅ Indexed {len(work_efforts)} work efforts")
+        return 0
 
-    # Apply filter if specified
-    if args.filter:
-        filtered_efforts = []
-        filter_text = args.filter.lower()
-        for we in work_efforts:
-            # Check title
-            title = we.get("metadata", {}).get("title", "").lower()
-            if filter_text in title:
-                filtered_efforts.append(we)
-                continue
-
-            # Check content snippet
-            content = we.get("content_snippet", "").lower()
-            if filter_text in content:
-                filtered_efforts.append(we)
-                continue
-
-            # Check path
-            if filter_text in we.get("relative_path", "").lower():
-                filtered_efforts.append(we)
-
-        work_efforts = filtered_efforts
-        logger.info(f"Filtered to {len(work_efforts)} work efforts matching '{args.filter}'")
-
-    # Show results
-    if args.format == "json":
-        print(json.dumps(work_efforts, indent=2))
-    elif args.format == "table":
-        print(format_work_efforts_as_table(work_efforts))
-
-    # Show summary if requested
-    if args.summary:
-        print("\nSummary:")
-        print(generate_summary(work_efforts))
-
-    # Show where the index was saved
-    if not args.no_save:
-        print(f"\nWork efforts index saved to: {os.path.join(project_dir, args.output)}")
-
-    return 0
+    except Exception as e:
+        logger.error(f"Error indexing work efforts: {str(e)}")
+        return 1
 
 if __name__ == "__main__":
     sys.exit(main())

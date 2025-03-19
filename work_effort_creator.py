@@ -17,21 +17,16 @@ import sys
 import argparse
 from datetime import datetime
 
-# Try to import the WorkEffortManager
 try:
-    from src.code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
+    # Direct import if installed as a package
+    from code_conductor.core.work_effort.manager import WorkEffortManager
 except ImportError:
     try:
-        # Second attempt if we're in the package directory
-        from code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
+        # Try importing from src directory
+        from src.code_conductor.core.work_effort.manager import WorkEffortManager
     except ImportError:
-        # Last attempt - direct import
-        try:
-            sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'src'))
-            from code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
-        except ImportError:
-            print("Error: Could not import WorkEffortManager. Make sure code_conductor is installed or in your PYTHONPATH.")
-            sys.exit(1)
+        print("Error: Could not import WorkEffortManager. Make sure code_conductor is installed.")
+        sys.exit(1)
 
 def parse_arguments():
     """Parse command line arguments."""

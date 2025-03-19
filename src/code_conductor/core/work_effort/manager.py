@@ -18,11 +18,17 @@ import logging
 import re
 import fcntl
 from datetime import datetime
-from typing import Dict, List, Optional, Callable, Any, Union, IO
+from typing import Dict, List, Optional, Callable, Any, Union, IO, Tuple
 from pathlib import Path
 
 from ...work_efforts.counter import WorkEffortCounter, get_counter, format_work_effort_filename
 from ...events import EventEmitter, Event
+from .manager_indexer import WorkEffortManagerIndexer
+from .manager_validator import WorkEffortManagerValidator
+from .manager_parser import WorkEffortManagerParser
+from .manager_formatter import WorkEffortManagerFormatter
+from .manager_tracer import WorkEffortManagerTracer
+from ...config import find_nearest_config, create_or_update_config
 
 # Configure logging
 logging.basicConfig(
@@ -50,351 +56,676 @@ class WorkEffortManager:
     """
 
     def __init__(self,
-                 project_dir: str = None,
-                 config: Dict = None,
-                 config_json: str = None,
-                 config_file: str = None,
-                 auto_start: bool = False):
-        """
-        Initialize the WorkEffortManager.
+                 name: str,
+                 project_dir: str,
+                 info: 'WorkEffortManagerInfo',
+                 config: 'WorkEffortManagerConfig',
+                 indexer: 'WorkEffortIndexer',
+                 validator: 'WorkEffortValidator',
+                 tracer: 'WorkEffortTracer',
+                 counter: 'WorkEffortCounter',
+                 template: 'WorkEffortTemplate',
+                 event_emitter: 'EventEmitter'):
+        """Initialize the work effort manager.
 
         Args:
-            project_dir: The root directory of the project. If None, uses current directory.
-            config: Configuration dictionary for the manager.
-            config_json: JSON string containing configuration.
-            config_file: Path to a JSON file containing configuration.
-            auto_start: Whether to start the event loop automatically.
+            name: The name of the manager.
+            project_dir: The root directory of the project.
+            info: Manager information component.
+            config: Manager configuration component.
+            indexer: Work effort indexer component.
+            validator: Work effort validator component.
+            tracer: Work effort tracer component.
+            counter: Work effort counter component.
+            template: Work effort template component.
+            event_emitter: Event emitter component.
         """
-        self.project_dir = project_dir or os.getcwd()
-        self.event_emitter = EventEmitter()
-
-        # Process configuration in order of precedence
-        self.config = {}
-
-        # 1. Base config (if provided)
-        if config:
-            self.config.update(config)
-
-        # 2. Config from JSON file (if provided)
-        if config_file:
-            file_config = self.load_json_file(config_file)
-            if file_config:
-                self.config.update(file_config)
-
-        # 3. Config from JSON string (highest precedence)
-        if config_json:
-            json_config = self.parse_json(config_json)
-            if json_config:
-                self.config.update(json_config)
-
-        logger.info(f"Initialized with configuration: {self.config}")
-
+        self.name = name
+        self.project_dir = project_dir
+        self.info = info
+        self.config = config
+        self.indexer = indexer
+        self.validator = validator
+        self.tracer = tracer
+        self.counter = counter
+        self.template = template
+        self.event_emitter = event_emitter
         self.running = False
-        self.event_handlers = {}
-        self.work_efforts = {}
-        self.last_updated = datetime.now()
+        self.logger = logging.getLogger(__name__)
 
-        # Initialize counter
-        self.counter = get_counter(self.project_dir)
+        # Set up directories
+        self._setup_directories()
 
-        if auto_start:
-            self.start()
-
-    def load_json_file(self, file_path: str) -> Optional[Dict]:
-        """Load configuration from a JSON file."""
-        try:
-            with open(file_path, 'r') as f:
-                return json.load(f)
-        except Exception as e:
-            logger.error(f"Error loading config file {file_path}: {e}")
-            return None
-
-    def parse_json(self, json_str: str) -> Optional[Dict]:
-        """Parse configuration from a JSON string."""
-        try:
-            return json.loads(json_str)
-        except Exception as e:
-            logger.error(f"Error parsing config JSON: {e}")
-            return None
-
-    def start(self):
-        """Start the event loop."""
-        if not self.running:
-            self.running = True
-            self.event_emitter.emit("start", {"timestamp": datetime.now()})
-            logger.info("WorkEffortManager started")
-
-    def stop(self):
-        """Stop the event loop."""
-        if self.running:
-            self.running = False
-            self.event_emitter.emit("stop", {"timestamp": datetime.now()})
-            logger.info("WorkEffortManager stopped")
-
-    def create_work_effort(self,
-                          title: str,
-                          description: str = "",
-                          assignee: str = None,
-                          priority: str = None,
-                          due_date: str = None,
-                          use_ai: bool = False) -> Optional[str]:
-        """
-        Create a new work effort.
-
-        Args:
-            title: The title of the work effort
-            description: Optional description
-            assignee: Optional assignee
-            priority: Optional priority level
-            due_date: Optional due date
-            use_ai: Whether to use AI for content generation
+    @property
+    def work_efforts_dir(self) -> str:
+        """Get the directory containing all work efforts.
 
         Returns:
-            Path to the created work effort file if successful, None otherwise
+            str: Path to the work efforts directory
+        """
+        return self.config.get("work_efforts_dir", os.path.join(self.project_dir, "_AI-Setup", "work_efforts"))
+
+    def _setup_directories(self) -> None:
+        """Set up required directories."""
+        try:
+            # Get directory paths from config or use defaults
+            work_efforts_dir = self.config.get("work_efforts_dir")
+            if not work_efforts_dir:
+                # Find the nearest config file
+                config_file, config_data = find_nearest_config(self.project_dir)
+                if config_data and "work_managers" in config_data:
+                    # Get default manager if available
+                    default_manager = config_data.get("default_manager")
+                    if default_manager:
+                        for manager in config_data["work_managers"]:
+                            if manager.get("name") == default_manager:
+                                work_efforts_dir = os.path.join(os.path.dirname(config_file), manager["work_efforts_dir"])
+                                break
+
+                    # If no default manager or default manager not found, use first available manager
+                    if not work_efforts_dir:
+                        for manager in config_data["work_managers"]:
+                            if "work_efforts_dir" in manager:
+                                work_efforts_dir = os.path.join(os.path.dirname(config_file), manager["work_efforts_dir"])
+                                break
+
+            # If still no work efforts directory, use default
+            if not work_efforts_dir:
+                work_efforts_dir = os.path.join(self.project_dir, "_AI-Setup", "work_efforts")
+
+            templates_dir = os.path.join(work_efforts_dir, "templates")
+            history_dir = os.path.join(work_efforts_dir, "history")
+
+            # Set up status directories
+            self.active_dir = os.path.join(work_efforts_dir, "active")
+            self.completed_dir = os.path.join(work_efforts_dir, "completed")
+            self.archived_dir = os.path.join(work_efforts_dir, "archived")
+            self.paused_dir = os.path.join(work_efforts_dir, "paused")
+
+            # Create directories if they don't exist
+            for directory in [
+                work_efforts_dir,
+                templates_dir,
+                history_dir,
+                self.active_dir,
+                self.completed_dir,
+                self.archived_dir,
+                self.paused_dir
+            ]:
+                os.makedirs(directory, exist_ok=True)
+
+            # Update config with actual paths
+            self.config.update({
+                "work_efforts_dir": work_efforts_dir,
+                "templates_dir": templates_dir,
+                "history_dir": history_dir
+            })
+
+        except Exception as e:
+            self.logger.error(f"Error setting up directories: {str(e)}")
+            raise
+
+    def create_work_effort(self, title: str, assignee: str = "self", priority: str = "medium",
+                          due_date: Optional[str] = None, description: Optional[str] = None,
+                          tags: Optional[List[str]] = None, content: Optional[Dict[str, Any]] = None,
+                          use_sequential_numbering: bool = False) -> Optional[str]:
+        """Create a new work effort.
+
+        Args:
+            title: The title of the work effort.
+            assignee: The assignee of the work effort.
+            priority: The priority of the work effort.
+            due_date: Optional due date for the work effort.
+            description: Optional description for the work effort.
+            tags: Optional list of tags for the work effort.
+            content: Optional dictionary containing additional content sections.
+            use_sequential_numbering: Whether to use sequential numbering for the work effort ID.
+
+        Returns:
+            The ID of the created work effort if successful, None otherwise.
         """
         try:
-            # Validate inputs
-            title = self._validate_title(title)
-            assignee = assignee or DEFAULT_ASSIGNEE
-            priority = priority or DEFAULT_PRIORITY
-            due_date = due_date or DEFAULT_DUE_DATE
+            # Generate work effort ID
+            if use_sequential_numbering:
+                counter = WorkEffortCounter(self.active_dir)
+                count = counter.get_next_count()
+                work_effort_id = f"{datetime.now().strftime('%Y%m%d%H%M')}_{count:04d}_{title.lower().replace(' ', '_')}"
+            else:
+                timestamp = datetime.now().strftime("%Y%m%d%H%M")
+                work_effort_id = f"{timestamp}_{title.lower().replace(' ', '_')}"
 
-            # Generate filename
-            filename = format_work_effort_filename(self.counter.get_next(), title)
-
-            # Create work effort content
-            content = self._generate_work_effort_content(
-                title=title,
-                description=description,
-                assignee=assignee,
-                priority=priority,
-                due_date=due_date
-            )
-
-            # Save to file
-            file_path = os.path.join(self.project_dir, "_AI-Setup", "work_efforts", filename)
-            os.makedirs(os.path.dirname(file_path), exist_ok=True)
-
-            with open(file_path, 'w') as f:
-                f.write(content)
-
-            # Emit event
-            self.event_emitter.emit("work_effort_created", {
-                "filename": filename,
+            # Create work effort metadata
+            metadata = {
+                "id": work_effort_id,
                 "title": title,
                 "assignee": assignee,
                 "priority": priority,
-                "due_date": due_date
-            })
+                "status": "active",
+                "created_at": datetime.now().isoformat(),
+                "tags": tags or []
+            }
+
+            if due_date:
+                metadata["due_date"] = due_date
+            if description:
+                metadata["description"] = description
+
+            # Create work effort data
+            work_effort_data = {
+                "id": work_effort_id,
+                "metadata": metadata,
+                "content": content or {}  # Add content to work effort data
+            }
+
+            # Validate work effort data
+            if not self.validator.validate_work_effort_data(metadata):
+                return None
+
+            # Format content
+            content = self.formatter.format_work_effort(work_effort_data)
+
+            # Write to file
+            file_path = os.path.join(self.active_dir, f"{work_effort_id}.md")
+            with open(file_path, "w") as f:
+                f.write(content)
+
+            # Index all work efforts
+            self.index_all_work_efforts()
 
             return file_path
 
         except Exception as e:
-            logger.error(f"Error creating work effort: {e}")
+            self.logger.error(f"Error creating work effort: {str(e)}")
             return None
 
-    def _validate_title(self, title: str) -> str:
-        """Validate and clean the work effort title."""
-        if not title:
-            return DEFAULT_TITLE
+    def list_work_efforts(self, status: Optional[str] = None) -> List[Dict[str, Any]]:
+        """List all work efforts, optionally filtered by status."""
+        try:
+            # Force reindex to get latest work efforts
+            self.index_all_work_efforts()
 
-        # Remove invalid characters
-        title = re.sub(INVALID_FILENAME_CHARS, '', title)
+            # Get work efforts from indexer
+            work_efforts = self.indexer.indexed_work_efforts
+            if work_efforts is None:
+                work_efforts = {}
 
-        # Truncate if too long
-        if len(title) > MAX_FILENAME_LENGTH:
-            title = title[:MAX_FILENAME_LENGTH]
+            # Filter by status if specified
+            if status:
+                filtered_efforts = []
+                for we in work_efforts.values():
+                    if we.get("metadata", {}).get("status") == status:
+                        filtered_efforts.append(we)
+                return filtered_efforts
 
-        return title.strip()
+            return list(work_efforts.values())
+        except Exception as e:
+            logger.error(f"Error listing work efforts: {str(e)}")
+            return []
 
-    def _generate_work_effort_content(self,
-                                    title: str,
-                                    description: str,
-                                    assignee: str,
-                                    priority: str,
-                                    due_date: str) -> str:
-        """Generate the content for a new work effort."""
-        content = [
-            f"# {title}",
-            "",
-            "## Metadata",
-            f"- **Assignee:** {assignee}",
-            f"- **Priority:** {priority}",
-            f"- **Due Date:** {due_date}",
-            f"- **Status:** active",
-            f"- **Created:** {datetime.now().strftime('%Y-%m-%d %H:%M')}",
-            "",
-            "## Description",
-            description,
-            "",
-            "## Tasks",
-            "- [ ] Initial setup",
-            "",
-            "## Notes",
-            ""
-        ]
-        return "\n".join(content)
-
-    def get_work_effort(self, identifier: str) -> Optional[Dict]:
-        """
-        Retrieve a work effort by identifier (filename, ID, or title).
+    def update_status(self, work_effort_id: str, new_status: str) -> bool:
+        """Update the status of a work effort.
 
         Args:
-            identifier: The identifier to search for
+            work_effort_id: The ID of the work effort.
+            new_status: The new status to set.
 
         Returns:
-            Dictionary containing work effort data if found, None otherwise
+            True if successful, False otherwise.
         """
         try:
-            # Try to find by filename
-            if identifier.endswith('.md'):
-                file_path = os.path.join(self.project_dir, "_AI-Setup", "work_efforts", identifier)
-                if os.path.exists(file_path):
-                    return self._load_work_effort(file_path)
-
-            # Try to find by ID
-            if identifier.isdigit():
-                for filename in os.listdir(os.path.join(self.project_dir, "_AI-Setup", "work_efforts")):
-                    if filename.startswith(f"{int(identifier):04d}_"):
-                        file_path = os.path.join(self.project_dir, "_AI-Setup", "work_efforts", filename)
-                        return self._load_work_effort(file_path)
-
-            # Try to find by title
-            for filename in os.listdir(os.path.join(self.project_dir, "_AI-Setup", "work_efforts")):
-                if identifier.lower() in filename.lower():
-                    file_path = os.path.join(self.project_dir, "_AI-Setup", "work_efforts", filename)
-                    return self._load_work_effort(file_path)
-
-            return None
-
-        except Exception as e:
-            logger.error(f"Error retrieving work effort: {e}")
-            return None
-
-    def _load_work_effort(self, file_path: str) -> Dict:
-        """Load a work effort from a file."""
-        try:
-            with open(file_path, 'r') as f:
-                content = f.read()
-
-            # Extract metadata
-            metadata = {}
-            metadata_match = re.search(r'## Metadata\n(.*?)\n\n', content, re.DOTALL)
-            if metadata_match:
-                for line in metadata_match.group(1).split('\n'):
-                    if ':' in line:
-                        key, value = line.split(':', 1)
-                        metadata[key.strip('* ')] = value.strip()
-
-            return {
-                "file_path": file_path,
-                "filename": os.path.basename(file_path),
-                "content": content,
-                "metadata": metadata
-            }
-
-        except Exception as e:
-            logger.error(f"Error loading work effort from {file_path}: {e}")
-            return None
-
-    def update_work_effort(self,
-                          identifier: str,
-                          updates: Dict) -> bool:
-        """
-        Update a work effort with new information.
-
-        Args:
-            identifier: The identifier of the work effort to update
-            updates: Dictionary of updates to apply
-
-        Returns:
-            True if successful, False otherwise
-        """
-        try:
-            work_effort = self.get_work_effort(identifier)
+            # Get work effort data
+            work_effort = self.indexer.get_indexed_work_effort(work_effort_id)
             if not work_effort:
                 return False
 
-            # Update content based on provided updates
-            content = work_effort["content"]
+            # Validate new status
+            if not self.validator.validate_status(new_status):
+                return False
 
-            # Update metadata section
-            if "metadata" in updates:
-                metadata_section = "## Metadata\n"
-                for key, value in updates["metadata"].items():
-                    metadata_section += f"- **{key}:** {value}\n"
-                metadata_section += "\n"
+            # Get old and new file paths
+            old_status = work_effort.get("metadata", {}).get("status", "active")  # Default to active if not found
 
-                # Replace existing metadata section
-                content = re.sub(r'## Metadata\n.*?\n\n', metadata_section, content, flags=re.DOTALL)
+            # Get old and new directories
+            status_dirs = {
+                "active": self.active_dir,
+                "completed": self.completed_dir,
+                "archived": self.archived_dir,
+                "paused": self.paused_dir
+            }
 
-            # Write updated content back to file
-            with open(work_effort["file_path"], 'w') as f:
+            old_dir = status_dirs.get(old_status)
+            new_dir = status_dirs.get(new_status)
+
+            if not old_dir or not new_dir:
+                return False
+
+            # Move file to new directory
+            old_file = os.path.join(old_dir, f"{work_effort_id}.md")
+            new_file = os.path.join(new_dir, f"{work_effort_id}.md")
+
+            if not os.path.exists(old_file):
+                return False
+
+            # Update work effort data
+            if "metadata" not in work_effort:
+                work_effort["metadata"] = {}
+            work_effort["metadata"]["status"] = new_status
+            work_effort["metadata"]["updated_at"] = datetime.now().isoformat()
+
+            # Format and write updated content
+            content = self.formatter.format_work_effort(work_effort)
+
+            # Create new directory if it doesn't exist
+            os.makedirs(os.path.dirname(new_file), exist_ok=True)
+
+            # Write updated content to new file
+            with open(new_file, "w") as f:
                 f.write(content)
 
-            # Emit event
-            self.event_emitter.emit("work_effort_updated", {
-                "filename": work_effort["filename"],
-                "updates": updates
-            })
+            # Remove old file if it exists and is different from new file
+            if old_file != new_file and os.path.exists(old_file):
+                os.remove(old_file)
+
+            # Update index
+            self.index_all_work_efforts()
 
             return True
 
         except Exception as e:
-            logger.error(f"Error updating work effort: {e}")
+            self.logger.error(f"Error updating work effort status: {str(e)}")
             return False
 
-    def list_work_efforts(self,
-                         status: str = None,
-                         assignee: str = None,
-                         priority: str = None) -> List[Dict]:
-        """
-        List work efforts with optional filtering.
-
-        Args:
-            status: Filter by status
-            assignee: Filter by assignee
-            priority: Filter by priority
+    def index_all_work_efforts(self) -> Dict[str, Any]:
+        """Index all work efforts in the work efforts directory.
 
         Returns:
-            List of work effort dictionaries
+            A dictionary of indexed work efforts.
         """
         try:
-            work_efforts_dir = os.path.join(self.project_dir, "_AI-Setup", "work_efforts")
+            # Get the work efforts directory from config or use default
+            work_efforts_dir = self.config.get("work_efforts_dir", self.work_efforts_dir)
             if not os.path.exists(work_efforts_dir):
-                return []
+                os.makedirs(work_efforts_dir)
 
-            work_efforts = []
-            for filename in os.listdir(work_efforts_dir):
-                if not filename.endswith('.md'):
-                    continue
+            # Index work efforts
+            self.indexer.index_all_work_efforts()
+            logger.info(f"✅ Indexed work efforts in {work_efforts_dir}")
+            return self.indexer.indexed_work_efforts
+        except Exception as e:
+            logger.error(f"❌ Failed to index work efforts: {str(e)}")
+            return {}
 
-                work_effort = self.get_work_effort(filename)
-                if not work_effort:
-                    continue
+    def get_counter(self) -> int:
+        """Get the next work effort counter value.
 
-                metadata = work_effort["metadata"]
+        Returns:
+            The next counter value.
+        """
+        try:
+            counter_file = os.path.join(self.config["work_efforts_dir"], "counter.json")
 
-                # Apply filters
-                if status and metadata.get("Status", "").lower() != status.lower():
-                    continue
-                if assignee and metadata.get("Assignee", "").lower() != assignee.lower():
-                    continue
-                if priority and metadata.get("Priority", "").lower() != priority.lower():
-                    continue
-
-                work_efforts.append(work_effort)
-
-            return work_efforts
+            if os.path.exists(counter_file):
+                with open(counter_file, "r") as f:
+                    counter_data = json.load(f)
+                    return counter_data.get("next_counter", 1)
+            else:
+                return 1
 
         except Exception as e:
-            logger.error(f"Error listing work efforts: {e}")
+            self.logger.error(f"Error getting counter: {str(e)}")
+            return 1
+
+    def increment_counter(self) -> int:
+        """Increment and save the work effort counter.
+
+        Returns:
+            The new counter value.
+        """
+        try:
+            counter_file = os.path.join(self.config["work_efforts_dir"], "counter.json")
+            next_counter = self.get_counter() + 1
+
+            with open(counter_file, "w") as f:
+                json.dump({"next_counter": next_counter}, f)
+
+            return next_counter
+
+        except Exception as e:
+            self.logger.error(f"Error incrementing counter: {str(e)}")
+            return 1
+
+    def create_new_manager(self, manager_name: str, target_dir: str) -> bool:
+        """Create a new work effort manager.
+
+        Args:
+            manager_name: Name of the manager.
+            target_dir: Directory where the manager will be created.
+
+        Returns:
+            True if successful, False otherwise.
+        """
+        try:
+            # Create target directory if it doesn't exist
+            os.makedirs(target_dir, exist_ok=True)
+
+            # Create work efforts directory
+            work_efforts_dir = os.path.join(target_dir, "work_efforts")
+            os.makedirs(work_efforts_dir, exist_ok=True)
+
+            # Create status directories
+            for status in ["active", "completed", "archived", "paused"]:
+                os.makedirs(os.path.join(work_efforts_dir, status), exist_ok=True)
+
+            # Create counter.json
+            counter_file = os.path.join(target_dir, "counter.json")
+            with open(counter_file, "w") as f:
+                json.dump({"counter": 0}, f)
+
+            # Create manager config
+            manager_config = {
+                "name": manager_name,
+                "path": target_dir,
+                "work_efforts_dir": work_efforts_dir,
+                "use_manager": True,
+                "auto_start": True
+            }
+
+            # Update project config
+            config_file, config_data = find_nearest_config()
+            if config_file and config_data:
+                if "work_managers" not in config_data:
+                    config_data["work_managers"] = []
+                config_data["work_managers"].append(manager_config)
+                create_or_update_config(os.path.dirname(config_file), config_data)
+
+            return True
+
+        except Exception as e:
+            logger.error(f"Error creating manager {manager_name}: {str(e)}")
+            return False
+
+    def stop(self):
+        """Stop the manager and clean up resources."""
+        self.running = False
+        self.logger.info("Work effort manager stopped")
+
+    def has_required_folders(self) -> bool:
+        """Check if all required folders exist."""
+        try:
+            required_dirs = [
+                self.work_efforts_dir,
+                os.path.join(self.work_efforts_dir, "active"),
+                os.path.join(self.work_efforts_dir, "completed"),
+                os.path.join(self.work_efforts_dir, "archived"),
+                os.path.join(self.work_efforts_dir, "templates")
+            ]
+            return all(os.path.exists(d) and os.path.isdir(d) for d in required_dirs)
+        except Exception as e:
+            self.logger.error(f"Error checking required folders: {str(e)}")
+            return False
+
+    def get_work_effort_content(self, filename: str) -> Optional[str]:
+        """Get the content of a work effort file.
+
+        Args:
+            filename: The filename of the work effort.
+
+        Returns:
+            The content of the work effort file if found, None otherwise.
+        """
+        try:
+            file_path = os.path.join(self.active_dir, filename)
+            if not os.path.exists(file_path):
+                # Try other directories
+                for dir_name in ["completed", "archived", "paused"]:
+                    dir_path = os.path.join(self.work_efforts_dir, dir_name)
+                    file_path = os.path.join(dir_path, filename)
+                    if os.path.exists(file_path):
+                        break
+                else:
+                    return None
+
+            with open(file_path, "r") as f:
+                return f.read()
+        except Exception as e:
+            self.logger.error(f"Error reading work effort content: {str(e)}")
+            return None
+
+    def get_work_efforts(self, status: Optional[str] = None) -> Dict[str, Dict[str, Any]]:
+        """Get all work efforts, optionally filtered by status.
+
+        Args:
+            status: Optional status to filter by.
+
+        Returns:
+            Dictionary of work efforts.
+        """
+        return self.list_work_efforts(status)
+
+    def register_handler(self, event_type: str, handler: Callable[[Event], None]) -> None:
+        """Register an event handler.
+
+        Args:
+            event_type: The type of event to handle.
+            handler: The handler function.
+        """
+        self.event_emitter.register_handler(event_type, handler)
+
+    def _check_for_changes(self) -> None:
+        """Check for changes in work effort files."""
+        try:
+            # Get all work effort files
+            work_efforts = {}
+            for status in ["active", "completed", "archived", "paused"]:
+                dir_path = os.path.join(self.work_efforts_dir, status)
+                if os.path.exists(dir_path):
+                    for filename in os.listdir(dir_path):
+                        if filename.endswith(".md"):
+                            file_path = os.path.join(dir_path, filename)
+                            work_efforts[filename] = os.path.getmtime(file_path)
+
+            # Compare with previous state
+            if hasattr(self, "_previous_work_efforts"):
+                # Check for changes
+                for filename, mtime in work_efforts.items():
+                    if filename not in self._previous_work_efforts or self._previous_work_efforts[filename] != mtime:
+                        # File was added or modified
+                        self.event_emitter.emit_event("work_effort_changed", {"filename": filename})
+
+                for filename in self._previous_work_efforts:
+                    if filename not in work_efforts:
+                        # File was removed
+                        self.event_emitter.emit_event("work_effort_removed", {"filename": filename})
+
+            # Update previous state
+            self._previous_work_efforts = work_efforts
+
+        except Exception as e:
+            self.logger.error(f"Error checking for changes: {str(e)}")
+
+    def create_work_effort_from_json(self, json_str: str) -> Optional[str]:
+        """Create a work effort from a JSON string.
+
+        Args:
+            json_str: JSON string containing work effort data.
+
+        Returns:
+            The ID of the created work effort if successful, None otherwise.
+        """
+        try:
+            data = json.loads(json_str)
+            return self.create_work_effort(
+                title=data.get("title"),
+                assignee=data.get("assignee", "self"),
+                priority=data.get("priority", "medium"),
+                due_date=data.get("due_date"),
+                description=data.get("description"),
+                tags=data.get("tags"),
+                content=data.get("content")
+            )
+        except Exception as e:
+            self.logger.error(f"Error creating work effort from JSON: {str(e)}")
+            return None
+
+    def update_work_effort_status(self, work_effort_id: str, new_status: str, keep_lock: bool = False) -> bool:
+        """Update the status of a work effort.
+
+        Args:
+            work_effort_id: The ID of the work effort.
+            new_status: The new status to set.
+            keep_lock: Whether to keep the lock on the file.
+
+        Returns:
+            True if successful, False otherwise.
+        """
+        try:
+            work_effort = self.get_work_effort(work_effort_id)
+            if not work_effort:
+                return False
+
+            file_path = work_effort.get("metadata", {}).get("file_path")
+            if not file_path:
+                return False
+
+            # Read content
+            with open(file_path, "r") as f:
+                content = f.read()
+
+            # Update status in content
+            old_status = work_effort.get("metadata", {}).get("status", "active")
+            content = content.replace(f'status: "{old_status}"', f'status: "{new_status}"')
+
+            # Write updated content
+            with open(file_path, "w") as f:
+                f.write(content)
+
+            return True
+        except Exception as e:
+            self.logger.error(f"Error updating work effort status: {str(e)}")
+            return False
+
+    def find_related_work_efforts(self, work_effort_id: str) -> List[str]:
+        """Find work efforts related to the given one.
+
+        Args:
+            work_effort_id: The ID of the work effort.
+
+        Returns:
+            List of related work effort IDs.
+        """
+        try:
+            # Get all work efforts
+            work_efforts = self.list_work_efforts()
+            related = []
+
+            # Get content of the target work effort
+            target_content = None
+            for we in work_efforts:
+                if we.get("id") == work_effort_id:
+                    target_content = we.get("content", "")
+                    break
+
+            if not target_content:
+                return []
+
+            # Look for references in other work efforts
+            for we in work_efforts:
+                if we.get("id") != work_effort_id:
+                    content = we.get("content", "")
+                    if work_effort_id in content or (
+                        target_content and any(
+                            ref in content for ref in [
+                                we.get("id", ""),
+                                we.get("title", "")
+                            ]
+                        )
+                    ):
+                        related.append(we.get("id"))
+
+            return related
+        except Exception as e:
+            self.logger.error(f"Error finding related work efforts: {str(e)}")
             return []
 
-    def on(self, event: str, handler: Callable):
-        """Register an event handler."""
-        self.event_emitter.on(event, handler)
+    def get_work_effort_history(self, work_effort_id: str) -> List[Dict[str, Any]]:
+        """Get the history of a work effort.
 
-    def off(self, event: str, handler: Callable):
-        """Remove an event handler."""
-        self.event_emitter.off(event, handler)
+        Args:
+            work_effort_id: The ID of the work effort.
+
+        Returns:
+            List of history entries.
+        """
+        try:
+            # Get all work efforts
+            work_efforts = self.list_work_efforts()
+            history = []
+
+            # Find the work effort
+            for we in work_efforts:
+                if we.get("id") == work_effort_id:
+                    # Add creation entry
+                    history.append({
+                        "type": "created",
+                        "timestamp": we.get("created_at"),
+                        "details": f"Created by {we.get('assignee', 'unknown')}"
+                    })
+
+                    # Add status changes
+                    if "status_history" in we:
+                        for status_change in we["status_history"]:
+                            history.append({
+                                "type": "status_change",
+                                "timestamp": status_change["timestamp"],
+                                "details": f"Status changed from {status_change['old_status']} to {status_change['new_status']}"
+                            })
+
+                    break
+
+            return sorted(history, key=lambda x: x["timestamp"])
+        except Exception as e:
+            self.logger.error(f"Error getting work effort history: {str(e)}")
+            return []
+
+    def trace_work_effort_chain(self, work_effort_id: str) -> List[str]:
+        """Trace the chain of related work efforts.
+
+        Args:
+            work_effort_id: The ID of the work effort.
+
+        Returns:
+            List of work effort IDs in the chain.
+        """
+        try:
+            chain = []
+            visited = set()
+
+            def trace_recursive(current_id: str) -> None:
+                if current_id in visited:
+                    return
+                visited.add(current_id)
+                chain.append(current_id)
+                related = self.find_related_work_efforts(current_id)
+                for related_id in related:
+                    trace_recursive(related_id)
+
+            trace_recursive(work_effort_id)
+            return chain
+        except Exception as e:
+            self.logger.error(f"Error tracing work effort chain: {str(e)}")
+            return []
+
+    def get_work_effort(self, work_effort_id: str) -> Optional[Dict[str, Any]]:
+        """Get a specific work effort by ID.
+
+        Args:
+            work_effort_id: The ID of the work effort.
+
+        Returns:
+            The work effort data if found, None otherwise.
+        """
+        work_efforts = self.get_work_efforts()
+        for we in work_efforts:
+            if we.get("id") == work_effort_id:
+                return we
+        return None

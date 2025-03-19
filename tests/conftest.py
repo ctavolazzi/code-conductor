@@ -15,6 +15,14 @@ from contextlib import contextmanager
 from unittest.mock import patch, MagicMock
 from datetime import datetime
 
+# Add the tests directory to the Python path
+tests_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, tests_dir)
+
+# Add the project root directory to the Python path
+project_root = os.path.dirname(tests_dir)
+sys.path.insert(0, project_root)
+
 # Add project root and src directories to Python path
 # This should work with the pytest.ini configuration, but we add it here as a backup
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))

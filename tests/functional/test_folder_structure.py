@@ -17,6 +17,7 @@ except ModuleNotFoundError:
     Config = None
 
 from src.code_conductor.folder_scanner import FolderStructureValidator
+from src.code_conductor.core.work_effort.manager import WorkEffortManager
 
 # Test data
 basic_structure = [
@@ -110,8 +111,6 @@ class TestFolderStructure:
         # Mock the current date/time to ensure consistent test results
         with patch('src.code_conductor.work_effort.datetime') as mock_datetime:
             mock_datetime.now.return_value.strftime.return_value = "20230101_test"
-
-            from src.code_conductor.manager import WorkEffortManager
 
             config = Config(public_apis_dir)
             manager = WorkEffortManager(project_dir=public_apis_dir)

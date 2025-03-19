@@ -70,6 +70,9 @@ class WorkEffortCounter:
             config_dir = os.path.join(home_dir, ".code_conductor")
             os.makedirs(config_dir, exist_ok=True)
             counter_file_path = os.path.join(config_dir, "counter.json")
+        elif os.path.isdir(counter_file_path):
+            # If a directory is provided, use counter.json within that directory
+            counter_file_path = os.path.join(counter_file_path, "counter.json")
 
         self.counter_file_path = counter_file_path
         self.lock_file_path = f"{counter_file_path}.lock"
@@ -396,23 +399,11 @@ class WorkEffortCounter:
 # Singleton instance
 _counter_instance = None
 
-def get_counter(counter_file_path: Optional[str] = None) -> WorkEffortCounter:
-    """
-    Factory function to get a WorkEffortCounter instance.
-
-    This is the recommended way to get a counter to ensure only one instance
-    exists per counter file.
-
-    Args:
-        counter_file_path: Path to counter file
-
-    Returns:
-        WorkEffortCounter instance
-    """
-    global _counter_instance
-    if _counter_instance is None:
-        _counter_instance = WorkEffortCounter(counter_file_path)
-    return _counter_instance
+def get_counter(project_dir: str) -> WorkEffortCounter:
+    """Get or create a work effort counter for the project."""
+    counter_file = os.path.join(project_dir, ".code-conductor", "counter.json")
+    os.makedirs(os.path.dirname(counter_file), exist_ok=True)
+    return WorkEffortCounter(counter_file)
 
 
 def initialize_counter_from_existing_work_efforts(work_efforts_dir: str, counter_file: Optional[str] = None) -> int:
@@ -433,7 +424,7 @@ def initialize_counter_from_existing_work_efforts(work_efforts_dir: str, counter
         counter_file = os.path.join(work_efforts_dir, "counter.json")
 
     # Create counter instance
-    counter = get_counter(counter_file)
+    counter = get_counter(work_efforts_dir)
 
     # Define directory paths
     active_dir = os.path.join(work_efforts_dir, "active")

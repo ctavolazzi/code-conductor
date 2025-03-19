@@ -17,14 +17,14 @@
             "typing.Optional",
             "typing.List"
         ],
-        "src/code_conductor/work_efforts/scripts/work_effort_manager.py": [
+        "src/code_conductor/core/work_effort/manager.py": [
             "work_efforts.counter.WorkEffortCounter",
             "work_efforts.counter.format_work_effort_filename"
         ]
     },
     "reexport_patterns": [
         "src/code_conductor/ai_work_effort_creator.py",
-        "src/code_conductor/work_effort_manager.py"
+        "src/code_conductor/core/work_effort/manager.py"
     ],
     "ignore_files": [
         "src/code_conductor/tests/.*",

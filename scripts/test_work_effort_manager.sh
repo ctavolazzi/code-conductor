@@ -135,7 +135,7 @@ python "$(pwd)/cli.py" list
 
 # Test the work effort manager directly
 echo -e "${YELLOW}Testing work effort manager directly...${NC}"
-python "$(pwd)/work_efforts/scripts/run_work_effort_manager.py" --list-active
+python "$(pwd)/src/code_conductor/scripts/run_work_effort_manager.py" --list-active
 
 # Success
 echo -e "${GREEN}All tests passed!${NC}"

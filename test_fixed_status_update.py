@@ -2,7 +2,11 @@
 
 import os
 import sys
-from src.code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
+import unittest
+import tempfile
+import shutil
+
+from code_conductor.core.work_effort.manager import WorkEffortManager
 
 def main():
     print("Testing fixed status update functionality...")

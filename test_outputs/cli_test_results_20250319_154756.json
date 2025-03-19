@@ -1,0 +1,75 @@
+{
+  "timestamp": "2025-03-19T15:47:52.199313",
+  "commands": {
+    "help_command": {
+      "command": "code-conductor --help",
+      "exit_code": 0,
+      "stdout": "usage: code-conductor [-h] [--version] [-i] [-y] [--manager MANAGER]\n                      [--title TITLE] [--assignee ASSIGNEE]\n                      [--priority {low,medium,high,critical}]\n                      [--due-date DUE_DATE] [--use-ai]\n                      [--description DESCRIPTION] [--model MODEL]\n                      [--timeout TIMEOUT] [--work-effort WORK_EFFORT]\n                      [--new-status {active,completed,archived,paused}]\n                      [--old-status {active,completed,archived,paused}]\n                      [--manager-name MANAGER_NAME] [--target-dir TARGET_DIR]\n                      [-q]\n                      [command]\n\nCode Conductor CLI\n\npositional arguments:\n  command               Command to execute\n\noptions:\n  -h, --help            show this help message and exit\n  --version             Show version number\n  -i, --interactive     Run in interactive mode\n  -y, --yes             Non-interactive mode (use defaults)\n  --manager MANAGER     Work effort manager to use\n  --title TITLE         Title for work effort\n  --assignee ASSIGNEE   Assignee for work effort\n  --priority {low,medium,high,critical}\n                        Priority for work effort\n  --due-date DUE_DATE   Due date for work effort (YYYY-MM-DD)\n  --use-ai              Use AI for content generation\n  --description DESCRIPTION\n                        Description for AI content generation\n  --model MODEL         Ollama model to use for AI content\n  --timeout TIMEOUT     Timeout for AI content generation\n  --work-effort WORK_EFFORT\n                        Work effort to update\n  --new-status {active,completed,archived,paused}\n                        New status for work effort\n  --old-status {active,completed,archived,paused}\n                        Old status for work effort\n  --manager-name MANAGER_NAME\n                        Name for work effort manager\n  --target-dir TARGET_DIR\n                        Target directory for work effort manager\n  -q, --quiet           Quiet mode (minimal output)\n",
+      "stderr": "",
+      "timestamp": "2025-03-19T15:47:52.587834"
+    },
+    "version_command": {
+      "command": "code-conductor --version",
+      "exit_code": 0,
+      "stdout": "Code Conductor v0.5.0\n",
+      "stderr": "",
+      "timestamp": "2025-03-19T15:47:53.036938"
+    },
+    "create_manager": {
+      "command": "code-conductor new-work-manager --manager-name 'TestManager2' --target-dir 'test_workspace/manager2'",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "2025-03-19 15:47:53,403 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:47:53,403 - CodeConductor - INFO - Found config file via manifest at: test_workspace/config.json\n2025-03-19 15:47:53,404 - CodeConductor - ERROR - Error in main: 'WorkEffortManager' object has no attribute 'config'\n",
+      "timestamp": "2025-03-19T15:47:53.473326"
+    },
+    "find_root": {
+      "command": "code-conductor find-root",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "2025-03-19 15:47:53,875 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:47:53,876 - CodeConductor - INFO - Found config file via manifest at: test_workspace/config.json\n2025-03-19 15:47:53,876 - CodeConductor - ERROR - Error in main: 'WorkEffortManager' object has no attribute 'config'\n",
+      "timestamp": "2025-03-19T15:47:53.916006"
+    },
+    "setup_command": {
+      "command": "code-conductor setup",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "2025-03-19 15:47:54,270 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:47:54,271 - CodeConductor - INFO - Found config file via manifest at: test_workspace/config.json\n2025-03-19 15:47:54,271 - CodeConductor - ERROR - Error in main: 'WorkEffortManager' object has no attribute 'config'\n",
+      "timestamp": "2025-03-19T15:47:54.316461"
+    },
+    "cc_work_e": {
+      "command": "cc-work-e --title 'Shorthand Test'",
+      "exit_code": 0,
+      "stdout": "Creating work effort with title: Shorthand Test, assignee: self, priority: medium, due date: 2025-03-19\nCreating in package directory\n\n\ud83d\ude80 New work effort created at: /Users/ctavolazzi/Code/code_conductor/src/code_conductor/work_efforts/active/202503191547_shorthand_test.md\n",
+      "stderr": "",
+      "timestamp": "2025-03-19T15:47:54.684108"
+    },
+    "cc_new": {
+      "command": "cc-new 'Quick Test' -p high -a 'Test User'",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "Traceback (most recent call last):\n  File \"/Users/ctavolazzi/Code/code_conductor/venv/bin/cc-new\", line 33, in <module>\n    sys.exit(load_entry_point('code-conductor', 'console_scripts', 'cc-new')())\n  File \"/Users/ctavolazzi/Code/code_conductor/src/code_conductor/scripts/cc_new.py\", line 180, in main\n    manager = WorkEffortManager(project_dir=project_root)\n  File \"/Users/ctavolazzi/Code/code_conductor/src/code_conductor/core/work_effort/manager.py\", line 72, in __init__\n    self.indexer = WorkEffortManagerIndexer(project_dir, config=self.config)\nAttributeError: 'WorkEffortManager' object has no attribute 'config'\n",
+      "timestamp": "2025-03-19T15:47:54.912101"
+    },
+    "create_status_test_work_effort": {
+      "command": "code-conductor new-work-effort --title 'Status Test' --assignee 'Test User' --priority medium",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "2025-03-19 15:47:55,239 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:47:55,240 - CodeConductor - INFO - Found config file via manifest at: test_workspace/config.json\n2025-03-19 15:47:55,240 - CodeConductor - ERROR - Error in main: 'WorkEffortManager' object has no attribute 'config'\n",
+      "timestamp": "2025-03-19T15:47:55.286757"
+    },
+    "update_status": {
+      "command": "code-conductor update-status --work-effort 'Status Test' --new-status completed",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "2025-03-19 15:47:55,610 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:47:55,611 - CodeConductor - INFO - Found config file via manifest at: test_workspace/config.json\n2025-03-19 15:47:55,611 - CodeConductor - ERROR - Error in main: 'WorkEffortManager' object has no attribute 'config'\n",
+      "timestamp": "2025-03-19T15:47:55.655293"
+    },
+    "create_work_effort": {
+      "command": "code-conductor new-work-effort --title 'Test Work Effort' --assignee 'Test User' --priority medium",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "2025-03-19 15:47:56,063 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:47:56,063 - CodeConductor - INFO - Found config file via manifest at: test_workspace/config.json\n2025-03-19 15:47:56,063 - CodeConductor - ERROR - Error in main: 'WorkEffortManager' object has no attribute 'config'\n",
+      "timestamp": "2025-03-19T15:47:56.102485"
+    }
+  }
+}

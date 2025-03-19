@@ -35,7 +35,7 @@ from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 # Now import the project modules
-from code_conductor.core.work_effort.manager import WorkEffortManager
+from src.code_conductor.core.work_effort.manager import WorkEffortManager
 
 
 class TestWorkEffortManagerInvalidInput(unittest.TestCase):

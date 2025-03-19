@@ -44,9 +44,17 @@ from src.code_conductor.config import (
     load_json_file,
     save_json_file
 )
-from src.code_conductor.manager import (
-    WorkEffortManager
-)
+from src.code_conductor.core.work_effort.manager import WorkEffortManager
+from src.code_conductor.core.work_effort.manager_info import WorkEffortManagerInfo
+from src.code_conductor.core.work_effort.manager_config import WorkEffortManagerConfig
+from src.code_conductor.core.work_effort.manager_factory import WorkEffortManagerFactory
+from src.code_conductor.core.work_effort.manager_registry import WorkEffortManagerRegistry
+from src.code_conductor.core.work_effort.manager_loader import WorkEffortManagerLoader
+from src.code_conductor.core.work_effort.manager_validator import WorkEffortManagerValidator
+from src.code_conductor.core.work_effort.manager_parser import WorkEffortManagerParser
+from src.code_conductor.core.work_effort.manager_formatter import WorkEffortManagerFormatter
+from src.code_conductor.core.work_effort.manager_tracer import WorkEffortManagerTracer
+from src.code_conductor.core.work_effort.manager_indexer import WorkEffortManagerIndexer
 
 
 class TestWorkEffortModel(unittest.TestCase):

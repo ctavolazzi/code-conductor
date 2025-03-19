@@ -60,7 +60,7 @@ filtered_efforts = manager.filter_work_efforts(title_contains=keyword)
 
 ### 1. Title validation in WorkEffortManager
 
-The `_validate_title` method needs to be improved to reject invalid characters. Find the method around line 420 in `src/code_conductor/work_efforts/scripts/work_effort_manager.py` and ensure it properly rejects characters like '/'.
+The `_validate_title` method needs to be improved to reject invalid characters. Find the method around line 420 in `src/code_conductor/core/work_effort/manager.py` and ensure it properly rejects characters like '/'.
 
 ### 2. Priority validation in WorkEffortManager
 

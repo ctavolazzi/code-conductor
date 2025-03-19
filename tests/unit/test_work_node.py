@@ -15,16 +15,21 @@ Usage:
 
 import os
 import sys
+import yaml
 import tempfile
 import unittest
 import shutil
-import yaml
 import re
 from pathlib import Path
+from datetime import datetime
+from unittest.mock import patch, MagicMock
 
 # Import the work node module
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from src.code_conductor.work_efforts.create_work_node import WorkNode, WorkNodeManager
+
+# Add the project root to the Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 class TestWorkNode(unittest.TestCase):
     """Test the WorkNode class functionality."""

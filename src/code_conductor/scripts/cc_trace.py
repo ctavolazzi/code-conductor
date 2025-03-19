@@ -8,8 +8,19 @@ import sys
 from typing import List, Dict, Any
 from datetime import datetime
 import json
+import os
+from pathlib import Path
 
-from code_conductor.manager import WorkEffortManager
+try:
+    # Direct import if installed as a package
+    from code_conductor.core.work_effort.manager import WorkEffortManager
+except ImportError:
+    try:
+        # Try importing from src directory
+        from src.code_conductor.core.work_effort.manager import WorkEffortManager
+    except ImportError:
+        print("Error: Could not import WorkEffortManager. Make sure code_conductor is installed.")
+        sys.exit(1)
 
 def format_work_efforts_as_table(work_efforts: List[Dict[str, Any]]) -> str:
     """Format work efforts as a nicely formatted table."""

@@ -1,0 +1,96 @@
+{
+  "timestamp": "2025-03-19T15:49:14.995095",
+  "commands": {
+    "help_command": {
+      "command": "code-conductor --help",
+      "exit_code": 0,
+      "stdout": "usage: code-conductor [-h] [--version] [-i] [-y] [--manager MANAGER]\n                      [--title TITLE] [--assignee ASSIGNEE]\n                      [--priority {low,medium,high,critical}]\n                      [--due-date DUE_DATE] [--use-ai]\n                      [--description DESCRIPTION] [--model MODEL]\n                      [--timeout TIMEOUT] [--work-effort WORK_EFFORT]\n                      [--new-status {active,completed,archived,paused}]\n                      [--old-status {active,completed,archived,paused}]\n                      [--manager-name MANAGER_NAME] [--target-dir TARGET_DIR]\n                      [-q]\n                      [command]\n\nCode Conductor CLI\n\npositional arguments:\n  command               Command to execute\n\noptions:\n  -h, --help            show this help message and exit\n  --version             Show version number\n  -i, --interactive     Run in interactive mode\n  -y, --yes             Non-interactive mode (use defaults)\n  --manager MANAGER     Work effort manager to use\n  --title TITLE         Title for work effort\n  --assignee ASSIGNEE   Assignee for work effort\n  --priority {low,medium,high,critical}\n                        Priority for work effort\n  --due-date DUE_DATE   Due date for work effort (YYYY-MM-DD)\n  --use-ai              Use AI for content generation\n  --description DESCRIPTION\n                        Description for AI content generation\n  --model MODEL         Ollama model to use for AI content\n  --timeout TIMEOUT     Timeout for AI content generation\n  --work-effort WORK_EFFORT\n                        Work effort to update\n  --new-status {active,completed,archived,paused}\n                        New status for work effort\n  --old-status {active,completed,archived,paused}\n                        Old status for work effort\n  --manager-name MANAGER_NAME\n                        Name for work effort manager\n  --target-dir TARGET_DIR\n                        Target directory for work effort manager\n  -q, --quiet           Quiet mode (minimal output)\n",
+      "stderr": "",
+      "timestamp": "2025-03-19T15:49:15.395246"
+    },
+    "version_command": {
+      "command": "code-conductor --version",
+      "exit_code": 0,
+      "stdout": "Code Conductor v0.5.0\n",
+      "stderr": "",
+      "timestamp": "2025-03-19T15:49:15.847413"
+    },
+    "create_manager": {
+      "command": "code-conductor new-work-manager --manager-name 'TestManager2' --target-dir 'test_workspace/manager2'",
+      "exit_code": 1,
+      "stdout": "",
+      "stderr": "2025-03-19 15:49:16,252 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:49:16,252 - CodeConductor - INFO - Found config file via manifest at: test_workspace/config.json\n2025-03-19 15:49:16,253 - CodeConductor - INFO - Created target directory: /Users/ctavolazzi/Code/code_conductor/test_workspace/manager2\n2025-03-19 15:49:16,253 - CodeConductor - ERROR - Error creating work manager: WorkEffortManager.__init__() got an unexpected keyword argument 'config'\n",
+      "timestamp": "2025-03-19T15:49:16.328815"
+    },
+    "find_root": {
+      "command": "code-conductor find-root",
+      "exit_code": 0,
+      "stdout": "Project root: /Users/ctavolazzi/Code/code_conductor\n",
+      "stderr": "2025-03-19 15:49:16,791 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:49:16,791 - CodeConductor - INFO - Found config file via manifest at: test_workspace/config.json\n",
+      "timestamp": "2025-03-19T15:49:16.844124"
+    },
+    "setup_command": {
+      "command": "code-conductor setup",
+      "exit_code": 0,
+      "stdout": "\u2705 Created _AI-Setup directory at: /Users/ctavolazzi/Code/code_conductor/_AI-Setup\n\u274c Error: Could not locate required script: work_effort_manager.py\nThis may affect the functionality of the work effort manager\n\u2705 Created work efforts structure in: /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n\u2705 Created configuration at: /Users/ctavolazzi/Code/code_conductor/_AI-Setup/config.json\n\u2705 Created project manifest at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n\n\u2705 Project setup complete!\n",
+      "stderr": "2025-03-19 15:49:17,187 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:49:17,187 - CodeConductor - INFO - Found config file via manifest at: test_workspace/config.json\n2025-03-19 15:49:17,188 - CodeConductor - INFO - Read existing config from: /Users/ctavolazzi/Code/code_conductor/_AI-Setup/config.json\n2025-03-19 15:49:17,188 - CodeConductor - INFO - Wrote config to: /Users/ctavolazzi/Code/code_conductor/_AI-Setup/config.json\n",
+      "timestamp": "2025-03-19T15:49:17.239188"
+    },
+    "cc_work_e": {
+      "command": "cc-work-e --title 'Shorthand Test'",
+      "exit_code": 0,
+      "stdout": "Creating work effort with title: Shorthand Test, assignee: self, priority: medium, due date: 2025-03-19\nCreating in package directory\n\n\ud83d\ude80 New work effort created at: /Users/ctavolazzi/Code/code_conductor/src/code_conductor/work_efforts/active/202503191549_shorthand_test.md\n",
+      "stderr": "",
+      "timestamp": "2025-03-19T15:49:17.621958"
+    },
+    "cc_new": {
+      "command": "cc-new 'Quick Test' -p high -a 'Test User'",
+      "exit_code": 0,
+      "stdout": "\u2705 Work effort created: work_efforts/active/202503191549_0064_quick_test.md\n",
+      "stderr": "2025-03-19 15:49:18,148 - code_conductor.core.work_effort.manager_indexer - INFO - \u2705 Indexed 98 work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n2025-03-19 15:49:18,148 - WorkEffortManager - INFO - \u2705 Indexed work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n",
+      "timestamp": "2025-03-19T15:49:18.180509"
+    },
+    "cc_index": {
+      "command": "cc-index",
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "2025-03-19 15:49:18,475 - index_work_efforts - INFO - Scanning project directory: /Users/ctavolazzi/Code/code_conductor\n2025-03-19 15:49:18,917 - code_conductor.core.work_effort.manager_indexer - INFO - \u2705 Indexed 98 work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n2025-03-19 15:49:18,917 - WorkEffortManager - INFO - \u2705 Indexed work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n2025-03-19 15:49:18,917 - index_work_efforts - INFO - \u2705 Indexed 98 work efforts\n",
+      "timestamp": "2025-03-19T15:49:18.951087"
+    },
+    "create_status_test_work_effort": {
+      "command": "code-conductor new-work-effort --title 'Status Test' --assignee 'Test User' --priority medium",
+      "exit_code": 0,
+      "stdout": "\nCreating work effort with title: Status Test, assignee: Test User, priority: medium, due date: 2025-03-26\n\u2705 Work effort created successfully\n",
+      "stderr": "2025-03-19 15:49:19,313 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:49:19,313 - CodeConductor - INFO - Found config file via manifest at: _AI-Setup/config.json\n2025-03-19 15:49:19,653 - code_conductor.core.work_effort.manager_indexer - INFO - \u2705 Indexed 98 work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n2025-03-19 15:49:19,653 - WorkEffortManager - INFO - \u2705 Indexed work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n",
+      "timestamp": "2025-03-19T15:49:19.705556"
+    },
+    "update_status": {
+      "command": "code-conductor update-status --work-effort 'Status Test' --new-status completed",
+      "exit_code": 0,
+      "stdout": "\u2705 Updated work effort status to: completed\n",
+      "stderr": "2025-03-19 15:49:20,051 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:49:20,051 - CodeConductor - INFO - Found config file via manifest at: _AI-Setup/config.json\n2025-03-19 15:49:20,373 - code_conductor.core.work_effort.manager_indexer - INFO - \u2705 Indexed 98 work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n2025-03-19 15:49:20,374 - WorkEffortManager - INFO - \u2705 Indexed work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n2025-03-19 15:49:20,698 - code_conductor.core.work_effort.manager_indexer - INFO - \u2705 Indexed 98 work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n2025-03-19 15:49:20,698 - WorkEffortManager - INFO - \u2705 Indexed work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n",
+      "timestamp": "2025-03-19T15:49:20.748322"
+    },
+    "create_work_effort": {
+      "command": "code-conductor new-work-effort --title 'Test Work Effort' --assignee 'Test User' --priority medium",
+      "exit_code": 0,
+      "stdout": "\nCreating work effort with title: Test Work Effort, assignee: Test User, priority: medium, due date: 2025-03-26\n\u2705 Work effort created successfully\n",
+      "stderr": "2025-03-19 15:49:21,101 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:49:21,106 - CodeConductor - INFO - Found config file via manifest at: _AI-Setup/config.json\n2025-03-19 15:49:21,424 - code_conductor.core.work_effort.manager_indexer - INFO - \u2705 Indexed 98 work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n2025-03-19 15:49:21,424 - WorkEffortManager - INFO - \u2705 Indexed work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n",
+      "timestamp": "2025-03-19T15:49:21.477700"
+    },
+    "list_work_efforts": {
+      "command": "code-conductor list",
+      "exit_code": 0,
+      "stdout": "\nNo work efforts found.\n",
+      "stderr": "2025-03-19 15:49:21,826 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:49:21,827 - CodeConductor - INFO - Found config file via manifest at: _AI-Setup/config.json\n2025-03-19 15:49:21,828 - code_conductor.core.work_effort.manager_indexer - INFO - \u2705 Indexed 0 work efforts in _AI-Setup/_AI-Setup/work_efforts\n2025-03-19 15:49:21,828 - WorkEffortManager - INFO - \u2705 Indexed work efforts in _AI-Setup/_AI-Setup/work_efforts\n",
+      "timestamp": "2025-03-19T15:49:21.884489"
+    },
+    "create_ai_work_effort": {
+      "command": "code-conductor new-work-effort --title 'AI Test' --use-ai --description 'Test description'",
+      "exit_code": 0,
+      "stdout": "\nCreating work effort with title: AI Test, assignee: self, priority: medium, due date: 2025-03-26\n\ud83e\udde0 Starting content generation process...\n\n\u274c Could not extract valid JSON from model response.\n\n\n\u001b[?25l\u001b[?25h\u001b[K\n\u2705 Work effort created successfully\n",
+      "stderr": "2025-03-19 15:49:22,227 - CodeConductor - INFO - Found project manifest file at: /Users/ctavolazzi/Code/code_conductor/.code-conductor\n2025-03-19 15:49:22,228 - CodeConductor - INFO - Found config file via manifest at: _AI-Setup/config.json\n2025-03-19 15:49:22,556 - code_conductor.core.work_effort.manager_indexer - INFO - \u2705 Indexed 98 work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n2025-03-19 15:49:22,556 - WorkEffortManager - INFO - \u2705 Indexed work efforts in /Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts\n",
+      "timestamp": "2025-03-19T15:49:22.615527"
+    }
+  }
+}

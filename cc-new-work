@@ -70,16 +70,18 @@ done
 python3 -c "
 import os
 import sys
+import argparse
+from datetime import datetime
 
 try:
-    # Try direct import first
-    from src.code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
+    # Direct import if installed as a package
+    from code_conductor.core.work_effort.manager import WorkEffortManager
 except ImportError:
     try:
-        # Try package import next
-        from code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
+        # Try importing from src directory
+        from src.code_conductor.core.work_effort.manager import WorkEffortManager
     except ImportError:
-        print('Error: Could not import WorkEffortManager. Make sure code_conductor is installed.')
+        print("Error: Could not import WorkEffortManager. Make sure code_conductor is installed.")
         sys.exit(1)
 
 # Create manager and work effort

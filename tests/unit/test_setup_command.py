@@ -113,7 +113,7 @@ def test_setup_command_with_missing_scripts(mock_filesystem, cli_runner, script_
     Test the setup command with missing script files.
 
     This test verifies that the setup command correctly handles cases where
-    script files are missing from the work_efforts/scripts directory.
+    script files are missing from the src/code_conductor/scripts directory.
 
     Args:
         mock_filesystem: Fixture providing a mock filesystem

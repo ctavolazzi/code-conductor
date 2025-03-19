@@ -16,7 +16,7 @@ The `counter.py` module provides a durable, persistent counter system for work e
 ### Usage in Code
 
 ```python
-from code_conductor.work_efforts.counter import get_counter, format_work_effort_filename
+from code_conductor.core.work_effort.counter import get_counter, format_work_effort_filename
 
 # Get a counter instance
 counter = get_counter()
@@ -38,7 +38,7 @@ filename = format_work_effort_filename("My Work Effort", count, use_date_prefix=
 When creating work efforts using the `WorkEffortManager`, you can control the numbering format:
 
 ```python
-from code_conductor.manager import WorkEffortManager
+from code_conductor.core.work_effort.manager import WorkEffortManager
 
 manager = WorkEffortManager()
 

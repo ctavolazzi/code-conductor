@@ -22,11 +22,10 @@ import shutil
 from unittest.mock import patch, MagicMock
 from pathlib import Path
 import json
-
-# Import the workflow runner module
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-import src.code_conductor.workflow.workflow_runner
+from src.code_conductor.workflow import workflow_runner
 from src.code_conductor.workflow.workflow_runner import WorkflowRunner
+from src.code_conductor.core.work_effort.manager import WorkEffortManager
+from src.code_conductor.events import EventEmitter
 
 class TestWorkflowRunner(unittest.TestCase):
     """Test suite for the WorkflowRunner class"""
@@ -50,29 +49,15 @@ class TestWorkflowRunner(unittest.TestCase):
         with open(self.changelog_file, "w") as f:
             f.write("# Changelog\n\n## [Unreleased]\n\n### Added\n\n### Changed\n\n")
 
-        # Save original constants
-        self.original_work_efforts_dir = workflow_runner.WORK_EFFORTS_DIR
-        self.original_active_dir = workflow_runner.ACTIVE_DIR
-        self.original_devlog_path = workflow_runner.DEVLOG_PATH
-        self.original_changelog_path = workflow_runner.CHANGELOG_PATH
-
-        # Override constants for testing
-        workflow_runner.WORK_EFFORTS_DIR = self.work_efforts_dir
-        workflow_runner.ACTIVE_DIR = self.active_dir
-        workflow_runner.DEVLOG_PATH = self.devlog_file
-        workflow_runner.CHANGELOG_PATH = self.changelog_file
-
-        # Initialize the workflow runner with non-interactive mode
-        self.workflow_runner = WorkflowRunner(interactive=False)
+        # Initialize workflow runner
+        self.workflow_runner = WorkflowRunner(
+            work_efforts_dir=self.work_efforts_dir,
+            devlog_file=self.devlog_file,
+            changelog_file=self.changelog_file
+        )
 
     def tearDown(self):
-        """Clean up temporary directories after tests"""
-        # Restore original constants
-        workflow_runner.WORK_EFFORTS_DIR = self.original_work_efforts_dir
-        workflow_runner.ACTIVE_DIR = self.original_active_dir
-        workflow_runner.DEVLOG_PATH = self.original_devlog_path
-        workflow_runner.CHANGELOG_PATH = self.original_changelog_path
-
+        """Clean up temporary files and directories"""
         shutil.rmtree(self.temp_dir)
 
     @patch('builtins.input')
@@ -105,7 +90,8 @@ class TestWorkflowRunner(unittest.TestCase):
             content = f.read()
             self.assertIn("# Test Feature", content)
             self.assertIn("This is a test feature", content)
-            self.assertIn("priority: \"Low\"", content)
+            self.assertIn("priority: Low", content)
+            self.assertIn("Testing", content)
 
     def test_update_devlog(self):
         """Test updating the devlog"""

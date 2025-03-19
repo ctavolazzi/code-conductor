@@ -24,20 +24,14 @@ from datetime import datetime
 # Import the correct WorkEffortManager and setup functions
 try:
     # Direct import if installed as a package
-    from code_conductor.manager import WorkEffortManager
+    from code_conductor.core.work_effort.manager import WorkEffortManager
 except ImportError:
     try:
-        # Import from src if in development mode
-        from src.code_conductor.manager import WorkEffortManager
+        # Try importing from src directory
+        from src.code_conductor.core.work_effort.manager import WorkEffortManager
     except ImportError:
-        try:
-            # Try using path-based import as last resort
-            sys.path.append(str(Path(__file__).parent.parent.parent))
-            from src.code_conductor.manager import WorkEffortManager
-        except ImportError:
-            print("Error: Could not import required modules.")
-            print("Make sure code_conductor is installed or you're in the correct directory.")
-            sys.exit(1)
+        print("Error: Could not import WorkEffortManager. Make sure code_conductor is installed.")
+        sys.exit(1)
 
 def parse_arguments():
     """Parse command-line arguments with clear, simple options."""

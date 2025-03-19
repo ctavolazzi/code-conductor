@@ -91,8 +91,8 @@ EOF
 {
   "work_efforts": {
     "use_manager": true,
-    "manager_script": "$TEST_DIR/work_efforts/scripts/work_effort_manager.py",
-    "runner_script": "$TEST_DIR/work_efforts/scripts/run_work_effort_manager.py",
+    "manager_script": "$TEST_DIR/src/code_conductor/core/work_effort/manager.py",
+    "runner_script": "$TEST_DIR/src/code_conductor/scripts/run_work_effort_manager.py",
     "auto_start": true,
     "default_settings": {
       "assignee": "Test User",
@@ -187,7 +187,7 @@ import sys
 import json
 
 # Add the project scripts to sys.path
-sys.path.insert(0, "$PROJECT_ROOT/work_efforts/scripts")
+sys.path.insert(0, "$PROJECT_ROOT/src/code_conductor/scripts")
 
 # Import the function
 from run_work_effort_manager import load_config_from_ai_setup

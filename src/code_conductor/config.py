@@ -97,15 +97,24 @@ def create_or_update_config(base_dir: str, config_data: Optional[Dict[str, Any]]
     if base_dir is None:
         base_dir = os.getcwd()
 
-    # Define the path for the config file
-    ai_setup_dir = os.path.join(base_dir, "_AI-Setup")
-    os.makedirs(ai_setup_dir, exist_ok=True)
-    config_file = os.path.join(ai_setup_dir, "config.json")
+    # First check if there's an existing config file in the base directory
+    config_file = os.path.join(base_dir, "config.json")
+    if os.path.exists(config_file):
+        logging.info(f"Found existing config file at: {config_file}")
+    else:
+        # If no config file exists, create it in _AI-Setup directory
+        if os.path.basename(base_dir) == "_AI-Setup":
+            ai_setup_dir = base_dir
+        else:
+            ai_setup_dir = os.path.join(base_dir, "_AI-Setup")
+
+        os.makedirs(ai_setup_dir, exist_ok=True)
+        config_file = os.path.join(ai_setup_dir, "config.json")
 
     # Default configuration
     default_config = {
         "version": VERSION,
-        "project_root": base_dir,
+        "project_root": os.path.dirname(os.path.dirname(config_file)),  # Use parent of config file's directory as project root
         "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "work_efforts": {
@@ -161,7 +170,7 @@ def create_or_update_config(base_dir: str, config_data: Optional[Dict[str, Any]]
     try:
         with open(config_file, 'w') as f:
             json.dump(merged_config, f, indent=2)
-            logging.info(f"Saved config to: {config_file}")
+            logging.info(f"Wrote config to: {config_file}")
     except Exception as e:
         logging.error(f"Error saving config file: {str(e)}")
 
@@ -182,7 +191,38 @@ def find_nearest_config(start_dir: Optional[str] = None) -> Tuple[Optional[str],
 
     current_dir = os.path.abspath(start_dir)
 
-    # Start from the current directory and go up
+    # First try to find a .code-conductor manifest file
+    while current_dir:
+        manifest_file = os.path.join(current_dir, ".code-conductor")
+        if os.path.exists(manifest_file):
+            try:
+                with open(manifest_file, 'r') as f:
+                    manifest_data = json.load(f)
+                    logging.info(f"Found project manifest file at: {manifest_file}")
+
+                    # If the manifest has a setup_path, use it to find the config.json
+                    if "setup_path" in manifest_data:
+                        setup_path = os.path.join(current_dir, manifest_data["setup_path"])
+                        config_file = os.path.join(setup_path, "config.json")
+                        if os.path.exists(config_file):
+                            try:
+                                with open(config_file, 'r') as f:
+                                    config_data = json.load(f)
+                                    logging.info(f"Found config file via manifest at: {config_file}")
+                                    return config_file, config_data
+                            except Exception as e:
+                                logging.warning(f"Error reading config file referenced in manifest: {str(e)}")
+            except Exception as e:
+                logging.warning(f"Error reading manifest file: {str(e)}")
+
+        # Move up one directory
+        parent_dir = os.path.dirname(current_dir)
+        if parent_dir == current_dir:  # Reached the root directory
+            break
+        current_dir = parent_dir
+
+    # If no manifest found or it didn't lead to a valid config, fall back to looking for _AI-Setup/config.json
+    current_dir = os.path.abspath(start_dir)
     while current_dir:
         ai_setup_dir = os.path.join(current_dir, "_AI-Setup")
         config_file = os.path.join(ai_setup_dir, "config.json")
@@ -191,7 +231,8 @@ def find_nearest_config(start_dir: Optional[str] = None) -> Tuple[Optional[str],
             try:
                 with open(config_file, 'r') as f:
                     config_data = json.load(f)
-                return config_file, config_data
+                    logging.info(f"Found config file at: {config_file}")
+                    return config_file, config_data
             except Exception as e:
                 logging.warning(f"Found config file at {config_file} but could not read it: {str(e)}")
 

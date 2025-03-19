@@ -4,7 +4,7 @@ import os
 import sys
 import json
 import shutil
-from src.code_conductor.work_efforts.scripts.work_effort_manager import WorkEffortManager
+from code_conductor.core.work_effort.manager import WorkEffortManager
 
 def main():
     print("Starting direct file test...")
