@@ -8,7 +8,6 @@ This module provides data structures for representing work efforts
 and functions for converting between different representations.
 """
 
-import os
 import json
 import re
 from datetime import datetime

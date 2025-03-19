@@ -241,3 +241,59 @@ def find_work_efforts_directory(start_dir: Optional[str] = None) -> Tuple[str, b
     ai_setup_dir = os.path.join(start_dir, "_AI-Setup")
     work_efforts_dir = os.path.join(ai_setup_dir, "work_efforts")
     return work_efforts_dir, True
+
+class Config:
+    """
+    Configuration class for the code conductor.
+    This class provides a simple interface for managing configuration data.
+    """
+    def __init__(self, project_dir=None):
+        """
+        Initialize a new configuration object.
+
+        Args:
+            project_dir: The project directory (default: current directory)
+        """
+        self.project_dir = project_dir or os.getcwd()
+        self.config_file, self.config_data = find_nearest_config(self.project_dir)
+
+        if not self.config_file:
+            # Create a new config file if none exists
+            self.config_file, self.config_data = create_or_update_config(self.project_dir)
+
+    def get(self, key, default=None):
+        """
+        Get a configuration value.
+
+        Args:
+            key: The key to get
+            default: The default value to return if the key doesn't exist
+
+        Returns:
+            The value for the given key, or the default
+        """
+        return self.config_data.get(key, default)
+
+    def set(self, key, value):
+        """
+        Set a configuration value.
+
+        Args:
+            key: The key to set
+            value: The value to set
+
+        Returns:
+            True if the value was set, False otherwise
+        """
+        self.config_data[key] = value
+        return save_json_file(self.config_file, self.config_data)
+
+    def get_work_efforts_dir(self):
+        """
+        Get the work efforts directory.
+
+        Returns:
+            The path to the work efforts directory
+        """
+        work_efforts_dir, _ = find_work_efforts_directory(self.project_dir)
+        return work_efforts_dir

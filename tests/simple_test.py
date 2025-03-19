@@ -4,7 +4,6 @@ Simple test to verify basic functionality without complex imports.
 """
 
 import os
-import sys
 import pytest
 
 # Simple test that doesn't rely on imports

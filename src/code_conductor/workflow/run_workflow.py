@@ -10,7 +10,7 @@ import os
 import re
 import sys
 import argparse
-import datetime
+from typing import Dict, List
 import subprocess
 
 def slugify(text):

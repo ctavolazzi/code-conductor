@@ -52,16 +52,13 @@ Options:
 """
 
 import os
-import sys
-import re
-import argparse
-import logging
-import datetime
 import json
-import yaml
-import fnmatch
-from pathlib import Path
-import shutil
+import logging
+import re
+from datetime import datetime
+from typing import Dict, Optional, List
+import sys
+import argparse
 from collections import defaultdict
 import difflib
 
@@ -130,12 +127,12 @@ class WorkNode:
         self.category = category
         self.description = description
         self.documents = documents or []
-        self.created = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.created = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.filename = self._generate_filename()
 
     def _generate_filename(self):
         """Generate a filename for the work node based on its title."""
-        timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M")
+        timestamp = datetime.now().strftime("%Y%m%d%H%M")
         title_slug = self.title.lower().replace(" ", "_")
         return f"{timestamp}_node_{title_slug}.md"
 

@@ -1,4 +1,4 @@
-from typing import Callable, Dict, List, Any, Optional, Union
+from typing import Callable, Any
 import logging
 
 class Event:

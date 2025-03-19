@@ -26,6 +26,9 @@ try:
 except ImportError:
     VERSION = "0.0.0"
 
+# Add the src directory to the Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
+
 @pytest.fixture
 def temp_work_directory(tmp_path):
     """Create a temporary working directory with _AI-Setup folder structure."""
@@ -205,16 +208,19 @@ This directory contains structured documentation for tracking tasks, features, a
         ai_setup_dir = os.path.join(base_dir, "_AI-Setup")
         os.makedirs(ai_setup_dir, exist_ok=True)
 
+        # Convert base_dir to a string if it's a Path object
+        base_dir_str = str(base_dir)
+
         # Default configuration
         default_config = {
             "version": version,
-            "project_root": base_dir,
+            "project_root": base_dir_str,
             "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "updated_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             "default_work_manager": ".",
             "work_managers": [
                 {
-                    "name": os.path.basename(base_dir) or "main",
+                    "name": os.path.basename(base_dir_str) or "main",
                     "path": ".",
                     "work_efforts_dir": os.path.join("_AI-Setup", "work_efforts"),
                     "use_manager": True,
@@ -291,8 +297,8 @@ def cli_runner():
         old_cwd = os.getcwd()
 
         # Create a temporary file for capturing output
-        stdout_file = tempfile.NamedTemporaryFile(delete=False)
-        stderr_file = tempfile.NamedTemporaryFile(delete=False)
+        stdout_file = tempfile.NamedTemporaryFile(delete=False, mode='w')
+        stderr_file = tempfile.NamedTemporaryFile(delete=False, mode='w')
 
         try:
             # Mock the command-line arguments
@@ -307,7 +313,7 @@ def cli_runner():
             sys.stdout, sys.stderr = stdout_file, stderr_file
 
             # Import the main function
-            from src.code_conductor.cli import main_entry
+            from src.code_conductor.cli.cli import main_entry
 
             # Call the main function
             result = main_entry()
@@ -381,6 +387,6 @@ def ai_content_generator():
 @pytest.fixture
 def mock_version():
     """Mock the version number for testing version-dependent functionality."""
-    with patch('code_conductor.cli.cli.VERSION', '0.4.6'):
-        with patch('code_conductor.__version__', '0.4.6'):
+    with patch('src.code_conductor.cli.cli.VERSION', '0.4.6'):
+        with patch('src.code_conductor.__version__', '0.4.6'):
             yield '0.4.6'

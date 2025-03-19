@@ -1,7 +1,6 @@
 import os
 import re
 import subprocess
-import platform
 from datetime import datetime
 
 def sanitize_directory_name(name):

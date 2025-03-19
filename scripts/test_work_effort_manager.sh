@@ -1,5 +1,24 @@
 #!/bin/bash
 
+# Test script for WorkEffortManager
+
+# Configuration
+MANAGER_SCRIPT="src/code_conductor/core/work_effort/manager.py"
+RUNNER_SCRIPT="src/code_conductor/core/work_effort/runner.py"
+
+# Create test configuration
+cat > test_config.json << EOF
+{
+  "work_efforts": {
+    "use_manager": true,
+    "manager_script": "$(pwd)/$MANAGER_SCRIPT",
+    "runner_script": "$(pwd)/$RUNNER_SCRIPT",
+    "project_dir": "$(pwd)",
+    "auto_start": true
+  }
+}
+EOF
+
 # Test script for work effort manager
 set -e  # Exit on error
 
@@ -58,8 +77,8 @@ cat > "$TEST_DIR/_AI-Setup/config.json" << EOF
 {
   "work_efforts": {
     "use_manager": true,
-    "manager_script": "$(pwd)/work_efforts/scripts/work_effort_manager.py",
-    "runner_script": "$(pwd)/work_efforts/scripts/run_work_effort_manager.py",
+    "manager_script": "$(pwd)/$MANAGER_SCRIPT",
+    "runner_script": "$(pwd)/$RUNNER_SCRIPT",
     "project_dir": "$TEST_DIR",
     "auto_start": true,
     "default_settings": {

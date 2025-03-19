@@ -33,6 +33,10 @@ logging.basicConfig(level=logging.INFO,
                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger('CodeConductor')
 
+# Import core components
+from code_conductor.core.work_effort.manager import WorkEffortManager
+from code_conductor.events import EventEmitter, Event
+
 # Function to create or update configuration file
 def create_or_update_config(base_dir=None, config_data=None):
     """
@@ -814,735 +818,6 @@ tags: [feature, bugfix, refactor, documentation, testing, devops]
             with open(template_path, "w") as f:
                 f.write(template_content)
             print(f"Created template file at: {template_path}")
-    else:
-        # Template already exists, no need to create it
-        pass
-
-    return template_path
-
-def validate_title(title):
-    """
-    Validate and sanitize the work effort title.
-
-    Args:
-        title (str): The title to validate and sanitize
-
-    Returns:
-        str: The sanitized title
-
-    Raises:
-        ValueError: If the title is empty, None, or consists only of whitespace
-    """
-    # Check if title is None or empty
-    if title is None or not title.strip():
-        raise ValueError("Work effort title cannot be empty")
-
-    # Sanitize title for use in filenames - replace invalid characters with underscores
-    import re
-    sanitized = re.sub(r'[<>:"/\\|?*]', '_', title.strip())
-
-    # Truncate extremely long titles to avoid filesystem errors
-    # Most filesystems have a 255 character limit
-    max_length = 200  # Providing some buffer for timestamp and extension
-    if len(sanitized) > max_length:
-        print(f"Warning: Title was truncated to {max_length} characters for filename compatibility")
-        sanitized = sanitized[:max_length]
-
-    return sanitized
-
-def validate_priority(priority):
-    """Validate that priority is one of the allowed values"""
-    valid_priorities = ["low", "medium", "high", "critical"]
-    if priority.lower() not in valid_priorities:
-        print(f"Warning: '{priority}' is not a recognized priority level. Using 'medium' instead.")
-        return "medium"
-    return priority.lower()
-
-def validate_date(date_str):
-    """
-    Validate a date string in the format YYYY-MM-DD.
-
-    Args:
-        date_str (str): The date string to validate
-
-    Returns:
-        str: The validated date string
-
-    Raises:
-        ValueError: If the date format is invalid
-    """
-    # First check if date_str is None or empty
-    if date_str is None or not date_str.strip():
-        raise ValueError("Date cannot be empty")
-
-    # Validate date format YYYY-MM-DD
-    import re
-    if not re.match(r'^\d{4}-\d{2}-\d{2}$', date_str):
-        raise ValueError(f"Invalid date format: {date_str}. Expected format: YYYY-MM-DD")
-
-    # Optionally add more validation (checking for valid month/day values)
-    try:
-        import datetime
-        year, month, day = map(int, date_str.split('-'))
-        datetime.date(year, month, day)  # This will raise ValueError if date is invalid
-    except ValueError as e:
-        raise ValueError(f"Invalid date: {date_str}. {str(e)}")
-
-    return date_str
-def load_config():
-    """
-    Load the configuration from the _AI-Setup/config.json file if it exists.
-    Returns a dictionary with the configuration or an empty dict if the file doesn't exist.
-    """
-    config_path = os.path.join(os.getcwd(), "_AI-Setup", "config.json")
-    if os.path.exists(config_path):
-        try:
-            with open(config_path, "r") as f:
-                return json.load(f)
-        except Exception as e:
-            print(f"Warning: Could not load config.json: {e}")
-    return {}
-
-def setup_work_effort_manager_path():
-    """
-    Set up the Python path to include the work_efforts/scripts directory
-    so that the work_effort_manager module can be imported properly.
-    """
-    try:
-        # Add the work_efforts/scripts directory to the Python path
-        scripts_dir = os.path.join(os.getcwd(), "work_efforts", "scripts")
-        if os.path.exists(scripts_dir) and scripts_dir not in sys.path:
-            sys.path.append(scripts_dir)
-            return True
-        return False
-    except Exception as e:
-        print(f"Warning: Could not set up WorkEffortManager path: {e}")
-        return False
-
-def create_work_effort(title, assignee, priority, due_date, template_path, target_dir, content=None, create_in_root=False):
-    """
-    Create a new work effort file
-
-    If create_in_root is True, create the file in the parent directory of target_dir
-    If content is provided, use it to populate the objectives, tasks, and notes
-    """
-    # Check if the work_managers field exists in config
-    config = load_config()
-    use_manager = "work_managers" in config and config["work_managers"]
-
-    try:
-        # Set up the Python path for the work effort manager and import it directly
-        # This ensures we use the centralized implementation
-        setup_work_effort_manager_path()
-
-        try:
-            from work_effort_manager import WorkEffortManager
-
-            # Initialize a standalone manager
-            base_dir = os.path.dirname(target_dir) if create_in_root else target_dir
-            manager = WorkEffortManager(project_dir=os.path.dirname(base_dir))
-
-            # Create the work effort using the manager
-            work_effort_path = manager.create_work_effort(
-                title=title,
-                assignee=assignee,
-                priority=priority,
-                due_date=due_date,
-                content=content or {}
-            )
-
-            if work_effort_path:
-                print(f"🚀 New work effort created at: {work_effort_path}")
-                return work_effort_path
-            else:
-                # Fall back to the direct implementation if manager fails
-                print("WorkEffortManager failed, falling back to direct implementation.")
-        except ImportError:
-            print("Could not import WorkEffortManager, using direct implementation.")
-
-        # Fall back to the direct implementation if WorkEffortManager can't be imported
-        # This is the legacy path and should rarely be used
-        # Validate inputs
-        title = validate_title(title)
-        priority = validate_priority(priority)
-        due_date = validate_date(due_date)
-
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M")
-        filename_timestamp = datetime.now().strftime("%Y%m%d%H%M")
-
-        # Validate and sanitize the title
-        safe_title = validate_title(title)
-        safe_title_slug = safe_title.lower().replace(' ', '_')
-
-        # Create a folder for the work effort
-        folder_name = f"{filename_timestamp}_{safe_title_slug}"
-        md_filename = f"{filename_timestamp}_{safe_title_slug}.md"
-
-        # Determine the target folder path
-        folder_path = os.path.join(target_dir, folder_name) if not create_in_root else os.path.join(os.path.dirname(target_dir), folder_name)
-        file_path = os.path.join(folder_path, md_filename)
-
-        # Create the folder if it doesn't exist
-        os.makedirs(folder_path, exist_ok=True)
-
-        # Read template file
-        with open(template_path, "r") as template_file:
-            template_content = template_file.read()
-
-        # Replace template variables
-        filled_content = template_content.replace("{{title}}", title)
-        filled_content = filled_content.replace("{{status}}", "active")
-        filled_content = filled_content.replace("{{priority}}", priority)
-        filled_content = filled_content.replace("{{assignee}}", assignee)
-        filled_content = filled_content.replace("{{created}}", timestamp)
-        filled_content = filled_content.replace("{{last_updated}}", timestamp)
-        filled_content = filled_content.replace("{{due_date}}", due_date)
-
-        # If AI-generated content is provided, replace the placeholders
-        if content and isinstance(content, dict):
-            if "objectives" in content:
-                filled_content = filled_content.replace("- Clearly define goals for this work effort.", content["objectives"])
-            if "tasks" in content:
-                filled_content = filled_content.replace("- [ ] Task 1\n- [ ] Task 2", content["tasks"])
-            if "notes" in content:
-                filled_content = filled_content.replace("- Context, links to relevant code, designs, references.", content["notes"])
-
-        # Write new file
-        with open(file_path, "w") as new_file:
-            new_file.write(filled_content)
-
-        print(f"🚀 New work effort created at: {file_path}")
-        return file_path
-    except Exception as e:
-        print(f"❌ Error creating work effort: {str(e)}")
-        return None
-
-async def setup_selected_directories():
-    """Use the interactive directory scanner to select and set up directories"""
-    current_dir = os.getcwd()
-    print(f"\n📍 Current directory: {current_dir}")
-    print("Select directories to set up with AI-Setup:")
-
-    # Use the interactive directory scanner
-    selected_dirs = select_directories(current_dir)
-
-    if not selected_dirs:
-        print("No directories selected for setup.")
-        return 1
-
-    # Set up work efforts in each selected directory
-    for directory in selected_dirs:
-        dir_name = os.path.basename(directory)
-        print(f"\n🔄 Setting up {dir_name}...")
-
-        # Create work efforts structure
-        work_efforts_dir, template_path, active_dir, _, _ = setup_work_efforts_structure(directory)
-        create_template_if_missing(template_path)
-
-        # Create default work effort
-        create_work_effort(
-            title="Getting Started",
-            assignee="self",
-            priority="medium",
-            due_date=datetime.now().strftime("%Y-%m-%d"),
-            template_path=template_path,
-            target_dir=active_dir
-        )
-
-        # Install AI-Setup in the directory
-        install_ai_setup([directory])
-
-    print("\n✅ Setup completed for all selected directories")
-    return 0
-
-async def setup_ai_in_current_dir(non_interactive=False):
-    """Set up AI and work efforts in the current directory"""
-    current_dir = os.getcwd()
-    print(f"\n📍 Checking current directory: {current_dir}")
-
-    # Check if _AI-Setup already exists
-    ai_setup_dir = os.path.join(current_dir, "_AI-Setup")
-    ai_setup_exists = os.path.exists(ai_setup_dir) and os.path.isdir(ai_setup_dir)
-
-    # Check if config.json exists
-    config_file = os.path.join(ai_setup_dir, "config.json") if ai_setup_exists else None
-    config_exists = config_file and os.path.exists(config_file) and os.path.isfile(config_file)
-
-    # Check if work_efforts already exists inside _AI-Setup
-    ai_setup_work_efforts_dir = os.path.join(ai_setup_dir, "work_efforts") if ai_setup_exists else None
-    ai_setup_work_efforts_exists = ai_setup_work_efforts_dir and os.path.exists(ai_setup_work_efforts_dir) and os.path.isdir(ai_setup_work_efforts_dir)
-
-    # Check if scripts directory exists and has required files
-    scripts_dir = os.path.join(ai_setup_work_efforts_dir, "scripts") if ai_setup_work_efforts_exists else None
-    scripts_exist = False
-    all_scripts_present = False
-    missing_scripts = []
-
-    if scripts_dir and os.path.exists(scripts_dir):
-        required_scripts = ["work_effort_manager.py", "run_work_effort_manager.py",
-                           "ai_work_effort_creator.py", "new_work_effort.py"]
-        existing_scripts = [script for script in required_scripts
-                           if os.path.exists(os.path.join(scripts_dir, script))]
-        scripts_exist = len(existing_scripts) > 0
-        all_scripts_present = len(existing_scripts) == len(required_scripts)
-        missing_scripts = [script for script in required_scripts if script not in existing_scripts]
-
-    # Print status of existing components
-    print("\n🔍 Checking for existing components:")
-    print(f"- _AI-Setup folder: {'✅ Exists' if ai_setup_exists else '❌ Not found'}")
-    if ai_setup_exists:
-        print(f"- Configuration file: {'✅ Exists' if config_exists else '❌ Not found'}")
-        print(f"- _AI-Setup/work_efforts folder: {'✅ Exists' if ai_setup_work_efforts_exists else '❌ Not found'}")
-        if ai_setup_work_efforts_exists:
-            if scripts_exist:
-                if all_scripts_present:
-                    print(f"- Required scripts: ✅ All present")
-                else:
-                    print(f"- Required scripts: ⚠️ Partially present ({len(existing_scripts)}/{len(required_scripts)})")
-                    for script in missing_scripts:
-                        print(f"  - ❌ Missing: {script}")
-            else:
-                print(f"- Required scripts: ❌ None found")
-
-    # If all exist and all scripts are present, inform the user and exit
-    if ai_setup_exists and config_exists and ai_setup_work_efforts_exists and all_scripts_present:
-        print("\n✅ AI-Setup is already completely installed in this directory")
-        print("\nNo changes will be made to existing components.")
-        print("\nYou can use the following commands:")
-        print("  code-conductor new-work-effort - Create a new work effort in _AI-Setup/work_efforts")
-        print("  cc-work-e                - Shorthand to create a work effort")
-        print("  code-conductor list      - List existing work efforts")
-        print("  code-conductor list-managers      - List all work effort managers in the project")
-        print("  code-conductor update-status      - Update the status of a work effort")
-        print("  code-conductor select             - Select directories to set up AI assistance")
-        print("  code-conductor help               - Show this help text")
-        print("  code-conductor version            - Show the version number")
-        print("\nOptions for new-work-effort command:")
-        print("  --title TEXT                      - Title of the work effort (default: Untitled)")
-        print("  --assignee TEXT                   - Assignee of the work effort (default: self)")
-        print("  --priority [low|medium|high|critical] - Priority of the work effort (default: medium)")
-        print("  --due-date YYYY-MM-DD             - Due date of the work effort (default: today)")
-        print("  --use-ai                          - Use AI to generate content (requires --description)")
-        print("  --description TEXT                - Description to use for AI content generation")
-        print("  --model TEXT                      - Ollama model to use for AI content (default: phi3)")
-        print("  --timeout SECONDS                 - Timeout for AI content generation (default: 30)")
-        print("  --manager TEXT                    - Name of the work effort manager to use")
-        print("  -y, --yes                         - Non-interactive mode (use defaults for all prompts)")
-        print("\nShorthand Command:")
-        print("  cc-work-e                            - Quick create work effort in _AI-Setup/work_efforts")
-        print("  cc-work-e -i                         - Create a work effort with interactive prompt")
-        print("  cc-work-e --use-ai --description TEXT - Generate content with AI")
-        print("  cc-work-e --manager NAME             - Use a specific work effort manager")
-        print("\nFor more information, visit: https://github.com/ctavolazzi/code-conductor")
-        return 0
-
-    # Report what will be installed and what will be preserved
-    print("\n📦 Installation plan:")
-
-    if ai_setup_exists:
-        print(f"- ⚠️ Existing _AI-Setup folder will be preserved at: {ai_setup_dir}")
-        if not config_exists:
-            print(f"- 🆕 Will create configuration file at: {os.path.join(ai_setup_dir, 'config.json')}")
-        if ai_setup_work_efforts_exists:
-            print(f"- ⚠️ Existing _AI-Setup/work_efforts folder will be preserved")
-            if scripts_exist and not all_scripts_present:
-                print(f"- 🆕 Will install {len(missing_scripts)} missing work effort manager scripts:")
-                for script in missing_scripts:
-                    print(f"  - {script}")
-            elif not scripts_exist:
-                print(f"- 🆕 Will install all required work effort manager scripts")
-        else:
-            print(f"- 🆕 Will create work_efforts folder inside _AI-Setup")
-    else:
-        print(f"- 🆕 Will create _AI-Setup folder at: {ai_setup_dir}")
-        print(f"- 🆕 Will create configuration file")
-        print(f"- 🆕 Will create work_efforts folder and install required scripts")
-
-    # Proceed with installation without any confirmation
-    print("\n📦 Installing components...")
-
-    # Create or update the config file first
-    config_file, config_data = create_or_update_config(current_dir)
-    if config_file:
-        print(f"✅ Configuration file created/updated at: {config_file}")
-
-        # Check if the config has work_managers, and add a default if it doesn't
-        if "work_managers" not in config_data or not config_data["work_managers"]:
-            print(f"⚠️ No work managers found in configuration. Adding default work manager.")
-            work_manager = {
-                "name": os.path.basename(current_dir) or "main",
-                "path": os.path.relpath(current_dir, current_dir),  # Relative to project root
-                "work_efforts_dir": os.path.join("_AI-Setup", "work_efforts"),
-                "use_manager": True,
-                "manager_script": os.path.join("_AI-Setup", "work_efforts", "scripts", "work_effort_manager.py"),
-                "runner_script": os.path.join("_AI-Setup", "work_efforts", "scripts", "run_work_effort_manager.py"),
-                "auto_start": True
-            }
-            update_config = {
-                "work_managers": [work_manager],
-                "default_work_manager": os.path.relpath(current_dir, current_dir)
-            }
-            # Update the config with the work manager
-            config_file, config_data = create_or_update_config(current_dir, update_config)
-            print(f"✅ Added default work manager '{work_manager['name']}' to configuration")
-    else:
-        print(f"⚠️ Failed to create/update configuration file")
-
-    # Create a project manifest file in the root directory to serve as an anchor point
-    manifest_file = os.path.join(current_dir, ".code-conductor")
-    try:
-        with open(manifest_file, "w") as f:
-            manifest_content = {
-                "project_root": current_dir,
-                "version": VERSION,
-                "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "setup_path": ai_setup_dir
-            }
-            json.dump(manifest_content, f, indent=2)
-        print(f"✅ Created project manifest file at: {manifest_file}")
-    except Exception as e:
-        print(f"⚠️ Could not create project manifest file: {str(e)}")
-
-    # Create the AI-Setup folder if needed (though create_or_update_config should have done this)
-    if not ai_setup_exists:
-        try:
-            # AI-Setup folder should already be created by create_or_update_config
-            if not os.path.exists(ai_setup_dir):
-                os.makedirs(ai_setup_dir)
-            print(f"✅ AI-Setup folder created at: {ai_setup_dir}")
-
-            # Ensure the work_efforts folder was created inside _AI-Setup
-            ai_setup_work_efforts_dir = os.path.join(ai_setup_dir, "work_efforts")
-            if not os.path.exists(ai_setup_work_efforts_dir):
-                _, template_path, active_dir, _, _ = setup_work_efforts_structure(current_dir, in_ai_setup=True)
-                create_template_if_missing(template_path)
-
-                # Create a default work effort in the active directory
-                file_path = create_work_effort(
-                    title="Getting Started",
-                    assignee="self",
-                    priority="medium",
-                    due_date=datetime.now().strftime("%Y-%m-%d"),
-                    template_path=template_path,
-                    target_dir=active_dir
-                )
-
-                print(f"✅ Work efforts directory created inside _AI-Setup folder")
-                if file_path:
-                    print(f"✅ Default work effort created at: {file_path}")
-        except Exception as e:
-            print(f"⚠️ AI setup encountered an issue: {str(e)}")
-    else:
-        print(f"⚠️ Using existing AI-Setup folder at: {ai_setup_dir}")
-        print(f"  No changes made to existing files in this directory")
-
-        # If _AI-Setup exists but doesn't have work_efforts, create it
-        if not ai_setup_work_efforts_exists:
-            _, template_path, active_dir, _, _ = setup_work_efforts_structure(current_dir, in_ai_setup=True)
-            create_template_if_missing(template_path)
-
-            # Create a default work effort in the active directory
-            file_path = create_work_effort(
-                title="Getting Started",
-                assignee="self",
-                priority="medium",
-                due_date=datetime.now().strftime("%Y-%m-%d"),
-                template_path=template_path,
-                target_dir=active_dir
-            )
-
-            print(f"✅ Work efforts directory created inside _AI-Setup folder")
-            if file_path:
-                print(f"✅ Default work effort created at: {file_path}")
-        else:
-            print(f"⚠️ Using existing _AI-Setup/work_efforts directory")
-
-            # If scripts are missing or partially present, run setup_work_efforts_structure
-            # to copy the missing scripts
-            if not all_scripts_present:
-                print(f"Installing missing work effort manager scripts...")
-                # Just run setup_work_efforts_structure again - it will skip existing files
-                # but try to copy missing scripts
-                setup_work_efforts_structure(current_dir, in_ai_setup=True)
-
-                # Check if scripts were successfully copied
-                scripts_dir = os.path.join(ai_setup_work_efforts_dir, "scripts")
-                if not os.path.exists(scripts_dir):
-                    os.makedirs(scripts_dir)
-                    print(f"✅ Created scripts directory at: {scripts_dir}")
-
-                # Create the __init__.py file if it's missing
-                init_path = os.path.join(scripts_dir, "__init__.py")
-                if not os.path.exists(init_path):
-                    with open(init_path, "w") as f:
-                        f.write("# Work Efforts Scripts\n")
-                    print(f"✅ Created __init__.py at: {init_path}")
-
-                # Verify which scripts were successfully installed
-                required_scripts = ["work_effort_manager.py", "run_work_effort_manager.py",
-                                   "ai_work_effort_creator.py", "new_work_effort.py"]
-                installed_scripts = [script for script in required_scripts
-                                    if os.path.exists(os.path.join(scripts_dir, script))]
-
-                if len(installed_scripts) == len(required_scripts):
-                    print(f"✅ All work effort manager scripts were successfully installed")
-                else:
-                    print(f"⚠️ Installed {len(installed_scripts)}/{len(required_scripts)} scripts")
-                    missing_after = [script for script in required_scripts if script not in installed_scripts]
-                    for script in missing_after:
-                        print(f"  - ❌ Still missing: {script}")
-            else:
-                print(f"  No changes needed to scripts directory - all scripts are present")
-
-    print(f"\n✅ Setup completed in: {current_dir}")
-    print(f"  Configuration file: {config_file}")
-    print("\nYou can now use the following commands:")
-    print("  code-conductor new-work-effort - Create a new work effort in _AI-Setup/work_efforts")
-    print("  cc-work-e                - Shorthand to create a work effort")
-    print("  code-conductor list      - List existing work efforts")
-    print("  code-conductor list-managers      - List all work effort managers in the project")
-    print("  code-conductor update-status      - Update the status of a work effort")
-    print("  code-conductor select             - Select directories to set up AI assistance")
-    print("\nEnhanced Work Effort Creator:")
-    print("  cc-work-e                            - Quick create work effort in _AI-Setup/work_efforts")
-    print("  cc-work-e -i                         - Create a work effort with interactive prompt")
-    print("  cc-work-e --use-ai --description TEXT - Generate content with AI")
-    print("\nFor all available options, run: code-conductor help")
-
-    return 0
-
-async def interactive_mode(template_path, active_dir, manager_info=None):
-    """Get user input with defaults to create a work effort"""
-    print("\n📝 Create a New Work Effort")
-    print("=========================")
-
-    # If using a specific manager, mention it
-    if manager_info:
-        print(f"Creating in manager: {manager_info.get('name', 'Default')}")
-
-    print("A work effort is a task or project you want to track with objectives, tasks, and notes.")
-    print("You can create a new work effort by filling in the details below.")
-    print("Press Enter to accept the default values shown in brackets.\n")
-
-    # Get user input with defaults
-    title_input = input("Title (name of your work effort) [Untitled]: ")
-    title = title_input if title_input.strip() else "Untitled"
-
-    assignee_input = input("Assignee (who is responsible) [self]: ")
-    assignee = assignee_input if assignee_input.strip() else "self"
-
-    print("\nPriority levels:")
-    print("  low      - Can be done when time permits")
-    print("  medium   - Important but not urgent")
-    print("  high     - Urgent and should be done soon")
-    print("  critical - Requires immediate attention")
-    priority_input = input("Priority [medium]: ")
-    priority = priority_input if priority_input.strip() else "medium"
-
-    # Validate priority input
-    while priority.lower() not in ["low", "medium", "high", "critical"]:
-        print("Invalid priority. Please choose from: low, medium, high, critical")
-        priority_input = input("Priority [medium]: ")
-        priority = priority_input if priority_input.strip() else "medium"
-
-    # Default to today's date
-    today = datetime.now().strftime("%Y-%m-%d")
-    due_date_input = input(f"Due date (YYYY-MM-DD) [{today}]: ")
-    due_date = due_date_input if due_date_input.strip() else today
-
-    # Validate date format
-    while not validate_date(due_date):
-        print("Invalid date format. Please use YYYY-MM-DD format.")
-        due_date_input = input(f"Due date (YYYY-MM-DD) [{today}]: ")
-        due_date = due_date_input if due_date_input.strip() else today
-
-    # Ask about using AI to generate content
-    use_ai_input = input("Use AI to generate content (y/n)? [n]: ")
-    use_ai = use_ai_input.lower() == 'y'
-
-    content = None
-    if use_ai:
-        description_input = input("Enter a description of the work effort: ")
-        if description_input.strip():
-            print("Generating content with AI...")
-            try:
-                model_input = input("Which Ollama model would you like to use? [phi3]: ")
-                model = model_input.strip() if model_input.strip() else "phi3"
-
-                content = await generate_content_with_ollama(description_input, model)
-            except Exception as e:
-                print(f"Error generating content: {str(e)}")
-                print("Continuing without AI-generated content.")
-
-    # Create the work effort file
-    create_work_effort(title, assignee, priority, due_date, template_path, active_dir, content)
-
-async def non_interactive_mode(args, template_path, active_dir, manager_info=None):
-    """Create a work effort without user interaction using command-line arguments"""
-    # If using a specific manager, mention it if verbose
-    if manager_info:
-        print(f"Creating in manager: {manager_info.get('name', 'Default')}")
-
-    # Use provided arguments or defaults
-    title = args.title if args.title else "Untitled"
-    assignee = args.assignee if args.assignee else "self"
-    priority = args.priority if args.priority else "medium"
-
-    # Default to today's date if not provided
-    today = datetime.now().strftime("%Y-%m-%d")
-    due_date = args.due_date if args.due_date else today
-
-    # Validate inputs
-    if priority.lower() not in ["low", "medium", "high", "critical"]:
-        print(f"Invalid priority: {priority}. Using default: medium")
-        priority = "medium"
-
-    if not validate_date(due_date):
-        print(f"Invalid date format: {due_date}. Using today's date: {today}")
-        due_date = today
-
-    # Generate content with AI if requested
-    content = None
-    if args.use_ai and args.description:
-        print("Generating content with AI...")
-        try:
-            model = args.model if args.model else "phi3"
-            timeout = args.timeout if args.timeout else 30
-            content = await generate_content_with_ollama(args.description, model)
-        except Exception as e:
-            print(f"Error generating content: {str(e)}")
-            print("Continuing without AI-generated content.")
-
-    # Create the work effort file
-    return create_work_effort(title, assignee, priority, due_date, template_path, active_dir, content)
-
-def list_work_efforts(work_efforts_dir):
-    """List all work efforts in the work_efforts directory"""
-    active_dir = os.path.join(work_efforts_dir, "active")
-    completed_dir = os.path.join(work_efforts_dir, "completed")
-    archived_dir = os.path.join(work_efforts_dir, "archived")
-
-    print("\n📋 Work Efforts:")
-
-    # Check if work_efforts directory exists
-    if not os.path.exists(work_efforts_dir):
-        print("❌ Work efforts directory not found. Run 'python cli.py' to set up.")
-        return
-
-    # List active work efforts
-    print("\nActive Work Efforts:")
-    if os.path.exists(active_dir):
-        # First, check for direct .md files
-        active_files = [f for f in os.listdir(active_dir) if f.endswith(".md")]
-
-        # Second, check for work effort folders (containing .md files)
-        active_folders = [d for d in os.listdir(active_dir) if os.path.isdir(os.path.join(active_dir, d))]
-
-        if active_files or active_folders:
-            # List direct .md files
-            for file in sorted(active_files):
-                print(f"  - {file}")
-
-            # List .md files within folders
-            for folder in sorted(active_folders):
-                folder_path = os.path.join(active_dir, folder)
-                folder_files = [f for f in os.listdir(folder_path) if f.endswith(".md")]
-                for file in sorted(folder_files):
-                    print(f"  - {folder}/{file}")
-        else:
-            print("  No active work efforts found.")
-    else:
-        print("  Active directory not found.")
-
-    # List completed work efforts
-    print("\nCompleted Work Efforts:")
-    if os.path.exists(completed_dir):
-        # First, check for direct .md files
-        completed_files = [f for f in os.listdir(completed_dir) if f.endswith(".md")]
-
-        # Second, check for work effort folders (containing .md files)
-        completed_folders = [d for d in os.listdir(completed_dir) if os.path.isdir(os.path.join(completed_dir, d))]
-
-        if completed_files or completed_folders:
-            # List direct .md files
-            for file in sorted(completed_files):
-                print(f"  - {file}")
-
-            # List .md files within folders
-            for folder in sorted(completed_folders):
-                folder_path = os.path.join(completed_dir, folder)
-                folder_files = [f for f in os.listdir(folder_path) if f.endswith(".md")]
-                for file in sorted(folder_files):
-                    print(f"  - {folder}/{file}")
-        else:
-            print("  No completed work efforts found.")
-    else:
-        print("  Completed directory not found.")
-
-    # List archived work efforts
-    print("\nArchived Work Efforts:")
-    if os.path.exists(archived_dir):
-        # First, check for direct .md files
-        archived_files = [f for f in os.listdir(archived_dir) if f.endswith(".md")]
-
-        # Second, check for work effort folders (containing .md files)
-        archived_folders = [d for d in os.listdir(archived_dir) if os.path.isdir(os.path.join(archived_dir, d))]
-
-        if archived_files or archived_folders:
-            # List direct .md files
-            for file in sorted(archived_files):
-                print(f"  - {file}")
-
-            # List .md files within folders
-            for folder in sorted(archived_folders):
-                folder_path = os.path.join(archived_dir, folder)
-                folder_files = [f for f in os.listdir(folder_path) if f.endswith(".md")]
-                for file in sorted(folder_files):
-                    print(f"  - {folder}/{file}")
-        else:
-            print("  No archived work efforts found.")
-    else:
-        print("  Archived directory not found.")
-
-def parse_arguments():
-    """Parse command line arguments"""
-    parser = argparse.ArgumentParser(description="Code Conductor - AI Development Environment Setup Tool")
-    parser.add_argument("-v", "--version", action="store_true", help="Show version number")
-    parser.add_argument("-i", "--interactive", action="store_true", help="Run in interactive mode")
-    parser.add_argument("-y", "--yes", action="store_true", help="Answer yes to all prompts (non-interactive mode)")
-    parser.add_argument("-q", "--quiet", action="store_true", help="Suppress verbose output about directory searching")
-
-    # Work effort options
-    parser.add_argument("--title", help="Title of the work effort (default: Untitled)")
-    parser.add_argument("--assignee", help="Assignee of the work effort (default: self)")
-    parser.add_argument("--priority", choices=["low", "medium", "high", "critical"],
-                       help="Priority of the work effort (low, medium, high, critical)")
-    parser.add_argument("--due-date", help="Due date of the work effort (YYYY-MM-DD)")
-
-    # AI content generation options
-    parser.add_argument("--use-ai", action="store_true", help="Use AI to generate content")
-    parser.add_argument("--description", help="Description to use for AI content generation")
-    parser.add_argument("--model", help="Ollama model to use for AI content (default: phi3)")
-    parser.add_argument("--timeout", type=int, default=30,
-                        help="Timeout in seconds for AI content generation (default: 30)")
-
-    # Work effort manager options
-    parser.add_argument("--manager", help="Name of the work effort manager to use")
-    parser.add_argument("--manager-name", help="Name for a new work effort manager")
-    parser.add_argument("--target-dir", help="Target directory for a new work effort manager")
-
-    # Update status options
-    parser.add_argument("--work-effort", help="Name of the work effort to update status for")
-    parser.add_argument("--new-status", choices=["active", "completed", "archived", "paused"],
-                       help="New status for the work effort")
-    parser.add_argument("--old-status", default="active",
-                       help="Current status of the work effort (default: active)")
-
-    # Command argument
-    parser.add_argument("command", nargs="?",
-                       help="Command to run (setup, new-work-manager, set-default, work, list, list-managers, update-status, select, find-root)")
-
-    return parser.parse_args()
 
 def create_directory_reference(command=None):
     """
@@ -1654,13 +929,15 @@ async def main():
         try:
             import subprocess
             runner_script = config["work_managers"][0].get("runner_script")
-            subprocess.Popen(["python", runner_script, "--no-auto-start"],
+            subprocess.Popen([sys.executable, runner_script, "--no-auto-start"],
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
                              start_new_session=True)
             print("Started WorkEffortManager in the background.")
         except Exception as e:
-            print(f"Warning: Could not start WorkEffortManager: {e}")
+            # Ensure the error message is properly encoded as a string
+            error_msg = str(e)
+            print(f"Warning: Could not start WorkEffortManager: {error_msg}")
 
     # Handle version flag
     if args.version:
@@ -1681,7 +958,7 @@ async def main():
             print("\nCode Conductor - AI Development Environment Setup Tool")
             print(f"Version: {VERSION}")
             print("\nCommands:")
-            print("  code-conductor setup              - Set up AI assistance in the current directory")
+            print("  code-conductor setup                 - Set up AI assistance in the current directory")
             print("  code-conductor new-work-manager   - Create a new work effort manager in a directory")
             print("  code-conductor set-default        - Set the default work effort manager")
             print("  code-conductor new-work-effort    - Create a new work effort in _AI-Setup/work_efforts")
@@ -1705,12 +982,16 @@ async def main():
             print("  --timeout SECONDS                 - Timeout for AI content generation (default: 30)")
             print("  --manager TEXT                    - Name of the work effort manager to use")
             print("  -y, --yes                         - Non-interactive mode (use defaults for all prompts)")
-            print("\nShorthand Command:")
-            print("  cc-work-e                            - Quick create work effort in _AI-Setup/work_efforts")
-            print("  cc-work-e -i                         - Create a work effort with interactive prompt")
+            print("\nShorthand Commands:")
+            print("  cc-work-e                         - Quick create work effort (same as new-work-effort)")
+            print("  cc-work-e -i                      - Create a work effort with interactive prompt")
             print("  cc-work-e --use-ai --description TEXT - Generate content with AI")
-            print("  cc-work-e --manager NAME             - Use a specific work effort manager")
-            print("\nFor more information, visit: https://github.com/ctavolazzi/code-conductor")
+            print("  cc-work-e --manager NAME          - Use a specific work effort manager")
+            print("  cc-new \"Title\"                    - Simple command to create a new work effort")
+            print("  cc-new \"Title\" -p high -a \"Name\"  - Create with priority and assignee")
+            print("  cc-index                          - Index and categorize work efforts")
+            print("  cc-trace                          - Trace work effort relationships")
+            print("\nFor all available options, run: code-conductor help")
             return 0
 
         # Current directory check
@@ -2200,4 +1481,106 @@ def show_instructions():
     print("  cc-work-e                            - Quick create work effort in _AI-Setup/work_efforts")
     print("  cc-work-e -i                         - Create a work effort with interactive prompt")
     print("  cc-work-e --use-ai --description TEXT - Generate content with AI")
+    print("  cc-work-e --manager NAME             - Use a specific work effort manager")
+    print("  cc-new \"Title\"                       - Simple command to create a new work effort")
+    print("  cc-new \"Title\" -p high -a \"Name\"     - Create with priority and assignee")
+    print("  cc-index                             - Index and categorize work efforts")
+    print("  cc-trace                             - Trace work effort relationships")
     print("\nFor all available options, run: code-conductor help")
+
+async def create_work_effort(args):
+    """Create a new work effort."""
+    try:
+        # Get the default manager path
+        default_manager_path = config_data.get("default_work_manager")
+
+        # Ensure directories exist
+        for directory in [template_dir, active_dir]:
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+
+        # Find or create template
+        template_path = os.path.join(template_dir, "work-effort-template.md")
+        create_template_if_missing(template_path)
+
+        # Create WorkEffortManager instance
+        manager = WorkEffortManager(
+            project_dir=os.getcwd(),
+            config=config_data
+        )
+
+        # Run in appropriate mode based on interactive flag
+        if args.interactive:
+            # Run in interactive mode if -i/--interactive flag was set
+            await interactive_mode(template_path, active_dir, manager)
+        else:
+            # Run in non-interactive mode by default
+            work_effort_path = await non_interactive_mode(args, template_path, active_dir, manager)
+            if work_effort_path:
+                print(f"✅ Work effort created successfully at: {work_effort_path}")
+            else:
+                print("❌ Failed to create work effort")
+                return 1
+
+        return 0
+
+    except Exception as e:
+        logger.error(f"Error creating work effort: {e}")
+        return 1
+
+async def interactive_mode(template_path, active_dir, manager):
+    """Run in interactive mode."""
+    try:
+        # Get user input
+        title = input("\nEnter work effort title: ").strip()
+        if not title:
+            print("❌ Title is required")
+            return None
+
+        description = input("Enter description (optional): ").strip()
+        assignee = input("Enter assignee (optional): ").strip()
+        priority = input("Enter priority (high/medium/low, optional): ").strip()
+        due_date = input("Enter due date (YYYY-MM-DD, optional): ").strip()
+
+        # Create work effort
+        work_effort_path = manager.create_work_effort(
+            title=title,
+            description=description,
+            assignee=assignee if assignee else None,
+            priority=priority if priority else None,
+            due_date=due_date if due_date else None
+        )
+
+        if work_effort_path:
+            print(f"✅ Work effort created successfully at: {work_effort_path}")
+            return work_effort_path
+        else:
+            print("❌ Failed to create work effort")
+            return None
+
+    except Exception as e:
+        logger.error(f"Error in interactive mode: {e}")
+        return None
+
+async def non_interactive_mode(args, template_path, active_dir, manager):
+    """Run in non-interactive mode."""
+    try:
+        # Create work effort
+        work_effort_path = manager.create_work_effort(
+            title=args.title,
+            description=args.description or "",
+            assignee=args.assignee,
+            priority=args.priority,
+            due_date=args.due_date,
+            use_ai=args.use_ai
+        )
+
+        if work_effort_path:
+            return work_effort_path
+        else:
+            print("❌ Failed to create work effort")
+            return None
+
+    except Exception as e:
+        logger.error(f"Error in non-interactive mode: {e}")
+        return None

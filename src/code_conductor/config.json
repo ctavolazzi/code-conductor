@@ -1,8 +1,8 @@
 {
   "work_efforts": {
     "use_manager": true,
-    "manager_script": "/Users/ctavolazzi/Code/code_conductor/work_efforts/scripts/work_effort_manager.py",
-    "runner_script": "/Users/ctavolazzi/Code/code_conductor/work_efforts/scripts/run_work_effort_manager.py",
+    "manager_script": "src/code_conductor/core/work_effort/manager.py",
+    "runner_script": "src/code_conductor/core/work_effort/runner.py",
     "project_dir": "/Users/ctavolazzi/Code/code_conductor",
     "auto_start": true,
     "default_settings": {
@@ -18,7 +18,8 @@
     }
   },
   "ai_settings": {
-    "preferred_model": "phi3",
+    "preferred_model": "phi4",
     "timeout": 60
-  }
+  },
+  "version": "0.5.0"
 }

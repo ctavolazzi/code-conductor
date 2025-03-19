@@ -1,7 +1,6 @@
 import subprocess
 import platform
 import os
-import sys
 import shutil
 
 def is_ollama_installed():

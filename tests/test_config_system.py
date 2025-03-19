@@ -4,9 +4,7 @@ import json
 import shutil
 import unittest
 import tempfile
-from unittest.mock import patch, MagicMock
-import pytest
-from unittest.mock import mock_open
+from unittest.mock import patch
 
 # Add the project root to the Python path
 sys.path.insert(0, os.path.abspath(os.path.dirname(os.path.dirname(__file__))))

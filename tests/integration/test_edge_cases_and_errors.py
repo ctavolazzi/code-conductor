@@ -37,8 +37,13 @@ def test_permission_denied_errors(mock_filesystem, cli_runner, mock_version):
     def mock_makedirs(*args, **kwargs):
         raise PermissionError("Permission denied")
 
-    # Run the command with mocked os.makedirs
-    with patch('os.makedirs', mock_makedirs):
+    # Mock subprocess.Popen to prevent actual subprocess execution
+    def mock_popen(*args, **kwargs):
+        raise FileNotFoundError("No such file or directory: 'python'")
+
+    # Run the command with mocked os.makedirs and subprocess.Popen
+    with patch('os.makedirs', mock_makedirs), \
+         patch('subprocess.Popen', mock_popen):
         with cli_runner["run_with_args"](["new-work-effort", "-y", "--title", "Permission Test"],
                                       cwd=str(mock_filesystem["base_dir"])) as result:
             # The command should not crash, even with permission errors

@@ -60,14 +60,12 @@ Options:
 
 import os
 import sys
+import logging
 import shutil
 import re
 import argparse
-import logging
 import datetime
-import yaml
 import fnmatch
-from pathlib import Path
 
 # Setup logging
 logging.basicConfig(

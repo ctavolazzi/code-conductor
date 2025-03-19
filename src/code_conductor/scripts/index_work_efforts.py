@@ -9,11 +9,10 @@ and creates a comprehensive index of all work efforts found.
 import os
 import sys
 import json
-import argparse
 import logging
-from datetime import datetime
+import argparse
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Optional
 
 # Add parent directory to path to allow imports
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))

@@ -5,9 +5,7 @@ import asyncio
 import requests
 import random
 import sys
-import time
 import signal
-import shutil
 from datetime import datetime
 from typing import Optional
 

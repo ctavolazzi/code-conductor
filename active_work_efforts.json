@@ -1,0 +1,185 @@
+{
+  "active_work_efforts": [
+    {
+      "path": "work_efforts/active/202503171444_clean_command_for_creating_work_efforts.md",
+      "title": "Clean Command for Creating Work Efforts",
+      "status": "active",
+      "priority": "high",
+      "assignee": "Claude",
+      "filename": "202503171444_clean_command_for_creating_work_efforts.md",
+      "created": "2025-03-17 14:44"
+    },
+    {
+      "path": "work_efforts/active/feature_obsidian_linking.md",
+      "title": "Feature: Obsidian Linking Implementation",
+      "status": "active",
+      "priority": "high",
+      "assignee": "self",
+      "filename": "feature_obsidian_linking.md",
+      "created": "2025-03-16 06:40"
+    },
+    {
+      "path": "work_efforts/active/0014_test_child_work_effort.md",
+      "title": "Test Child Work Effort",
+      "status": "active",
+      "priority": "high",
+      "assignee": "Team",
+      "filename": "0014_test_child_work_effort.md",
+      "created": "2025-03-19 10:08"
+    },
+    {
+      "path": "work_efforts/active/202503171444_another_example_work_effort.md",
+      "title": "Another Example Work Effort",
+      "status": "active",
+      "priority": "high",
+      "assignee": "unassigned",
+      "filename": "202503171444_another_example_work_effort.md",
+      "created": "2025-03-17 14:44"
+    },
+    {
+      "path": "work_efforts/active/0013_test_parent_work_effort.md",
+      "title": "Test Parent Work Effort",
+      "status": "active",
+      "priority": "high",
+      "assignee": "Team",
+      "filename": "0013_test_parent_work_effort.md",
+      "created": "2025-03-19 10:07"
+    },
+    {
+      "path": "work_efforts/active/complex_edge_case_testing.md",
+      "title": "Complex Edge Case Testing for Work Effort Manager",
+      "status": "active",
+      "priority": "high",
+      "assignee": "AI Assistant",
+      "filename": "complex_edge_case_testing.md",
+      "created": "2023-03-10 13:31"
+    },
+    {
+      "path": "work_efforts/active/202503171453_streamlined_work_effort_command_test.md",
+      "title": "Streamlined Work Effort Command Test",
+      "status": "active",
+      "priority": "high",
+      "assignee": "unassigned",
+      "filename": "202503171453_streamlined_work_effort_command_test.md",
+      "created": "2025-03-17 14:53"
+    },
+    {
+      "path": "work_efforts/active/0005_test_location_one_-_first_work_effort.md",
+      "title": "0005_test_location_one_-_first_work_effort.md",
+      "status": "unknown",
+      "priority": "medium",
+      "assignee": "unassigned",
+      "filename": "0005_test_location_one_-_first_work_effort.md",
+      "created": "unknown"
+    },
+    {
+      "path": "work_efforts/active/0005_implement_sequential_numbering_for_work_efforts.md",
+      "title": "Implement Sequential Numbering for Work Efforts",
+      "status": "active",
+      "priority": "medium",
+      "assignee": "priority: medium",
+      "filename": "0005_implement_sequential_numbering_for_work_efforts.md",
+      "created": "unknown"
+    },
+    {
+      "path": "work_efforts/active/550e8400-e29b-41d4-a716-446655440000.md",
+      "title": "UUID-Based Naming Example",
+      "status": "active",
+      "priority": "medium",
+      "assignee": "self",
+      "filename": "550e8400-e29b-41d4-a716-446655440000.md",
+      "created": "2025-03-16 06:39"
+    },
+    {
+      "path": "work_efforts/active/improved_sequential_numbering.md",
+      "title": "improved_sequential_numbering.md",
+      "status": "unknown",
+      "priority": "medium",
+      "assignee": "unassigned",
+      "filename": "improved_sequential_numbering.md",
+      "created": "unknown"
+    },
+    {
+      "path": "work_efforts/active/0006_test_location_one_-_second_work_effort.md",
+      "title": "0006_test_location_one_-_second_work_effort.md",
+      "status": "unknown",
+      "priority": "medium",
+      "assignee": "unassigned",
+      "filename": "0006_test_location_one_-_second_work_effort.md",
+      "created": "unknown"
+    },
+    {
+      "path": "work_efforts/active/0004_test_work_effort_with_sequential_numbering.md",
+      "title": "Test Work Effort with Sequential Numbering",
+      "status": "active",
+      "priority": "medium",
+      "assignee": "Unassigned",
+      "filename": "0004_test_work_effort_with_sequential_numbering.md",
+      "created": "2025-03-17 14:00"
+    },
+    {
+      "path": "work_efforts/active/task_with_9999_in_middle.md",
+      "title": "task_with_9999_in_middle.md",
+      "status": "unknown",
+      "priority": "medium",
+      "assignee": "unassigned",
+      "filename": "task_with_9999_in_middle.md",
+      "created": "unknown"
+    },
+    {
+      "path": "work_efforts/active/001_sequential_naming_example.md",
+      "title": "Sequential Naming Example",
+      "status": "active",
+      "priority": "medium",
+      "assignee": "self",
+      "filename": "001_sequential_naming_example.md",
+      "created": "2025-03-16 06:38"
+    },
+    {
+      "path": "work_efforts/active/log_20250317_134500.md",
+      "title": "log_20250317_134500.md",
+      "status": "unknown",
+      "priority": "medium",
+      "assignee": "unassigned",
+      "filename": "log_20250317_134500.md",
+      "created": "unknown"
+    },
+    {
+      "path": "work_efforts/active/0007_test_location_two_-_third_work_effort.md",
+      "title": "0007_test_location_two_-_third_work_effort.md",
+      "status": "unknown",
+      "priority": "medium",
+      "assignee": "unassigned",
+      "filename": "0007_test_location_two_-_third_work_effort.md",
+      "created": "unknown"
+    },
+    {
+      "path": "work_efforts/active/202503171455_final_command_test.md",
+      "title": "Final Command Test",
+      "status": "active",
+      "priority": "medium",
+      "assignee": "unassigned",
+      "filename": "202503171455_final_command_test.md",
+      "created": "2025-03-17 14:55"
+    },
+    {
+      "path": "work_efforts/active/event_1678912345_large_timestamp.md",
+      "title": "event_1678912345_large_timestamp.md",
+      "status": "unknown",
+      "priority": "medium",
+      "assignee": "unassigned",
+      "filename": "event_1678912345_large_timestamp.md",
+      "created": "unknown"
+    },
+    {
+      "path": "work_efforts/active/0002_test_counter_with_timestamp_filenames.md",
+      "title": "0002_test_counter_with_timestamp_filenames.md",
+      "status": "unknown",
+      "priority": "medium",
+      "assignee": "unassigned",
+      "filename": "0002_test_counter_with_timestamp_filenames.md",
+      "created": "unknown"
+    }
+  ],
+  "count": 20
+}

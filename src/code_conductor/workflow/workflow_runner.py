@@ -24,13 +24,9 @@ Options:
 import os
 import re
 import sys
-import json
-import shutil
 import argparse
 import datetime
 import subprocess
-from pathlib import Path
-from string import Template
 
 # Constants
 WORK_EFFORTS_DIR = "_AI-Setup/work_efforts"

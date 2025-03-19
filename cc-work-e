@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Enhanced Work Effort Creator
+"""
+
+import os
+import sys
+import argparse
+from datetime import datetime
+
+try:
+    # Direct import if installed as a package
+    from code_conductor.core.work_effort.manager import WorkEffortManager
+except ImportError:
+    try:
+        # Try importing from src directory
+        from src.code_conductor.core.work_effort.manager import WorkEffortManager
+    except ImportError:
+        print("Error: Could not import WorkEffortManager. Make sure code_conductor is installed.")
+        sys.exit(1)
+
+// ... existing code ...

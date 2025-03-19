@@ -7,13 +7,9 @@ error conditions, and edge cases, ensuring robust behavior.
 """
 
 import os
-import sys
 import pytest
 import tempfile
-import shutil
 import subprocess
-import time
-from unittest.mock import patch, MagicMock
 
 # Test utility to run code conductor command
 def run_code_conductor(args):

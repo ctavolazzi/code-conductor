@@ -8,10 +8,8 @@ from other modules.
 
 import os
 import re
-import json
-import shutil
 from datetime import datetime
-from typing import Dict, List, Optional, Tuple, Any, Union
+from typing import Dict, Any, Union
 import logging
 
 # Re-export common operations needed by tests

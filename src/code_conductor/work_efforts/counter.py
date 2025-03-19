@@ -16,7 +16,7 @@ import logging
 import threading
 import re
 import datetime
-from typing import Dict, Any, Optional, Tuple, List, Union
+from typing import Dict, Any, Optional, List
 
 logger = logging.getLogger(__name__)
 

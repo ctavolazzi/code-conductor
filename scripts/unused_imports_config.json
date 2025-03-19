@@ -1,0 +1,37 @@
+{
+    "required_imports": {
+        "src/code_conductor/ai_work_effort_creator.py": [
+            "src.code_conductor.work_efforts.scripts.ai_work_effort_creator.setup_work_efforts_structure",
+            "src.code_conductor.work_efforts.scripts.ai_work_effort_creator.create_work_effort",
+            "src.code_conductor.work_efforts.scripts.ai_work_effort_creator.main",
+            "src.code_conductor.work_efforts.scripts.ai_work_effort_creator.main_async",
+            "src.code_conductor.work_efforts.scripts.ai_work_effort_creator.parse_arguments",
+            "src.code_conductor.work_efforts.scripts.ai_work_effort_creator.generate_content_with_ollama"
+        ],
+        "src/code_conductor/work_efforts/counter.py": [
+            "typing.Dict",
+            "typing.Optional"
+        ],
+        "src/code_conductor/work_efforts/create_work_node.py": [
+            "typing.Dict",
+            "typing.Optional",
+            "typing.List"
+        ],
+        "src/code_conductor/work_efforts/scripts/work_effort_manager.py": [
+            "work_efforts.counter.WorkEffortCounter",
+            "work_efforts.counter.format_work_effort_filename"
+        ]
+    },
+    "reexport_patterns": [
+        "src/code_conductor/ai_work_effort_creator.py",
+        "src/code_conductor/work_effort_manager.py"
+    ],
+    "ignore_files": [
+        "src/code_conductor/tests/.*",
+        "src/code_conductor/examples/.*"
+    ],
+    "ignore_imports": [
+        "typing\\..*",
+        ".*\\.typing\\..*"
+    ]
+}

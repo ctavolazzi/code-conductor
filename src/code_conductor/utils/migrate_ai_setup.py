@@ -23,11 +23,9 @@ Options:
 
 import os
 import sys
-import re
 import shutil
 import argparse
 import logging
-from pathlib import Path
 
 # Setup logging
 logging.basicConfig(

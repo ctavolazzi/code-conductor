@@ -1,11 +1,8 @@
-import os
 import json
 import asyncio
 import requests
 import random
 import sys
-import time
-from datetime import datetime
 from typing import Optional
 
 # ANSI escape codes for terminal manipulation

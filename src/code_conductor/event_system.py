@@ -5,7 +5,7 @@ It enables components to communicate through events.
 """
 
 import logging
-from typing import Dict, List, Callable, Any
+from typing import Callable, Any, Dict, List, Union
 
 class Event:
     """
@@ -165,7 +165,7 @@ try:
     from src.code_conductor.events import EventEmitter, Event, LoggingHandler
 except ImportError:
     # If the import fails, define the classes here for compatibility
-    from typing import Callable, Dict, List, Any, Optional, Union
+    from typing import Callable, Any, Optional
     import logging
 
     class Event:

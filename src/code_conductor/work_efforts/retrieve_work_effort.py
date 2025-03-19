@@ -8,7 +8,7 @@ It locates work efforts by name, status or date, and outputs their content along
 any associated files to provide comprehensive context.
 
 Usage:
-    python retrieve_work_effort.py --name <name>
+    python retrieve_work_effort.py --name <n>
     python retrieve_work_effort.py --status <active|completed|archived>
     python retrieve_work_effort.py --date <YYYYMMDD>
     python retrieve_work_effort.py --latest [count]
@@ -18,13 +18,8 @@ Usage:
 import os
 import sys
 import re
-import glob
 import argparse
-import datetime
-from pathlib import Path
-import json
 import yaml
-from pprint import pprint
 
 # Define constants
 WORK_EFFORTS_DIR = "_AI-Setup/work_efforts"

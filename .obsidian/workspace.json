@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/202503161730_codebase_streamlining_for_version_update.md",
+                "file": "_AI-Setup/work_efforts/completed/Clean Up Unused Imports.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "202503161730_codebase_streamlining_for_version_update"
+              "title": "Clean Up Unused Imports"
             }
           }
         ]
@@ -170,20 +170,28 @@
   },
   "active": "fcd9003accbdf525",
   "lastOpenFiles": [
-    "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/scripts/test_typing.py.bak",
-    "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/scripts/batch_cleanup_imports.py",
+    "venv/bin/code-conductor",
+    "venv/bin/cc-work-e",
+    "venv/bin/cc-trace",
+    "venv/bin/cc-new",
+    "venv/bin/cc-index",
+    "venv/lib/python3.10/site-packages/code-conductor.egg-link",
+    "tests/__pycache__/test_import.cpython-310-pytest-8.3.5.pyc",
+    "tests/__pycache__/conftest.cpython-310-pytest-8.3.5.pyc",
+    "venv/lib/python3.10/site-packages/pytest-8.3.5.dist-info/REQUESTED",
+    "venv/lib/python3.10/site-packages/pytest-8.3.5.dist-info/INSTALLER",
+    "venv/bin/pytest",
+    "venv/lib/python3.10/site-packages/Markdown-3.7.dist-info/LICENSE.md",
+    "venv/lib/python3.10/site-packages/idna-3.10.dist-info/LICENSE.md",
+    "_AI-Setup/prompt_library/work_effort_tracing.md",
+    "_AI-Setup/prompts/work_effort_tracing.md",
+    "_AI-Setup/work_efforts/active/0014_test_child_work_effort.md",
+    "_AI-Setup/work_efforts/active/0013_test_parent_work_effort.md",
+    "_AI-Setup/work_efforts/active/202503171700_implement_work_effort_tracing.md",
+    "_AI-Setup/work_efforts/active/0001_test_sequential_numbering/0001_test_sequential_numbering.md",
     "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/project_structure_map.md",
     "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/summary.md",
-    "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/scripts/test_typing.py",
-    "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/scripts/test_cleanup2.py.bak",
-    "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/scripts/test_cleanup2.py",
-    "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/scripts/test_cleanup.py.bak",
-    "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/scripts/test_cleanup.py",
-    "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/scripts/cleanup_unused_imports.py",
     "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/docs/unused_imports_analysis.md",
-    "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/docs/unused_imports_work_efforts.txt",
-    "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/docs/unused_imports_tests.txt",
-    "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/docs/unused_imports_src.txt",
     "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/docs/detect_unused_imports.md",
     "_AI-Setup/work_efforts/active/202503161730_codebase_streamlining_for_version_update/scripts/README.md",
     "src/code_conductor/work_efforts/templates/work-effort-template.md",
@@ -197,14 +205,6 @@
     "_AI-Setup/work_efforts/active/202503160633_obsidian_style_document_linking/202503160633_obsidian_style_document_linking.md",
     "_AI-Setup/work_efforts/active/202503160805_work_effort_context_retrieval/202503160805_work_effort_context_retrieval.md",
     "_AI-Setup/work_efforts/active/202503160750_template_integration/202503160750_template_integration.md",
-    "_AI-Setup/work_efforts/active/202503160820_project_restructuring/202503160820_project_restructuring.md",
-    "_AI-Setup/work_efforts/active/202503091306_test_inside_ai-setup/202503091306_test_inside_ai-setup.md",
-    "_AI-Setup/work_efforts/active/202503091238_test_in_current_directory/202503091238_test_in_current_directory.md",
-    "_AI-Setup/work_efforts/active/202503071956_global_installation_of_ai_setup_package/202503071956_global_installation_of_ai_setup_package.md",
-    "_AI-Setup/work_efforts/active/202503062014_untitled/202503062014_untitled.md",
-    "_AI-Setup/work_efforts/active/202503160716_work_node_creation_workflow/202503160716_work_node_creation_workflow.md",
-    "_AI-Setup/work_efforts/active/202503062041_using_ai_setup_command/202503062041_using_ai_setup_command.md",
-    "_AI-Setup/work_efforts/active/202503091415_getting_started/202503091415_getting_started.md",
-    "_AI-Setup/work_efforts/active/202503091259_getting_started/202503091259_getting_started.md"
+    "_AI-Setup/work_efforts/active/202503160820_project_restructuring/202503160820_project_restructuring.md"
   ]
 }

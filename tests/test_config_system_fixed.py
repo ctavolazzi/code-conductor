@@ -4,14 +4,12 @@ import json
 import shutil
 import unittest
 import tempfile
-from unittest.mock import patch, MagicMock
 
 # Add parent directory to path to import modules
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
 
 # Import from the correct package structure
-from src.code_conductor.cli import cli
 from src.code_conductor import __version__ as VERSION
 
 class TestConfigSystem(unittest.TestCase):

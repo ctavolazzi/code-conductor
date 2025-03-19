@@ -9,7 +9,6 @@ creates a folder for each one, moving the file inside.
 import os
 import sys
 import shutil
-from datetime import datetime
 import argparse
 
 def convert_work_efforts_to_folders(work_efforts_dir, dry_run=False):

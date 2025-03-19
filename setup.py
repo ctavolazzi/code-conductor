@@ -33,6 +33,7 @@ setup(
             "cc-work-e=code_conductor.work_efforts.scripts.ai_work_effort_creator:main",
             "cc-index=code_conductor.scripts.index_work_efforts:main",
             "cc-new=code_conductor.scripts.cc_new:main",
+            "cc-trace=code_conductor.scripts.cc_trace:main",
         ],
     },
     install_requires=required,

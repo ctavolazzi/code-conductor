@@ -12,7 +12,6 @@ Options:
     --help    Show this help message
 """
 
-import os
 import sys
 import argparse
 

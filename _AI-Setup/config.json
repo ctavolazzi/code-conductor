@@ -1,29 +1,12 @@
 {
-  "version": "0.4.6",
+  "version": "0.5.0",
   "project_root": "/Users/ctavolazzi/Code/code_conductor",
   "created_at": "2025-03-16 12:48:12",
   "updated_at": "2025-03-16 12:54:52",
-  "default_work_manager": ".",
-  "work_managers": [
-    {
-      "name": "MainManager",
-      "path": ".",
-      "work_efforts_dir": "_AI-Setup/work_efforts",
-      "use_manager": true,
-      "manager_script": "_AI-Setup/work_efforts/scripts/work_effort_manager.py",
-      "runner_script": "_AI-Setup/work_efforts/scripts/run_work_effort_manager.py",
-      "auto_start": true
-    }
-  ],
-  "default_settings": {
-    "assignee": "AI Assistant",
-    "priority": "medium",
-    "due_date": "+7d"
-  },
   "work_efforts": {
     "use_manager": true,
-    "manager_script": "/Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts/scripts/work_effort_manager.py",
-    "runner_script": "/Users/ctavolazzi/Code/code_conductor/_AI-Setup/work_efforts/scripts/run_work_effort_manager.py",
+    "manager_script": "src/code_conductor/core/work_effort/manager.py",
+    "runner_script": "src/code_conductor/core/work_effort/runner.py",
     "project_dir": "/Users/ctavolazzi/Code/code_conductor",
     "auto_start": true,
     "default_settings": {

@@ -1,0 +1,359 @@
+{
+  "version": "1.0",
+  "last_updated": "2025-03-19 09:02:56",
+  "work_efforts": {
+    "active": {
+      "202503171444_clean_command_for_creating_work_efforts.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/202503171444_clean_command_for_creating_work_efforts.md",
+        "metadata": {
+          "title": "Clean Command for Creating Work Efforts",
+          "status": "active",
+          "priority": "high",
+          "assignee": "Claude",
+          "created": "2025-03-17 14:44",
+          "last_updated": "2025-03-17 14:44",
+          "due_date": "2025-03-17",
+          "tags": "[]"
+        },
+        "last_modified": 1742247865.575504
+      },
+      "feature_obsidian_linking.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/feature_obsidian_linking.md",
+        "metadata": {
+          "title": "Feature: Obsidian Linking Implementation",
+          "status": "active\" # options: active, paused, completed",
+          "priority": "high\" # options: low, medium, high, critical",
+          "assignee": "self",
+          "created": "2025-03-16 06:40\" # YYYY-MM-DD HH:mm",
+          "last_updated": "2025-03-16 06:40\" # YYYY-MM-DD HH:mm",
+          "due_date": "2025-03-26\" # YYYY-MM-DD",
+          "tags": "[feature, documentation, enhancement, obsidian]",
+          "related_efforts": "[[202503160637_work_effort_naming_conventions, 202503160633_obsidian_style_document_linking]]"
+        },
+        "last_modified": 1742150266.4417048
+      },
+      "0005_implement_sequential_numbering_for_work_efforts.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0005_implement_sequential_numbering_for_work_efforts.md",
+        "metadata": {
+          "title": "Implement Sequential Numbering for Work Efforts",
+          "assignee": "",
+          "priority": "medium",
+          "status": "active",
+          "due_date": "",
+          "created_at": "2023-03-17 14:05"
+        },
+        "last_modified": 1742245258.053928
+      },
+      "550e8400-e29b-41d4-a716-446655440000.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/550e8400-e29b-41d4-a716-446655440000.md",
+        "metadata": {
+          "title": "UUID-Based Naming Example",
+          "status": "active\" # options: active, paused, completed",
+          "priority": "medium\" # options: low, medium, high, critical",
+          "assignee": "self",
+          "created": "2025-03-16 06:39\" # YYYY-MM-DD HH:mm",
+          "last_updated": "2025-03-16 06:39\" # YYYY-MM-DD HH:mm",
+          "due_date": "2025-03-23\" # YYYY-MM-DD",
+          "tags": "[example, documentation, naming, uuid]",
+          "related_efforts": "[[202503160637_work_effort_naming_conventions, 001_sequential_naming_example]]"
+        },
+        "last_modified": 1742150266.4249485
+      },
+      "0004_test_work_effort_with_sequential_numbering.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0004_test_work_effort_with_sequential_numbering.md",
+        "metadata": {
+          "title": "Test Work Effort with Sequential Numbering",
+          "status": "active",
+          "priority": "medium",
+          "assignee": "Unassigned",
+          "created": "2025-03-17 14:00",
+          "last_updated": "2025-03-17 14:00",
+          "due_date": "None"
+        },
+        "last_modified": 1742245201.4385107
+      },
+      "202503171444_another_example_work_effort.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/202503171444_another_example_work_effort.md",
+        "metadata": {
+          "title": "Another Example Work Effort",
+          "status": "active",
+          "priority": "high",
+          "assignee": "unassigned",
+          "created": "2025-03-17 14:44",
+          "last_updated": "2025-03-17 14:44",
+          "due_date": "2099-12-31",
+          "tags": "[]"
+        },
+        "last_modified": 1742247878.7900295
+      },
+      "202503171451_streamline_work_effort_creation_and_tracing_system.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/202503171451_streamline_work_effort_creation_and_tracing_system.md",
+        "metadata": {
+          "title": "Streamline Work Effort Creation and Tracing System",
+          "status": "active",
+          "priority": "high",
+          "assignee": "Team",
+          "created": "2025-03-17 14:51",
+          "last_updated": "2025-03-17 14:54",
+          "due_date": "2025-03-17",
+          "tags": "[\"refactor\", \"simplification\", \"cli\", \"core-functionality\"]"
+        },
+        "last_modified": 1742248480.613205
+      },
+      "001_sequential_naming_example.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/001_sequential_naming_example.md",
+        "metadata": {
+          "title": "Sequential Naming Example",
+          "status": "active\" # options: active, paused, completed",
+          "priority": "medium\" # options: low, medium, high, critical",
+          "assignee": "self",
+          "created": "2025-03-16 06:38\" # YYYY-MM-DD HH:mm",
+          "last_updated": "2025-03-16 06:38\" # YYYY-MM-DD HH:mm",
+          "due_date": "2025-03-23\" # YYYY-MM-DD",
+          "tags": "[example, documentation, naming]",
+          "related_efforts": "[[202503160637_work_effort_naming_conventions]]"
+        },
+        "last_modified": 1742150265.9876654
+      },
+      "202503171455_final_command_test.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/202503171455_final_command_test.md",
+        "metadata": {
+          "title": "Final Command Test",
+          "status": "active",
+          "priority": "medium",
+          "assignee": "unassigned",
+          "created": "2025-03-17 14:55",
+          "last_updated": "2025-03-17 14:55",
+          "due_date": "2025-03-17",
+          "tags": "[]"
+        },
+        "last_modified": 1742248502.9826496
+      },
+      "0006_implement_work_effort_indexing.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0006_implement_work_effort_indexing.md",
+        "metadata": {
+          "title": "Implement Work Effort Indexing",
+          "assignee": "",
+          "priority": "medium",
+          "status": "completed",
+          "due_date": "",
+          "created_at": "2023-03-17 14:10",
+          "completed_at": "2023-03-17 14:25"
+        },
+        "last_modified": 1742246355.2444303
+      },
+      "complex_edge_case_testing.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/complex_edge_case_testing.md",
+        "metadata": {
+          "title": "Complex Edge Case Testing for Work Effort Manager",
+          "status": "active",
+          "priority": "high",
+          "assignee": "AI Assistant",
+          "created": "2023-03-10 13:31",
+          "last_updated": "2023-03-10 13:37",
+          "due_date": "2023-03-17",
+          "tags": "[testing, edge-cases]"
+        },
+        "last_modified": 1742150266.4341314
+      },
+      "202503171453_streamlined_work_effort_command_test.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/202503171453_streamlined_work_effort_command_test.md",
+        "metadata": {
+          "title": "Streamlined Work Effort Command Test",
+          "status": "active",
+          "priority": "high",
+          "assignee": "unassigned",
+          "created": "2025-03-17 14:53",
+          "last_updated": "2025-03-17 14:53",
+          "due_date": "2025-03-17",
+          "tags": "[]"
+        },
+        "last_modified": 1742248383.5589309
+      },
+      "0008_comprehensive_work_effort_usage_documentation.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0008_comprehensive_work_effort_usage_documentation.md",
+        "metadata": {
+          "title": "Comprehensive Work Effort Usage Documentation",
+          "status": "active",
+          "priority": "medium",
+          "assignee": "Unassigned",
+          "created": "2025-03-17 14:37",
+          "last_updated": "2025-03-17 14:37",
+          "due_date": "None"
+        },
+        "last_modified": 1742247488.922431
+      },
+      "0006_test_central_index.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0006_test_central_index/0006_test_central_index.md",
+        "folder_path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0006_test_central_index",
+        "metadata": {
+          "title": "Test Central Index",
+          "status": "active",
+          "priority": "high",
+          "assignee": "developer",
+          "created": "2025-03-17 16:27",
+          "last_updated": "2025-03-17 16:27",
+          "due_date": "2025-04-15"
+        },
+        "last_modified": 1742254054.815643
+      },
+      "0008_final_verification_test.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0008_final_verification_test/0008_final_verification_test.md",
+        "folder_path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0008_final_verification_test",
+        "metadata": {
+          "title": "Final Verification Test",
+          "status": "active",
+          "priority": "medium",
+          "assignee": "tester",
+          "created": "2025-03-17 16:33",
+          "last_updated": "2025-03-17 16:33",
+          "due_date": "2025-05-01"
+        },
+        "last_modified": 1742254383.2999043
+      },
+      "0012_clean_up_unused_imports.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0012_clean_up_unused_imports/0012_clean_up_unused_imports.md",
+        "folder_path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0012_clean_up_unused_imports",
+        "metadata": {
+          "title": "Clean Up Unused Imports",
+          "status": "active",
+          "priority": "medium",
+          "assignee": "Developer",
+          "created": "2025-03-17 18:13",
+          "last_updated": "2025-03-17 18:13",
+          "due_date": "2025-04-10"
+        },
+        "last_modified": 1742260394.2166395
+      }
+    },
+    "completed": {
+      "202503160751_enhanced_workflow_runner.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/completed/202503160751_enhanced_workflow_runner.md",
+        "metadata": {
+          "title": "Enhanced Workflow Runner",
+          "status": "completed\" # options: active, paused, completed",
+          "priority": "medium\" # options: low, medium, high, critical",
+          "assignee": "Unassigned",
+          "created": "2025-03-16 07:51:36\" # YYYY-MM-DD HH:mm",
+          "last_updated": "2025-03-16 07:51:36\" # YYYY-MM-DD HH:mm",
+          "due_date": "2025-03-23\" # YYYY-MM-DD",
+          "tags": "[feature, enhancement, workflow, documentation]"
+        },
+        "last_modified": 1742150272.2748482
+      },
+      "202503081145_add_work_efforts_folder_to_ai_setup.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/completed/202503081145_add_work_efforts_folder_to_ai_setup.md",
+        "metadata": {
+          "title": "Add work_efforts folder to _AI-Setup",
+          "status": "completed\" # options: active, paused, completed",
+          "priority": "medium\" # options: low, medium, high, critical",
+          "assignee": "AI-Setup Team",
+          "created": "2025-03-08 11:45\" # YYYY-MM-DD HH:mm",
+          "last_updated": "2025-03-08 12:18\" # YYYY-MM-DD HH:mm",
+          "due_date": "2025-03-09\" # YYYY-MM-DD",
+          "tags": "[feature, refactor]"
+        },
+        "last_modified": 1742150272.2649474
+      },
+      "0007_system_verification_test.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/completed/0007_system_verification_test/0007_system_verification_test.md",
+        "folder_path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/completed/0007_system_verification_test",
+        "metadata": {
+          "title": "System Verification Test",
+          "status": "completed",
+          "priority": "high",
+          "assignee": "tester",
+          "created": "2025-03-17 16:30",
+          "last_updated": "2025-03-17 16:30",
+          "due_date": "2025-04-20"
+        },
+        "last_modified": 1742254246.91504
+      },
+      "0009_status_update_test.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/completed/0009_status_update_test/0009_status_update_test.md",
+        "folder_path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0009_status_update_test",
+        "metadata": {
+          "title": "Status Update Test",
+          "status": "completed",
+          "priority": "medium",
+          "assignee": "tester",
+          "created": "2025-03-17 16:35",
+          "last_updated": "2025-03-17 16:35",
+          "due_date": "2025-04-30"
+        },
+        "last_modified": 1742254557.9531505
+      },
+      "0010_directory_cleanup_test.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/completed/0010_directory_cleanup_test/0010_directory_cleanup_test.md",
+        "folder_path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0010_directory_cleanup_test",
+        "metadata": {
+          "title": "Directory Cleanup Test",
+          "status": "completed",
+          "priority": "medium",
+          "assignee": "tester",
+          "created": "2025-03-17 16:38",
+          "last_updated": "2025-03-17 16:38",
+          "due_date": "2025-05-01"
+        },
+        "last_modified": 1742254729.124947
+      },
+      "0011_directory_cleanup_test.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/completed/0011_directory_cleanup_test/0011_directory_cleanup_test.md",
+        "folder_path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/active/0011_directory_cleanup_test",
+        "metadata": {
+          "title": "Directory Cleanup Test",
+          "status": "completed",
+          "priority": "medium",
+          "assignee": "tester",
+          "created": "2025-03-17 16:39",
+          "last_updated": "2025-03-17 16:39",
+          "due_date": "2025-05-01"
+        },
+        "last_modified": 1742254749.6680248
+      },
+      "202404030001_work_effort_status_report.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/completed/202404030001_work_effort_status_report.md",
+        "metadata": {
+          "title": "Work Effort Status Report Script",
+          "status": "completed",
+          "priority": "medium",
+          "assignee": "Developer",
+          "created": "2024-04-03 13:14",
+          "last_updated": "2025-03-19 09:02",
+          "due_date": "2024-04-17",
+          "tags": "[script, utility, reporting, monitoring]"
+        },
+        "last_modified": 1742400162.8892698
+      },
+      "work_effort_manager_fixes.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/completed/work_effort_manager_fixes.md",
+        "metadata": {
+          "title": "Work Effort Manager Edge Case Fixes",
+          "status": "completed",
+          "priority": "high",
+          "assignee": "AI Assistant",
+          "created": "2023-03-10 13:40",
+          "last_updated": "2025-03-19 09:02",
+          "due_date": "2023-06-15",
+          "tags": "[bugfix, edge-cases, improvements]"
+        },
+        "last_modified": 1742400172.8316011
+      },
+      "v0.4.1_release_preparation.md": {
+        "path": "/Users/ctavolazzi/Code/code_conductor/work_efforts/completed/v0.4.1_release_preparation.md",
+        "metadata": {
+          "title": "v0.4.1 Release Preparation",
+          "status": "completed",
+          "priority": "high",
+          "assignee": "AI Assistant",
+          "created": "2023-07-20 12:00",
+          "last_updated": "2025-03-19 09:02",
+          "due_date": "2023-07-20",
+          "tags": "[release, documentation, bugfix]"
+        },
+        "last_modified": 1742400176.595587
+      }
+    },
+    "archived": {}
+  }
+}

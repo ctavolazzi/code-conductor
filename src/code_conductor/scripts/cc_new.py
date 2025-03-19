@@ -17,26 +17,23 @@ Examples:
 import os
 import sys
 import argparse
-import asyncio
-from datetime import datetime
 from pathlib import Path
+from typing import Dict, List, Optional, Union
+from datetime import datetime
 
 # Import the correct WorkEffortManager and setup functions
 try:
     # Direct import if installed as a package
     from code_conductor.manager import WorkEffortManager
-    from code_conductor.cli.cli import find_nearest_config, setup_ai_in_current_dir
 except ImportError:
     try:
         # Import from src if in development mode
         from src.code_conductor.manager import WorkEffortManager
-        from src.code_conductor.cli.cli import find_nearest_config, setup_ai_in_current_dir
     except ImportError:
         try:
             # Try using path-based import as last resort
             sys.path.append(str(Path(__file__).parent.parent.parent))
             from src.code_conductor.manager import WorkEffortManager
-            from src.code_conductor.cli.cli import find_nearest_config, setup_ai_in_current_dir
         except ImportError:
             print("Error: Could not import required modules.")
             print("Make sure code_conductor is installed or you're in the correct directory.")
@@ -83,83 +80,97 @@ Examples:
         action="store_true",
         help="Show detailed output"
     )
-    parser.add_argument(
-        "--setup",
-        action="store_true",
-        help="Run setup if needed before creating the work effort"
-    )
 
     return parser.parse_args()
 
-async def ensure_setup(verbose=False, force=False):
-    """
-    Ensure that the work effort system is set up in the current directory.
+def find_project_root(start_dir, verbose=False):
+    """Find the project root by looking for .code-conductor file or _AI-Setup directory."""
+    current = os.path.abspath(start_dir)
 
-    Args:
-        verbose: Whether to show detailed output
-        force: Whether to force setup even if it appears to be set up
+    # Keep going up until we find the root or hit the system root
+    while current != os.path.dirname(current):  # Check if we've reached the system root
+        # Check for .code-conductor file
+        code_conductor_file = os.path.join(current, ".code-conductor")
+        ai_setup_dir = os.path.join(current, "_AI-Setup")
 
-    Returns:
-        True if setup exists or was successfully created, False otherwise
+        if os.path.exists(code_conductor_file) or os.path.exists(ai_setup_dir):
+            if verbose:
+                print(f"Found project root at: {current}")
+            return current
+
+        # Move up one directory
+        current = os.path.dirname(current)
+
+    # If we get here, use the starting directory
+    if verbose:
+        print(f"No project root found, using current directory: {start_dir}")
+    return start_dir
+
+def create_work_effort_in_current_dir(manager, title, assignee, priority, due_date, verbose=False):
     """
+    Create a work effort in a work_efforts folder in the current directory.
+
+    This function:
+    1. Creates a work_efforts folder in the current directory if it doesn't exist
+    2. Creates the necessary subdirectories (active, completed, archived)
+    3. Creates the work effort in the work_efforts/active directory
+    """
+    # Get current directory
     current_dir = os.getcwd()
 
-    # Check if work_efforts directory exists
+    # Create work_efforts directory structure in current directory
     work_efforts_dir = os.path.join(current_dir, "work_efforts")
-    ai_setup_dir = os.path.join(current_dir, "_AI-Setup")
+    active_dir = os.path.join(work_efforts_dir, "active")
+    completed_dir = os.path.join(work_efforts_dir, "completed")
+    archived_dir = os.path.join(work_efforts_dir, "archived")
 
-    has_work_efforts = os.path.exists(work_efforts_dir) and os.path.isdir(work_efforts_dir)
-    has_ai_setup = os.path.exists(ai_setup_dir) and os.path.isdir(ai_setup_dir)
+    # Create the directories if they don't exist
+    os.makedirs(active_dir, exist_ok=True)
+    os.makedirs(completed_dir, exist_ok=True)
+    os.makedirs(archived_dir, exist_ok=True)
 
-    # Check for config file
-    config_file, _ = find_nearest_config()
-    has_config = config_file is not None
-
-    if has_work_efforts and has_ai_setup and has_config and not force:
-        if verbose:
-            print("✅ Work effort system already set up")
-        return True
-
-    # Setup needed
     if verbose:
-        print("⚙️ Setting up work effort system...")
+        print(f"Created work_efforts directory structure in current directory")
+
+    # Store original directories
+    original_active_dir = manager.active_dir
+    original_completed_dir = manager.completed_dir
+    original_archived_dir = manager.archived_dir
 
     try:
-        # Run the setup process
-        await setup_ai_in_current_dir()
+        # Set the directories to use our local work_efforts structure
+        manager.active_dir = active_dir
+        manager.completed_dir = completed_dir
+        manager.archived_dir = archived_dir
 
-        # Verify that setup worked
-        work_efforts_dir = os.path.join(current_dir, "work_efforts")
-        ai_setup_dir = os.path.join(current_dir, "_AI-Setup")
+        # Create the work effort
+        if verbose:
+            print(f"Creating work effort in: {active_dir}")
 
-        has_work_efforts = os.path.exists(work_efforts_dir) and os.path.isdir(work_efforts_dir)
-        has_ai_setup = os.path.exists(ai_setup_dir) and os.path.isdir(ai_setup_dir)
+        work_effort_path = manager.create_work_effort(
+            title=title,
+            assignee=assignee,
+            priority=priority,
+            due_date=due_date,
+            use_sequential_numbering=True  # Always use sequential numbering
+        )
 
-        if has_work_efforts and has_ai_setup:
-            if verbose:
-                print("✅ Work effort system set up successfully")
-            return True
-        else:
-            if verbose:
-                print("❌ Failed to set up work effort system")
-            return False
-    except Exception as e:
-        print(f"❌ Error during setup: {str(e)}")
-        return False
+        return work_effort_path
+    finally:
+        # Restore original directories
+        manager.active_dir = original_active_dir
+        manager.completed_dir = original_completed_dir
+        manager.archived_dir = original_archived_dir
 
-async def main_async():
-    """Async main function with clean workflow for creating a work effort."""
+def main():
+    """Main function with clean workflow for creating a work effort."""
     args = parse_arguments()
 
-    # Ensure the work effort system is set up
-    if args.setup:
-        setup_successful = await ensure_setup(verbose=args.verbose, force=args.setup)
-        if not setup_successful:
-            print("❌ Failed to set up work effort system. Please run 'code-conductor setup' first.")
-            return 1
-
-    # Get current directory (where we'll create the work effort)
+    # Get current directory
     current_dir = os.getcwd()
+
+    # Find the project root for central tracking
+    project_root = find_project_root(current_dir, verbose=args.verbose)
 
     # Show summary if verbose
     if args.verbose:
@@ -168,19 +179,20 @@ async def main_async():
         print(f"  Assignee:  {args.assignee}")
         print(f"  Priority:  {args.priority}")
         print(f"  Due Date:  {args.due_date}")
-        print(f"  Location:  {current_dir}")
+        print(f"  Location:  {current_dir}/work_efforts")
         print(f"  Format:    Sequential numbering")
 
-    # Create the WorkEffortManager instance with the current directory
-    manager = WorkEffortManager(project_dir=current_dir)
+    # Create the WorkEffortManager with the project root
+    manager = WorkEffortManager(project_dir=project_root)
 
-    # Create the work effort with sequential numbering
-    work_effort_path = manager.create_work_effort(
+    # Create the work effort in the work_efforts directory in the current directory
+    work_effort_path = create_work_effort_in_current_dir(
+        manager=manager,
         title=args.title,
         assignee=args.assignee,
         priority=args.priority,
         due_date=args.due_date,
-        use_sequential_numbering=True  # Always use sequential numbering
+        verbose=args.verbose
     )
 
     # Handle success or failure clearly
@@ -190,12 +202,8 @@ async def main_async():
         return 0
     else:
         print("❌ Failed to create work effort")
-        print("   ▶ Make sure you've run 'code-conductor setup' in this directory first")
+        print("   ▶ Run 'code-conductor setup' if this is the first work effort in the project")
         return 1
-
-def main():
-    """Main entry point - runs the async main function."""
-    return asyncio.run(main_async())
 
 if __name__ == "__main__":
     sys.exit(main())

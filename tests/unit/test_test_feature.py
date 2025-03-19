@@ -16,7 +16,7 @@ from pathlib import Path
 
 # Import the module to test
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-import src.tests.unit.test_feature
+import test_feature
 
 
 class TestTestFeature(unittest.TestCase):

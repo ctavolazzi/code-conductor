@@ -1,5 +1,4 @@
 import os
-from datetime import datetime
 
 def create_work_efforts_structure(project_dir):
     """

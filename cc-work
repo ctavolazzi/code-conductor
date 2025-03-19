@@ -1,0 +1,165 @@
+#!/bin/bash
+# cc-work - Unified command for creating structured work efforts
+# Replaces all previous work effort creation commands with a single, consistent interface
+
+# Default values
+TITLE=""
+ASSIGNEE="unassigned"
+PRIORITY="medium"
+DUE_DATE=$(date -v+2w +%Y-%m-%d) # Default due date 2 weeks from now
+USE_SEQUENTIAL=1  # 1=true, 0=false
+USE_DATE_PREFIX=0  # 1=true, 0=false
+
+# Print usage information
+function print_usage {
+  echo "Usage: cc-work \"Title of Work Effort\" [OPTIONS]"
+  echo ""
+  echo "Options:"
+  echo "  -a, --assignee NAME     Person assigned to the work (default: unassigned)"
+  echo "  -p, --priority LEVEL    Priority level (low, medium, high, critical)"
+  echo "  -d, --due-date DATE     Due date in YYYY-MM-DD format"
+  echo "  -n, --no-sequential     Don't use sequential numbering (use timestamps instead)"
+  echo "  -x, --date-prefix       Add date prefix to sequential numbering (YYYYMMDD)"
+  echo "  -h, --help              Show this help message"
+  echo ""
+  echo "Examples:"
+  echo "  cc-work \"Implement New Feature\" -a \"John Doe\" -p high -d 2023-12-31"
+  echo "  cc-work \"Bug Fix\" --no-sequential        # Uses timestamp-based naming"
+  echo "  cc-work \"Quick Task\" --date-prefix       # Uses YYYYMMDD0001 format"
+}
+
+# Parse arguments
+if [ $# -eq 0 ]; then
+  print_usage
+  exit 1
+fi
+
+# First argument is the title
+TITLE="$1"
+shift
+
+# Parse remaining options
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -a|--assignee)
+      ASSIGNEE="$2"
+      shift 2
+      ;;
+    -p|--priority)
+      case "$2" in
+        low|medium|high|critical)
+          PRIORITY="$2"
+          shift 2
+          ;;
+        *)
+          echo "Error: Priority must be one of: low, medium, high, critical"
+          exit 1
+          ;;
+      esac
+      ;;
+    -d|--due-date)
+      DUE_DATE="$2"
+      shift 2
+      ;;
+    -n|--no-sequential)
+      USE_SEQUENTIAL=0
+      shift
+      ;;
+    -x|--date-prefix)
+      USE_DATE_PREFIX=1
+      shift
+      ;;
+    -h|--help)
+      print_usage
+      exit 0
+      ;;
+    *)
+      echo "Unknown option: $1"
+      print_usage
+      exit 1
+      ;;
+  esac
+done
+
+# Execute the Python code to create a proper work effort folder
+python3 -c "
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+Enhanced work effort creator
+"""
+
+import os
+import sys
+import argparse
+from datetime import datetime
+
+from code_conductor.core.work_effort.manager import WorkEffortManager
+
+# Create a folder-based work effort
+def create_work_effort(title, assignee, priority, due_date, use_sequential, use_date_prefix):
+    \"\"\"Creates a proper folder-based work effort\"\"\"
+    # Convert integer flags to boolean
+    use_sequential_bool = bool(use_sequential)
+    use_date_prefix_bool = bool(use_date_prefix)
+
+    manager = WorkEffortManager(project_dir=os.getcwd())
+
+    # Validate inputs
+    if not title:
+        print('Error: Title is required')
+        return None
+
+    # Create the folder-based work effort
+    print(f'Creating work effort: \"{title}\"')
+    print(f'  Assignee: {assignee}')
+    print(f'  Priority: {priority}')
+    print(f'  Due Date: {due_date}')
+    print(f'  Numbering: {\"Sequential\" if use_sequential_bool else \"Timestamp\"}')
+    if use_sequential_bool:
+        print(f'  Format: {\"Date-prefixed\" if use_date_prefix_bool else \"Standard\"}')
+
+    work_effort_path = manager.create_work_effort(
+        title=title,
+        assignee=assignee,
+        priority=priority,
+        due_date=due_date,
+        use_sequential_numbering=use_sequential_bool,
+        use_date_prefix=use_date_prefix_bool
+    )
+
+    return work_effort_path
+
+# Create the work effort
+work_effort_path = create_work_effort(
+    title='$TITLE',
+    assignee='$ASSIGNEE',
+    priority='$PRIORITY',
+    due_date='$DUE_DATE',
+    use_sequential=$USE_SEQUENTIAL,
+    use_date_prefix=$USE_DATE_PREFIX
+)
+
+if work_effort_path:
+    print(f'\\n✅ Work effort created successfully at: {work_effort_path}')
+
+    # Display the created files/folders
+    if os.path.isdir(work_effort_path):
+        print(f'\\nFolder contents:')
+        for item in os.listdir(work_effort_path):
+            item_path = os.path.join(work_effort_path, item)
+            if os.path.isdir(item_path):
+                print(f'  📁 {item}')
+            else:
+                print(f'  📄 {item}')
+    sys.exit(0)
+else:
+    print('\\n❌ Failed to create work effort. Check logs for more information.')
+    sys.exit(1)
+"
+
+# Make an alias for backward compatibility (temporary)
+if [ "$0" = "cc-new-work" ] || [ "$0" = "cc-work-e" ]; then
+    echo "Note: Please use 'cc-work' in the future. This command name will be deprecated."
+fi

@@ -1,3 +1,3 @@
 """
-Test suite for Code Conductor.
+Test package initialization.
 """

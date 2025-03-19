@@ -7,7 +7,7 @@ This script updates the status of the Enhanced Workflow Runner work effort to "c
 
 import os
 import sys
-from src.code_conductor.workflow.workflow_runner import WorkflowRunner, ACTIVE_DIR, COMPLETED_DIR
+from src.code_conductor.workflow.workflow_runner import WorkflowRunner, ACTIVE_DIR
 
 def main():
     """Update the status of the Enhanced Workflow Runner work effort."""

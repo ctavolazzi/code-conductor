@@ -21,6 +21,23 @@ echo -e "${YELLOW}Test directory: ${TEST_DIR}${NC}"
 # Initialize test status
 TEST_STATUS=0
 
+# Configuration
+MANAGER_SCRIPT="src/code_conductor/core/work_effort/manager.py"
+RUNNER_SCRIPT="src/code_conductor/core/work_effort/runner.py"
+
+# Create test configuration
+cat > test_config.json << EOF
+{
+  "work_efforts": {
+    "use_manager": true,
+    "manager_script": "$TEST_DIR/$MANAGER_SCRIPT",
+    "runner_script": "$TEST_DIR/$RUNNER_SCRIPT",
+    "project_dir": "$TEST_DIR",
+    "auto_start": true
+  }
+}
+EOF
+
 # Function to run a command and check its success
 run_test() {
     local cmd="$1"

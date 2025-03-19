@@ -1,8 +1,19 @@
 # AI Setup Instructions
 
-This directory contains instructions and resources for AI assistants working with this codebase.
+## Core Components
+
+- Use `src/code_conductor/core/work_effort/manager.py` for work effort operations
+- Use `src/code_conductor/core/work_effort/runner.py` for interactive work effort management
 
 ## Work Effort Management
+
+The work effort system is now centralized in the core module, providing:
+- Consistent work effort creation and management
+- Improved error handling
+- Better support for concurrent operations
+- Enhanced validation of inputs
+
+For more details, see the migration guide in `docs/development/migration/MIGRATION_GUIDE_v0.5.x.md`.
 
 ### Familiarize First, Then Use Scripts
 
