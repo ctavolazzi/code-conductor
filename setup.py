@@ -20,8 +20,7 @@ setup(
     python_requires=">=3.7",
     entry_points={
         "console_scripts": [
-            "code-conductor=cli:main_entry",
-            "code-work-effort=work_efforts.scripts.ai_work_effort_creator:main",
+            "cc-ai=cli:main_entry",
         ],
     },
     install_requires=[

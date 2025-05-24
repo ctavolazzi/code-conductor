@@ -9,8 +9,8 @@ Current version: 0.4.1
 ## Features
 
 - AI-assisted development setup
-- Work efforts tracking and management
-- Project templates
+- Work effort tracking and management
+- Project template creation
 - CLI tools for AI integration
 
 ## Installation
@@ -81,10 +81,10 @@ code-conductor work_effort -i
 code-conductor work_effort --title "New Feature" --priority high
 
 # Using the enhanced work effort creator
-code-work-effort -i
+cc-work-e -i
 
 # With AI content generation (requires Ollama)
-code-work-effort --use-ai --description "Implement authentication system" --model phi3
+cc-work-e --use-ai --description "Implement authentication system" --model phi3
 ```
 
 Note: AI content generation is OFF by default. Use the `--use-ai` flag to enable it.

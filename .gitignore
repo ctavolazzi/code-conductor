@@ -65,8 +65,6 @@ venv.bak/
 Thumbs.db
 
 # Project specific
-work_efforts/active/
-work_efforts/completed/
 work_efforts/archived/
 
 # Local configuration

@@ -5,14 +5,14 @@ All notable changes to the Code Conductor project will be documented in this fil
 ## [0.4.1] - 2025-03-09
 
 ### Fixed
-- Fixed entry points to use the new command names (`code-conductor` and `code-work-effort`)
+- Fixed entry points to use the new command names (`code-conductor` and `cc-work-e`)
 - Updated package structure for better consistency with the new name
 
 ## [0.4.0] - 2025-03-09
 
 ### Added
 - Initial public release as Code Conductor
-- Renamed commands to `code-conductor` and `code-work-effort`
+- Renamed commands to `code-conductor` and `cc-work-e`
 - Fully functional work effort management system
 - Comprehensive CLI tools
 - Project template creation and management

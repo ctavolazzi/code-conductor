@@ -26,23 +26,23 @@ BOLD = '\033[1m' if os.name != 'nt' else ''
 RESET = '\033[0m' if os.name != 'nt' else ''
 
 def create_ai_setup(root_dir=None):
-    """Create the .AI-setup folder structure with all necessary files."""
+    """Create the .AI_setup folder structure with all necessary files."""
     if root_dir is None:
         root_dir = os.getcwd()
 
     # Define the AI setup folder
-    setup_folder = os.path.join(root_dir, ".AI-Setup")
+    setup_folder = os.path.join(root_dir, ".AI_setup")
 
-    # Create .AI-Setup folder
+    # Create .AI_setup folder
     if not os.path.exists(setup_folder):
         os.makedirs(setup_folder)
 
     # 1. Create INSTRUCTIONS.md
     instructions_file = os.path.join(setup_folder, "INSTRUCTIONS.md")
     with open(instructions_file, "w") as f:
-        f.write("""# AI-Setup Instructions
+        f.write("""# AI_Setup Instructions
 
-This directory contains setup files for AI-assisted development.
+This directory contains setup files for AI_assisted development.
 
 ## Usage
 
@@ -51,24 +51,24 @@ and provide more contextual help and recommendations.
 
 ### Commands
 
-The AI-Setup package provides two main commands:
+The AI_Setup package provides two main commands:
 
-1. `ai-setup` - Main command for setting up AI assistance and basic work efforts
-   - `ai-setup help` - Show help information
-   - `ai-setup setup` - Set up AI assistance in the current directory
-   - `ai-setup work_effort` - Create a new work effort
-   - `ai-setup list` - List all work efforts
+1. `ai_setup` - Main command for setting up AI assistance and basic work efforts
+   - `ai_setup help` - Show help information
+   - `ai_setup setup` - Set up AI assistance in the current directory
+   - `ai_setup work_effort` - Create a new work effort
+   - `ai_setup list` - List all work efforts
 
-2. `ai-work-effort` - Enhanced work effort creator with AI content generation capabilities
-   - `ai-work-effort -i` - Create a work effort interactively
-   - `ai-work-effort --use-ai --description "Your description"` - Use AI to generate content
-   - `ai-work-effort --help` - Show help information
+2. `ai_work_effort` - Enhanced work effort creator with AI content generation capabilities
+   - `ai_work_effort -i` - Create a work effort interactively
+   - `ai_work_effort --use_ai --description "Your description"` - Use AI to generate content
+   - `ai_work_effort --help` - Show help information
 
 No action is required from you - the AI tools will automatically utilize these files.
 """)
 
-    # 2. Create AI-setup-validation-instructions.md
-    validation_file = os.path.join(setup_folder, "AI-setup-validation-instructions.md")
+    # 2. Create AI_setup_validation_instructions.md
+    validation_file = os.path.join(setup_folder, "AI_setup_validation_instructions.md")
     with open(validation_file, "w") as f:
         f.write("""# AI Setup Validation Instructions
 
@@ -77,17 +77,17 @@ It helps AI assistants understand how to verify that everything is working corre
 
 ## Validation Steps
 
-1. Check that the `.AI-Setup` folder exists and contains all required files
+1. Check that the `.AI_setup` folder exists and contains all required files
 2. Verify that the `work_efforts` directory structure is properly set up
-3. Confirm that the AI-setup commands are working as expected
+3. Confirm that the AI_setup commands are working as expected
 
 ## Required Components
 
-1. `.AI-Setup` folder with:
+1. `.AI_setup` folder with:
    - INSTRUCTIONS.md
-   - AI-setup-validation-instructions.md
-   - AI-work-effort-system.md
-   - AI-setup-instructions.md
+   - AI_setup_validation_instructions.md
+   - AI_work_effort_system.md
+   - AI_setup_instructions.md
 
 2. `work_efforts` directory with:
    - templates/
@@ -100,14 +100,14 @@ It helps AI assistants understand how to verify that everything is working corre
 You can test that the AI setup is working correctly by running:
 
 ```
-ai-setup list
+ai_setup list
 ```
 
 This should show any existing work efforts or indicate that none exist yet.
 """)
 
-    # 3. Create AI-work-effort-system.md
-    work_effort_file = os.path.join(setup_folder, "AI-work-effort-system.md")
+    # 3. Create AI_work_effort_system.md
+    work_effort_file = os.path.join(setup_folder, "AI_work_effort_system.md")
     with open(work_effort_file, "w") as f:
         f.write("""# AI Work Effort System
 
@@ -166,13 +166,13 @@ tags: [tag1, tag2, tag3]
 
 Creating work efforts:
 ```
-ai-setup work_effort --title "Feature Name" --priority high
-ai-work-effort -i  # Interactive mode with more features
+ai_setup work_effort --title "Feature Name" --priority high
+ai_work_effort -i  # Interactive mode with more features
 ```
 
 Listing work efforts:
 ```
-ai-setup list
+ai_setup list
 ```
 
 ## Work Effort Locations
@@ -183,8 +183,8 @@ Work efforts are organized into directories:
 - `work_efforts/archived/` - Deprecated or abandoned work
 """)
 
-    # 4. Create AI-setup-instructions.md
-    setup_instructions_file = os.path.join(setup_folder, "AI-setup-instructions.md")
+    # 4. Create AI_setup_instructions.md
+    setup_instructions_file = os.path.join(setup_folder, "AI_setup_instructions.md")
     with open(setup_instructions_file, "w") as f:
         f.write("""# AI Setup Instructions
 
@@ -193,15 +193,15 @@ It helps AI assistants understand how to configure and use the AI tools.
 
 ## Installation
 
-The AI-Setup package can be installed globally using:
+The AI_Setup package can be installed globally using:
 
 ```bash
-sudo pip3 install ai-setup
+sudo pip3 install ai_setup
 ```
 
 After installation, the following commands will be available:
-- `ai-setup` - Main command for AI setup and work effort management
-- `ai-work-effort` - Enhanced work effort creator with AI features
+- `ai_setup` - Main command for AI setup and work effort management
+- `ai_work_effort` - Enhanced work effort creator with AI features
 
 ## Setting Up a Project
 
@@ -214,11 +214,11 @@ To set up a new or existing project with AI assistance:
 
 2. Run the setup command:
    ```bash
-   ai-setup setup
+   ai_setup setup
    ```
 
 This will:
-- Create a `.AI-Setup` folder with all necessary files
+- Create a `.AI_setup` folder with all necessary files
 - Set up a `work_efforts` directory structure
 - Create an initial default work effort
 
@@ -226,24 +226,24 @@ This will:
 
 Basic work effort creation:
 ```bash
-ai-setup work_effort --title "Feature Name" --priority high
+ai_setup work_effort --title "Feature Name" --priority high
 ```
 
 Enhanced work effort creation with more features:
 ```bash
-ai-work-effort -i
+ai_work_effort -i
 ```
 
 With AI-powered content generation (requires Ollama):
 ```bash
-ai-work-effort --use-ai --description "Create a user authentication system" --model phi3
+ai_work_effort --use_ai --description "Create a user authentication system" --model phi3
 ```
 
 ## Managing Work Efforts
 
 List all work efforts:
 ```bash
-ai-setup list
+ai_setup list
 ```
 
 ## Directory Structure
@@ -251,15 +251,15 @@ ai-setup list
 A properly configured project will have:
 
 ```
-your-project/
-├── .AI-Setup/
+your_project/
+├── .AI_setup/
 │   ├── INSTRUCTIONS.md
-│   ├── AI-setup-validation-instructions.md
-│   ├── AI-work-effort-system.md
-│   └── AI-setup-instructions.md
+│   ├── AI_setup_validation_instructions.md
+│   ├── AI_work_effort_system.md
+│   └── AI_setup_instructions.md
 └── work_efforts/
     ├── templates/
-    │   └── work-effort-template.md
+    │   └── work_effort_template.md
     ├── active/
     ├── completed/
     ├── archived/
@@ -268,7 +268,7 @@ your-project/
 
 ## Advanced Features
 
-The `ai-work-effort` command supports integration with Ollama for AI-powered content generation. When using the `--use-ai` flag, it can:
+The `ai_work_effort` command supports integration with Ollama for AI-powered content generation. When using the `--use_ai` flag, it can:
 
 1. Connect to a local Ollama instance
 2. Generate structured content based on your description
@@ -276,12 +276,12 @@ The `ai-work-effort` command supports integration with Ollama for AI-powered con
 4. Allow for timeout configuration and graceful interruption
 """)
 
-    print(f"✅ Created AI-Setup in: {root_dir}")
+    print(f"✅ Created AI_setup in: {root_dir}")
     return setup_folder
 
 def install_ai_setup(target_dirs):
-    """Install AI-Setup in target directories."""
-    # Create a temporary .AI-Setup in the current directory
+    """Install AI_setup in target directories."""
+    # Create a temporary .AI_setup in the current directory
     temp_dir = os.getcwd()
     setup_folder = create_ai_setup(temp_dir)
 
@@ -294,34 +294,34 @@ def install_ai_setup(target_dirs):
 
         # Skip if already installed
         if is_ai_setup_installed(directory):
-            print(f"⚠️ AI-Setup already installed in: {directory}")
+            print(f"⚠️ AI_setup already installed in: {directory}")
             continue
 
-        # Create .AI-Setup in target directory
-        target_setup = os.path.join(directory, ".AI-Setup")
+        # Create .AI_setup in target directory
+        target_setup = os.path.join(directory, ".AI_setup")
         if not os.path.exists(target_setup):
             os.makedirs(target_setup)
 
-        # Copy all files from temporary .AI-Setup to target
-        print(f"Copying AI-Setup files to {directory}...")
+        # Copy all files from temporary .AI_setup to target
+        print(f"Copying AI_setup files to {directory}...")
         for item in os.listdir(setup_folder):
             source = os.path.join(setup_folder, item)
             target = os.path.join(target_setup, item)
             if os.path.isfile(source):
                 shutil.copy2(source, target)
 
-        print(f"✅ Installed AI-Setup in: {directory}")
+        print(f"✅ Installed AI_setup in: {directory}")
 
-    # Clean up temporary .AI-Setup if it was created for this operation
+    # Clean up temporary .AI_setup if it was created for this operation
     if os.path.dirname(setup_folder) == temp_dir:
         shutil.rmtree(setup_folder)
 
 def is_ai_setup_installed(directory: str) -> bool:
-    """Check if AI-Setup is already installed in a directory."""
+    """Check if AI_setup is already installed in a directory."""
     if not os.path.exists(directory) or not os.path.isdir(directory):
         return False
 
-    return os.path.exists(os.path.join(directory, ".AI-Setup"))
+    return os.path.exists(os.path.join(directory, ".AI_setup"))
 
 def get_directories(base_dir: str = ".") -> List[str]:
     """
@@ -369,7 +369,7 @@ def draw_menu_item(idx, directory, is_selected, is_current, has_ai_setup):
     """Draw a single menu item with proper formatting."""
     prefix = f"{BOLD}➤{RESET}" if is_current else " "
     checkbox = f"[{GREEN}✓{RESET}]" if is_selected else "[ ]"
-    ai_setup_status = f" {CYAN}(AI-Setup installed){RESET}" if has_ai_setup else ""
+    ai_setup_status = f" {CYAN}(AI_setup installed){RESET}" if has_ai_setup else ""
 
     # Highlight the current item
     directory_text = f"{YELLOW}{directory}{RESET}" if is_current else directory
@@ -539,7 +539,7 @@ def select_directories(base_dir=None):
                 for path in selected_paths:
                     print(f"  - {os.path.basename(path)}")
 
-                print("\n🚀 Installing AI-Setup to selected directories...")
+                print("\n🚀 Installing AI_setup to selected directories...")
                 install_ai_setup(selected_paths)
                 return selected_paths
 
